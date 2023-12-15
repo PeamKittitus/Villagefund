@@ -1,0 +1,67 @@
+﻿@model IEnumerable<DZ_VILLAGEFUND_WEB.ViewModels.News.ListNewsViewModel>
+@{
+    var GetPermission = ViewBag.Permission;
+}
+
+<table id="JsonTable" class="table table-bordered table-hover table-striped w-100">
+    <thead class="bg-primary-600">
+        <tr>
+            <th class="text-center" style="width:50px">ลำดับ</th>
+            <th>ชื่อเรื่อง</th>
+            <th>ผู้สร้างข่าวสาร</th>
+            <th class="text-center">วันที่สร้างรายการ</th>
+            <th class="text-center">ประเภทข่าวสาร</th>
+            <th class="text-center">สถานะข่าวสาร</th>
+            <th class="text-center">จัดการข้อมูล</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @{
+            int Rows = 1;
+            foreach (var Get in Model.OrderByDescending(d=>d._UpdateDate))
+            {
+                <tr>
+                    <td class="text-center">@Rows.</td>
+                    <td>@Get.TransactionTitle</td>
+                    <td>@Get.TransactionBy</td>
+                    <td class="text-center">@Get.UpdateDate</td>
+                    <td class="text-center">
+                        @{
+                            if (Get.TransactionType == true)
+                            {
+                                <label>สมาชิก</label>
+                            }
+                            else
+                            {
+                                <label>สาธารณะ</label>
+                            }
+                        }
+
+                    </td>
+                    <td class="text-center">
+                        @{
+                            if (Get.IsApprove == true)
+                            {
+                                <i class="fal fa-check-circle " style="color:green;font-size:1rem"></i> <span style="color:green;">อนุมัติแล้ว</span>
+                            }
+                            else
+                            {
+                                <i class="fal fa-clock" style="color:orange;font-size:1rem"></i> <span style="color:orange;">รออนุมัติ</span>
+                            }
+                        }
+
+                    </td>
+                    <td class="text-center" width="25%">
+                        <a href="/Home/News?Id=@Get.TransactionNewsId" target="_blank" class="btn btn-sm btn-info" title="View"><i class="fal fa-eye"></i> ดู </a>
+                        <a href="javascript:void(0);" data-val="@Get.TransactionNewsId" style="visibility:@(Get.IsApprove == true ? "hidden" : "")" class="btn btn-sm btn-success approve" title="Approve"><i class="fal fa-check-circle"></i> อนุมัติ </a>
+                        @*<a href="javascript:void(0);" data-val="@Get.TransactionNewsId" style="visibility:@(GetPermission.Delete == false ? "hidden" : "")" class="btn btn-sm btn-danger  notapprove" title="Not Approve"><i class="fal fa-times"></i> ไม่อนุมัติ </a>*@
+                    </td>
+                </tr>
+
+                Rows++;
+            }
+        }
+
+    </tbody>
+</table>

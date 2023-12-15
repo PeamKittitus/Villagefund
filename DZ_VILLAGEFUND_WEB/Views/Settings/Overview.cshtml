@@ -1,0 +1,83 @@
+﻿<div class="section mt-3 text-center">
+    <div class="avatar-section">
+        <a href="#">
+            <img src="~/assets/img/sample/avatar/avatar-2.webp" alt="avatar" class="imaged w100 rounded">
+            @*<span class="button">
+                <ion-icon name="camera-outline"></ion-icon>
+            </span>*@
+        </a>
+    </div>
+</div>
+<div class="listview-title mt-1">ธีม</div>
+<ul class="listview image-listview text inset no-line">
+    <li>
+        <div class="item">
+            <div class="in">
+                <div> Dark Mode </div>
+                <div class="form-check form-switch  ms-2">
+                    <input class="form-check-input dark-mode-switch" type="checkbox" id="darkmodeSwitch">
+                    <label class="form-check-label" for="darkmodeSwitch"></label>
+                </div>
+            </div>
+        </div>
+    </li>
+</ul>
+<div class="listview-title mt-1">ตั้งค่าการแจ้งเตือน</div>
+<ul class="listview image-listview text inset">
+    <li>
+        <div class="item">
+            <div class="in">
+                <div>
+                    Payment Alert
+                    <div class="text-muted"> Send notification when new payment received </div>
+                </div>
+                <div class="form-check form-switch  ms-2">
+                    <input class="form-check-input" type="checkbox" id="SwitchCheckDefault1">
+                    <label class="form-check-label" for="SwitchCheckDefault1"></label>
+                </div>
+            </div>
+        </div>
+    </li>
+</ul>
+<div class="listview-title mt-1">ตั้งค่าโปรไฟล์</div>
+<ul class="listview image-listview text inset">
+    <li>
+        <a href="/Settings/UpdateProfile" class="item">
+            <div class="in">
+                <div>แก้ไขข้อมูลส่วนตัว</div>
+            </div>
+        </a>
+    </li>
+</ul>
+<div class="listview-title mt-1">ตั้งค่าความปลอดภัย</div>
+<ul class="listview image-listview text mb-2 inset">
+    <li>
+        <a href="#" class="item">
+            <div class="in">
+                <div>เปลี่ยนรหัสผ่าน</div>
+            </div>
+        </a>
+    </li>
+    <li>
+        <div class="item">
+            <div class="in">
+                <div>
+                    ยืนยันตัวตน 2 ขั้นตอน
+                </div>
+                <div class="form-check form-switch ms-2">
+                    <input class="form-check-input" type="checkbox" id="SwitchCheckDefault3" checked />
+                    <label class="form-check-label" for="SwitchCheckDefault3"></label>
+                </div>
+            </div>
+        </div>
+    </li>
+</ul>
+
+@section Scripts{
+    <script src="~/assets/js/plugins/splide/splide.min.js"></script>
+    <script>
+        $(function () {
+
+        });
+    </script>
+}

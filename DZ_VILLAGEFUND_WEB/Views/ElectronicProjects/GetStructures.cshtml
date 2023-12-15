@@ -1,0 +1,48 @@
+﻿@model IEnumerable<DZ_VILLAGEFUND_WEB.Models.SystemOrgStructures>
+
+@{
+    var GetPermission = ViewBag.Permission as DZ_VILLAGEFUND_WEB.ViewModels.Settings.PermissionViewModel;
+}
+
+<table id="JsonTable" class="table table-bordered table-hover table-striped w-100">
+    <thead class="bg-primary-600">
+        <tr>
+            <th class="text-center" style="width:50px">ลำดับ</th>
+            <th>ชื่อหน่วยงาน</th>
+            <th class="text-center" style="width:150px;"></th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @{
+            int Rows1 = 1;
+            foreach (var Get in Model.Where(w => w.ParentId == 0))
+            {
+                <tr>
+                    <td class="text-center">@Rows1.</td>
+                    <td>- <strong>@Get.OrgName</strong></td>
+                    <td class="text-center">
+                        <a href="javascript:void(0);" data-val="@Get.OrgId" class="btn btn-xs btn-warning edit" title="Edit" style="visibility:@(GetPermission.Update == false ? "hidden" : "")"><i class="fal fa-edit"></i> แก้ไข </a>
+                        <a href="javascript:void(0);" data-val="@Get.OrgId" class="btn btn-xs btn-danger  delete" title="Delete" style="visibility:@(GetPermission.Delete == false ? "hidden" : "")"><i class="fal fa-times"></i> ลบ </a>
+                    </td>
+                </tr>
+
+                int Rows2 = 1;
+                foreach (var Get1 in Model.Where(w => w.ParentId == Get.OrgId))
+                {
+                    <tr>
+                        <td class="text-right">@Rows1.  @Rows2</td>
+                        <td style="padding-left:2rem">- @Get1.OrgName</td>
+                        <td class="text-center">
+                            <a href="javascript:void(0);" data-val="@Get1.OrgId" class="btn btn-xs btn-warning edit" title="Edit" style="visibility:@(GetPermission.Update == false ? "hidden" : "")"><i class="fal fa-edit"></i> แก้ไข </a>
+                            <a href="javascript:void(0);" data-val="@Get1.OrgId" class="btn btn-xs btn-danger  delete" title="Delete" style="visibility:@(GetPermission.Delete == false ? "hidden" : "")"><i class="fal fa-times"></i> ลบ </a>
+                        </td>
+                    </tr>
+                    Rows2++;
+                }
+                Rows1++;
+            }
+        }
+
+    </tbody>
+</table>

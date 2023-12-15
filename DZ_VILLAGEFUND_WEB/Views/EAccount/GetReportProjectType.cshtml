@@ -1,0 +1,31 @@
+﻿@model IEnumerable<DZ_VILLAGEFUND_WEB.ViewModels.EAccount.ReportProjectType>
+
+<table id="JsonTable" class="table table-bordered table-hover table-striped w-100">
+    <thead class="bg-primary-600">
+        <tr>
+            <th class="text-center" style="width:50px">ลำดับ</th>
+            <th>โครงการ</th>
+            <th style="width:100px;">จำนวนโครงการ</th>
+            <th class="text-right" >งบประมาณ</th>
+            <th class="text-right" >ร้อยละ</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int Rows = 1;
+            foreach (var Get in Model.Where(w => w.ProjectNumber != 0))
+            {
+                <tr>
+                    <td class="text-center">@Rows.</td>
+                    <td>@Get.ProjectTypeName</td>
+                    <td class="text-center" >@Get.ProjectNumber</td>
+                    <td class="text-right" >@(Get.Amount > 0 ? Get.Amount.ToString("N") : "0.00")</td>
+                    <td class="text-right">@(Get.Amount * 100 / (ViewBag.TotalAmount != 0 ? ViewBag.ToTalAmount  : 1) > 0 ? (Get.Amount * 100 / ViewBag.TotalAmount).ToString("N") : "0.00")</td>
+                </tr>
+
+                Rows++;
+            }
+        }
+
+    </tbody>
+</table>

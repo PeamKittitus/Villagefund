@@ -1,0 +1,38 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using DZ_VILLAGEFUND_WEB.Models
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@{var CurrentUser = await UserManager.FindByIdAsync(UserManager.GetUserId(User)); }
+
+<div>
+    <a href="#" data-toggle="dropdown" title="@CurrentUser.Email" class="header-icon d-flex align-items-center justify-content-center ml-2">
+        <img src="/img/demo/avatars/user-avatar-vfoc.png" class="profile-image rounded-circle" alt="Mr.Bunchuai Chaiket">
+    </a>
+    <div class="dropdown-menu dropdown-menu-animated dropdown-lg">
+        <div class="dropdown-header bg-trans-gradient d-flex flex-row py-4 rounded-top">
+            <div class="d-flex flex-row align-items-center mt-1 mb-1 color-white">
+                <span class="mr-2">
+                    <img src="/img/demo/avatars/user-avatar-vfoc.png" class="rounded-circle profile-image" alt="Dr. Codex Lantern">
+                </span>
+                <div class="info-card-text">
+                    <div class="fs-lg text-truncate text-truncate-lg">@CurrentUser.FirstName @CurrentUser.LastName</div>
+                    <span class="text-truncate text-truncate-md opacity-80">@CurrentUser.Email</span>
+                </div>
+            </div>
+        </div>
+        <a href="/Home/ProfileData" class="dropdown-item">
+            <span data-i18n="drpdwn.settings"> แก้ไขข้อมูลส่วนตัว</span>
+        </a>
+        <div class="dropdown-divider m-0"></div>
+        <a href="#" class="dropdown-item" data-action="app-fullscreen">
+            <span data-i18n="drpdwn.fullscreen"> แสดงเติมจอ</span>
+            <i class="float-right text-muted fw-n">F11</i>
+        </a>
+        <div class="dropdown-divider m-0"></div>
+        <a class="dropdown-item fw-500 pt-3 pb-3" href="/Identity/Account/Logout?returnUrl=%2F">
+            <span data-i18n="drpdwn.page-logout"> ออกจากระบบ</span>
+            <span class="float-right fw-n"></span>
+        </a>
+    </div>
+</div>

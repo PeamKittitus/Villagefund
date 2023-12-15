@@ -1,0 +1,95 @@
+﻿@model IEnumerable<DZ_VILLAGEFUND_WEB.ViewModels.EProjects.ProjectListViewModel>
+@{
+    decimal Total = 0;
+    var GetPermission = ViewBag.Permission as DZ_VILLAGEFUND_WEB.ViewModels.Settings.PermissionViewModel;
+}
+
+<table id="JsonTable" class="table table-bordered table-hover table-striped w-100">
+    <thead class="bg-primary-600">
+        <tr>
+            <th class="text-center" width="100">รหัส</th>
+            <th>ชื่อโครงการ</th>
+            <th>วันที่เริ่มต้น-สิ้นสุดของโครงการ</th>
+            <th class="text-center">ความคืบหน้า</th>
+            <th class="text-center">สถานะ</th>
+            <th class="text-center">งบประมาณ</th>
+            <th style="width:150px;"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int Rows = 1;
+            foreach (var Get in Model)
+            {
+                <tr>
+                    <td class="text-center">@Get.ProjectCode</td>
+                    <td>
+                        <a href="/ElectronicProjects/ViewDetails?ProjectId=@Get.ProjectId">@Get.ProjectName</a>                      
+                    </td>
+                    <td>
+                        <span style="color:green"> @Get.ProjectTime</span>
+                    </td>
+                    <td>
+                        <small class="mb-1 d-block">Completion with: @Get.Progress.ToString("N") %</small>
+                        <div class="progress progress-sm"><div class="progress-bar" role="progressbar" style="width: @Get.Progress% " aria-valuenow="@Get.Progress" aria-valuemin="0" aria-valuemax="100"></div></div>
+                    </td>
+                    <td class="text-center">
+                        @{
+                            if (Get.StatusId == 13 || Get.StatusId == 14)
+                            {
+                                <span style="color:red"> @Get.StatusName</span>
+                            }
+                            else if (Get.StatusId == 15 || Get.StatusId == 16)
+                            {
+                                <span style="color:orange"> @Get.StatusName</span>
+                            }
+                            else if(Get.StatusId == 12)
+                            {
+                                <span style="color:orange"> @Get.StatusName</span>
+                            }
+                            else
+                            {
+                                <span style="color:green"> @Get.StatusName</span>
+                            }
+                        }
+                    </td>
+                    <td class="text-right">@Get.Amount.ToString("N")</td>
+                    <td class="text-center">
+                        @{
+                            if (Get.StatusId == 16 || Get.StatusId == 14 || Get.StatusId == 12)
+                            {
+                                <a href="javascript:void(0);" data-val="@Get.ProjectId" class="btn btn-xs btn-warning  edit" title="Edit" style="visibility:@(GetPermission.Update == false ? "hidden" : "")"><i class="fal fa-eraser"></i> แก้ไข </a>
+                                <a href="javascript:void(0);" data-val="@Get.ProjectId" class="btn btn-xs btn-danger  delete" title="Delete" style="visibility:@(GetPermission.Delete == false ? "hidden" : "")"><i class="fal fa-times"></i> ลบ </a>
+
+                            }
+                            else if (Get.StatusId == 14)
+                            {
+                                <a href="javascript:void(0);" data-val="@Get.ProjectId" class="btn btn-xs btn-warning  edit" title="Edit"><i class="fal fa-eraser" style="visibility:@(GetPermission.Update == false ? "hidden" : "")"></i> แก้ไข </a>
+                            }
+                            else if (Get.StatusId == 5)
+                            {
+                                <span>
+                                    <strong style="color:green"> @Get.ApproveBy</strong> <br />
+                                    <strong style="color:red"> @Get.ApproveDate</strong>
+                                </span>
+                            }
+                        }
+                    </td>
+                </tr>
+
+                Rows++;
+                Total += Get.Amount;
+            }
+        }
+
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="5" class="text-right">รวม:</td>
+            <td class="text-right">@Total.ToString("N")  </td>
+            <td></td>
+        </tr>
+    </tfoot>
+</table>
+
+<input type="hidden" id="ProjectId" value="@Model.Select(s=>s.ProjectId).FirstOrDefault()" />

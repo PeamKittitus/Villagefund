@@ -1,0 +1,56 @@
+﻿@model IEnumerable<DZ_VILLAGEFUND_WEB.ViewModels.Villages.AdminVillageViewIndex>
+
+<form id="Permissionform">
+    <table id="JsonTable" class="table table-bordered table-hover table-striped w-100">
+        <thead class="bg-primary-600">
+            <tr>
+                <th class="text-center" style="width:50px">ลำดับ</th>
+                <th class="text-center">รหัสกองทุนหมู่บ้าน</th>
+                <th>ชื่อนิติบุคคล</th>
+                <th>รหัสนิติบุคคล</th>
+                <td class="text-center">สถานะ</td>
+                <th class="text-center" style="width:100px">  </th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int Rows = 1;
+                foreach (var Village in Model)
+                {
+                    <tr>
+                        <td class="text-center">@Rows.</td>
+                        <td class="text-center">@Village.VillageCodeText </td>
+                        <td>
+                            <a href="javascript:void(0)">@Village.VillageName</a>
+                        </td>
+                        <td>@Village.VillageBbdId</td>
+                        <td class="text-center font-weight-bold" style="color: @(Village.StatusId == 0 ? "orange":(Village.StatusId == 1 ? "green" : "red"))">
+
+                            @{
+                                string[] StatusName = { "รออนุมัติ", "อนุมัติ", "ไม่อนุมัติ" };
+                                @StatusName[Village.StatusId]
+                            }
+
+                        </td>
+                        <td class="text-center">
+                            @{
+                                if (Village.TransactionType == 2)
+                                {
+                                    <a href="/Members/ViewsMember?VillageId=@Village.VillageId" class="btn btn-success btn-xs">ดำเนินการ</a>
+                                }
+                                else
+                                {
+                                    <a href="/Villages/AdminVillageView?TransactionVillageId=@Village.TransactionVillageId&Type=@Village.TransactionType" class="btn btn-success btn-xs">ดำเนินการ</a>
+                                }
+                            }
+                        </td>
+                    </tr>
+                    Rows++;
+
+                }
+            }
+
+
+        </tbody>
+    </table>
+</form>

@@ -1,0 +1,29 @@
+﻿@model IEnumerable<DZ_VILLAGEFUND_WEB.ViewModels.EProjects.MileStoneViewModel>
+
+<table id="JsonTable" class="table table-bordered table-hover table-striped w-100">
+    <thead class="bg-primary-600">
+        <tr>
+            <th class="text-center" style="width:50px"><input type="checkbox" id="check-all" /></th>
+            <th> รหัสโครงการ</th>
+            <th> ชื่อโครงการ</th>
+            <th> ชื่อกิจกรรม</th>
+        </tr>
+    </thead>
+    <tbody>
+
+
+        @{
+            foreach (var Get in Model)
+            {
+                <tr>
+                    <td class="text-center">  <input type="checkbox" name="check-item" class="check-item" value="@Get.Id" /></td>
+                    <td>@Get.AccCode</td>
+                    <td>@Get.ProjectName</td>
+                    <td>@Get.ActivityName</td>
+                </tr>
+            }
+        }
+
+
+    </tbody>
+</table>

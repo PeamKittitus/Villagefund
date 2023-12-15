@@ -1,0 +1,65 @@
+﻿@model IEnumerable<DZ_VILLAGEFUND_WEB.Models.SystemMenus>
+
+@{
+    foreach (var Menu in Model.Where(w => w.ParentId == 0).OrderBy(o => o.Position))
+    {
+        if (Model.Where(w => w.ParentId == Menu.Id).Count() > 0)
+        {
+            <li>
+                <a href="javascript:void(0)" @(Menu.IsLink == true ? "target='_blank'" : "")
+                   title="@Menu.MenuName"
+                   data-filter-tags="application intel"
+                   style="color: #fff; text-decoration: none;">
+                    <i class="@Menu.Icon"></i>
+                    <span class="nav-link-text" data-i18n="nav.application_intel">@Menu.MenuName </span>
+                    <b class="collapse-sign"><em class="fal fa-angle-down"></em></b>
+                </a>
+                <ul>
+                    @{
+
+                        foreach (var Menu2 in Model.Where(w => w.ParentId == Menu.Id).OrderBy(o => o.Position))
+                        {
+                            <li class="">
+                                <a href="@(Menu2.ControllerName == "-" ? "#" : "/"+Menu2.ControllerName +"/" + Menu2.ActionName)" title="@Menu2.MenuName" data-filter-tags="theme settings how it works" style="color:#fff">
+                                    <span class="nav-link-text" data-i18n="nav.theme_settings_how_it_works">- @Menu2.MenuName </span>
+                                </a>
+                                @{
+                                    if (Model.Where(w => w.ParentId == Menu2.Id).Count() > 0)
+                                    {
+                                        <ul>
+                                            @{
+                                                foreach (var Menu3 in Model.Where(w => w.ParentId == Menu2.Id).OrderBy(o => o.Position))
+                                                {
+                                                    <li>
+                                                        <a href="/@Menu3.ControllerName/@Menu3.ActionName" title="@Menu3.MenuName" data-filter-tags="theme settings how it works" style="color:#fff">
+                                                            <span class="nav-link-text" data-i18n="nav.theme_settings_how_it_works">- @Menu3.MenuName</span>
+                                                        </a>
+                                                    </li>
+                                                }
+                                            }
+                                        </ul>
+                                    }
+                                }
+                            </li>
+                        }
+                    }
+                </ul>
+            </li>
+        }
+        else
+        {
+            <li>
+                <a href="@(Menu.IsLink == true ? "javascript:void(0)" : "/"+Menu.ControllerName+"/"+Menu.ActionName)"
+                   title="@Menu.MenuName"
+                   data-menuid="@Menu.Id"
+                   class="activeToken"
+                   data-filter-tags="application intel"
+                   style="color:#fff">
+                    <i class="@Menu.Icon"></i>
+                    <span class="nav-link-text" data-i18n="nav.application_intel">@Menu.MenuName </span>
+                    <b class="collapse-sign"><em class="fal fa-angle-down"></em></b>
+                </a>
+            </li>
+        }
+    }
+}

@@ -1,0 +1,216 @@
+﻿@{
+    ViewData["Title"] = "ครุภัณฑ์";
+}
+
+<ol class="breadcrumb page-breadcrumb">
+    <li class="breadcrumb-item"><a href="/Home/Index">หน้าหลัก</a></li>
+    <li class="breadcrumb-item"><a href="/ElectronicProjects/Index">e-Project</a></li>
+    <li class="breadcrumb-item"><a href="/ElectronicProjects/CreatePeriod?Projectid=@ViewBag.ProjectId"> กิจกรรมในโครงการ</a></li>
+    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+</ol>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel">
+            <div class="panel-container show">
+                <div class="panel-content text-center">
+                    <button type="button" class="btn btn-default  waves-effect waves-themed"> (1) ข้อมูลเกี่ยวกับโครงการ <i class="fal fa-arrow-right"></i></button>
+                    <button type="button" class="btn btn-default  waves-effect waves-themed"> (2) กิจกรรมในโครงการ <i class="fal fa-arrow-right"></i></button>
+                    <button type="button" class="btn btn-success  waves-effect waves-themed"> (3) @ViewData["Title"] <i class="fal fa-arrow-right"></i></button>
+                    <button type="button" class="btn btn-default  waves-effect waves-themed"> (4) เอกสารแนบ </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="d-flex justify-content-start flex-wrap demo">
+    <div class="btn-group">
+        <a href="javascript:void()" class="btn btn-light" id="Create">
+            <i class="fal fa-plus-circle mr-1 fs-xxl color-primary-600"></i><br />
+            <span class="fs-nano color-primary-600"> เพิ่มครุภัณฑ์</span>
+        </a>
+        <a href="/ElectronicProjects/CreateDocument?Projectid=@ViewBag.ProjectId" class="btn btn-light">
+            <i class="fal fa-arrow-right mr-1 fs-xxl color-primary-600"></i><br />
+            <span class="fs-nano color-primary-600"> ดำเนินการต่อ</span>
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel">
+            <div class="panel-hdr"><h2><i class='subheader-icon fal fa-list-alt'></i>  @ViewData["Title"]</h2> </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+
+                    <div id="JsonData"></div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- form create   -->
+<div class="modal fade default-example-modal-right-lg" id="FormCreateModal" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-right modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title h4"><i class="ni ni-menu"></i> เพิ่มครุภัณฑ์</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true"><i class="fal fa-times"></i></span> </button>
+            </div>
+            <div class="modal-body">
+                <span id="FormCreate"></span>
+            </div>
+            <div class="modal-footer"> </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade default-example-modal-right-lg" id="FormViewModal" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title h4"><i class="fal fa-file-pdf"></i> เอกสารแนบ</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true"><i class="fal fa-times"></i></span> </button>
+            </div>
+            <div class="modal-body">
+                <span id="FormView"></span>
+            </div>
+            <div class="modal-footer"> </div>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" id="ProjectId" value="@ViewBag.ProjectId" />
+
+
+@section Scripts{
+    <link rel="stylesheet" type="text/css" href="/css/notifications/toastr/toastr.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/datagrid/datatables/datatables.bundle.css">
+    <link rel="stylesheet" href="~/css/notifications/sweetalert2/sweetalert2.bundle.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/formplugins/select2/select2.bundle.css">
+    <script src="~/js/Validation/bootstrapValidator.min.js"></script>
+    <script src="~/js/datagrid/datatables/datatables.bundle.js"></script>
+    <script src="~/js/datagrid/datatables/datatables.export.js"></script>
+    <script src="~/js/notifications/toastr/toastr.js"></script>
+    <script src="~/js/notifications/sweetalert2/sweetalert2.bundle.js"></script>
+    <script src="~/js/formplugins/select2/select2.bundle.js"></script>
+    <script src="~/js/NumberFormat.js"></script>
+    <script>
+        $(function () {
+            // set data
+            $("#JsonData").html('<img  src="/img/loading.gif" width="200">');
+            $.get("/ElectronicProjects/GetAssets", { "ProjectId": $("#ProjectId").val() }, function (JsonResult) {
+                $("#JsonData").html(JsonResult);
+                $('#JsonTable').dataTable(
+                    {
+                        "pageLength": 50,
+                        responsive: true,
+                        lengthChange: false
+                    });
+
+                // delete
+                $("#JsonTable").on("click", ".delete", function () {
+                    const ProjectAssetId = $(this).attr("data-val");
+                    Swal.fire(
+                        {
+                            title: "ยืนยันการทำรายการ",
+                            text: "คุณต้องการลบรายการนี้ หรือไม่?",
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonText: "ยืนยัน",
+                            cancelButtonText: "ยกเลิก",
+                            closeOnConfirm: false
+                        }).then(function (isConfirm) {
+                            if (isConfirm.value == true) {
+                                $.get("/ElectronicProjects/DeleteAsset", { "ProjectAssetId": ProjectAssetId }, function (rs) {
+                                    if (rs.valid == true) {
+                                        toastr.success(rs.message);
+                                        setTimeout(function () {
+                                            window.location.href = "";
+                                        }, 700);
+                                    }
+                                    else {
+                                        toastr.error('แจ้งเตือน! ' + rs.message);
+                                    }
+                                });
+                            }
+                        });
+                });
+
+                // view file
+                $("#JsonTable").on("click", ".ViewFile", function () {
+                    const ProjectPeriodId = $(this).attr("data-val");
+                    $.get("/ElectronicProjects/ViewPeiodDocuments", { "ProjectPeriodId": ProjectPeriodId }, function (JsonView) {
+                        $("#FormViewModal").modal("show");
+                        $("#FormView").html(JsonView);
+                    });
+                });
+            });
+
+            // add period
+            $("#Create").click(function () {
+                $.get("/ElectronicProjects/FormAddAsset", { "ProjectId": $("#ProjectId").val() }, function (JsonForm) {
+                    $("#FormCreate").html(JsonForm);
+                    $("#FormCreateModal").modal('show');
+
+                    $('#AmountUnit').autoNumeric('init', { aSign: '' });
+                    $('#Amount').autoNumeric('init', { aSign: '' });
+
+                    $('#JsonForm').bootstrapValidator();
+                    $("#Submit").click(function () {
+
+                        if ($('#AmountUnit').val() == 0 || $('#Amount').val() == 0) {
+                            toastr.error('แจ้งเตือน! กรุณากรอกข้อมูล');
+                            return null;
+                        }
+
+                        $('#JsonForm').data("bootstrapValidator").validate();
+                        if ($('#JsonForm').data("bootstrapValidator").isValid() == true) {
+                            $('#AmountUnit').val($('#AmountUnit').autoNumeric('get'));
+                            $('#Amount').autoNumeric('init', { aSep: '.', aDec: ',', mDec: '0' });
+                            var Data = new FormData($("#JsonForm")[0]);
+                            $.ajax(
+                                {
+                                    type: "POST",
+                                    url: "/ElectronicProjects/FormAddAsset",
+                                    contentType: false,
+                                    processData: false,
+                                    data: Data,
+                                    success: function (result) {
+                                        if (result.valid == true) {
+                                            $("#FormCreateModal").modal('hide');
+                                            Swal.fire(
+                                                {
+                                                    title: result.message,
+                                                    text: "คุณต้องการทำรายการต่อ หรือไม่?",
+                                                    type: "success",
+                                                    showCancelButton: true,
+                                                    confirmButtonText: "ต้องการ",
+                                                    cancelButtonText: "ไม่ต้องการ",
+                                                    closeOnConfirm: false
+                                                }).then(function (isConfirm) {
+                                                    if (isConfirm.value == true) {
+                                                        window.location.href = "";
+                                                    } else {
+                                                        window.location.href = "/ElectronicProjects/CreateDocument?Projectid=" + $("#ProjectId").val();
+                                                    }
+                                                });
+                                        }
+                                        else {
+                                            toastr.error('Error! ' + result.message);
+                                        }
+                                    }
+                                });
+                        }
+                    });
+                });
+            });
+
+        });
+
+    </script>
+
+}

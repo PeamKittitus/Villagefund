@@ -1,0 +1,49 @@
+﻿@model DZ_VILLAGEFUND_WEB.Models.Village
+
+<table id="JsonTable" class="table table-bordered table-hover table-striped w-100">
+    <thead class="bg-primary-600">
+        <tr>
+            <th class="text-center" style="width:50px">ลำดับ</th>
+            <th>ชื่อนิติบุคคล</th>
+            <th class="text-center" style="width:200px;">ยื่นแก้ไขข้อมูล</th>
+            <th class="text-center" style="width:50px;">สถานะ</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            <tr>
+                <td class="text-center"> 1.</td>
+                <td> @Model.VillageName </td>
+                <td class="text-center">
+                    @{
+                        if (!ViewBag.TransactionTypeFlag && ViewBag.IsActive)
+                        {
+                            <a href="/Villages/VillageEdit" class="btn btn-sm btn-success" title="Edit"><i class="fal fa-edit"></i>  แก้ไข</a>
+                        }
+                        else if (!ViewBag.IsActive)
+                        {
+                            <text>ยกเลิกการเป็นสมาชิก</text>
+                        }
+                        else
+                        {
+                            <text>รออนุมัติ</text>
+                        }
+                    }
+                </td>
+                <td class="text-center">
+                    @{
+                        if (Model.IsActive == true)
+                        {
+                            <i class="fal fa-unlock-alt set-icon-unlock-size"></i>
+                        }
+                        else
+                        {
+                            <i class="fal fa-lock-alt set-icon-lock-size"></i>
+                        }
+                    }
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table>

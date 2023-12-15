@@ -1,0 +1,83 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title> สำนักงานกองทุนหมู่บ้านและชุมชนเมืองแห่งชาติ </title>
+    <meta name="description" content="Login">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no, minimal-ui">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="msapplication-tap-highlight" content="no">
+    <link rel="stylesheet" media="screen, print" href="/css/vendors.bundle.css">
+    <link rel="stylesheet" media="screen, print" href="/css/app.bundle.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="/image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="mask-icon" href="/img/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="stylesheet" media="screen, print" href="/css/page-login.css">
+    <link rel="stylesheet" href="~/css/site.css">
+</head>
+<body>
+
+
+    @RenderBody()
+
+
+    <script src="/js/vendors.bundle.js"></script>
+    <script src="/js/app.bundle.js"></script>
+    <script src="/js/cookie.js"></script>
+
+    <script>
+        $(function () {
+            $('#rememberme').on('change', function (e, state) {
+                IsCheck = e.target.checked;
+                var Username = $('#Input_UserName').val();
+                var password = $('#Input_Password').val();
+                if (IsCheck == true) {
+                    $.cookie($(this).attr("name"), $(this).attr('checked'), { expires: 365 });
+                    $.cookie('Username', Username, { expires: 365 });
+                    $.cookie('Password', password, { expires: 365 });
+                    $(this).attr("checked", true);
+                }
+            });
+
+            $("#rememberme").each(function () {
+                var Username = $.cookie('Username');
+                var password = $.cookie('Password');
+                if (Username != null && password != null) {
+                    if (Username != null) {
+                        $("#Input_UserName").val(Username);
+                    }
+                    if (password != null) {
+                        $("#Input_Password").val(password);
+                    }
+
+                    $("#rememberme").attr("checked", true);
+                }
+            });
+
+            $("#password").on("click", function () {
+                if ($("#Input_Password").attr("type") === "password") {
+                    $("#Input_Password").attr("type", "text");
+                    $(".eye").attr("class", "fal fa-eye eye");
+                }else{
+                    $("#Input_Password").attr("type", "password");
+                    $(".eye").attr("class", "fal fa-eye-slash eye");
+                }
+            });
+
+            $("#ConfirmPassword").on("click", function () {
+                if ($("#Input_ConfirmPassword").attr("type") === "password") {
+                    $("#Input_ConfirmPassword").attr("type", "text");
+                    $(".ceye").attr("class", "fal fa-eye ceye");
+                } else {
+                    $("#Input_ConfirmPassword").attr("type", "password");
+                    $(".ceye").attr("class", "fal fa-eye-slash ceye");
+                }
+            });
+
+        });
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

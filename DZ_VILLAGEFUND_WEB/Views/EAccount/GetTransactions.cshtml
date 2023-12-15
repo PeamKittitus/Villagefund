@@ -1,0 +1,58 @@
+﻿@model IEnumerable<DZ_VILLAGEFUND_WEB.ViewModels.EAccount.TransactionAccBudgetViewModel>
+@{
+    decimal TotalIncome = 0;
+    decimal TotalExpense = 0;
+    decimal Total = 0;
+}
+
+<table id="JsonTable" class="table table-bordered table-hover table-striped w-100">
+    <thead class="bg-primary-600">
+        <tr>
+            <th class="text-center" style="width:50px">ลำดับ</th>
+            <th> รายการ</th>
+            <th> @(ViewBag.TransactionType == 1 ? "ผู้โอน" : "ผู้รับโอน") </th>
+            <th class="text-right"> จำนวนเงิน</th>
+            <th class="text-center">เมื่อวันที่</th>
+            <th class="text-center">เอกสารแนบ</th>
+            <th style="width:150px;"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int Rows = 1;
+            foreach (var Get in Model)
+            {
+                <tr>
+                    <td class="text-center">@Rows.</td>
+                    <td>@Get.Title</td>
+                    <td>@Get.ToOrgAccount</td>
+                    <td class="text-right">@(Get.TransactionType == false ? Get.Amount.ToString("N") : "0.00")</td>
+                    <td class="text-center">@Get.SendDate</td>
+                    <td class="text-center"> <a href="javascript:(0)" class="viewDocument" style="font-size:1rem" data-id="@Get.TransactionAccBudgetId"><i class="fal fa-file-excel"></i> </a></td>
+                    <td class="text-center">
+                        @{
+                            if (Get.TransactionType == false)
+                            {
+                                <a href="javascript:void(0);" data-val="@Get.TransactionAccBudgetId" class="btn btn-xs btn-warning edit" title="Edit"><i class="fal fa-edit"></i> แก้ไข </a>
+                                <a href="javascript:void(0);" data-val="@Get.TransactionAccBudgetId" class="btn btn-xs btn-danger  delete" title="Delete"><i class="fal fa-times"></i> ลบ </a>
+                            }
+                        }
+                    </td>
+                </tr>
+
+                Rows++;
+                TotalIncome += Get.TransactionType == true ? Get.Amount : 0;
+                TotalExpense += Get.TransactionType == false ? Get.Amount : 0;
+                Total = TotalIncome - TotalExpense;
+            }
+        }
+
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="3" class="text-right">รวม:</td>
+            <td class="text-right">@TotalExpense.ToString("N")</td>
+            <td colspan="3" class="text-center"></td>
+        </tr>
+    </tfoot>
+</table>

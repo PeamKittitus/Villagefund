@@ -1,0 +1,197 @@
+﻿
+
+@{
+    // detail document
+    var Details = ViewBag.Details as DZ_VILLAGEFUND_WEB.ViewModels.EOffice.ArchiveViewDetailViewModel;
+}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel">
+            <div class="panel-hdr">
+                <h2><i class='subheader-icon fal fa-list-alt'></i> รายละเอียดหนังสือ</h2>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+                    <table>
+                        <tr>
+                            <td class="font-weight-bold" style="width:150px;">สร้างโดย :</td>
+                            <td style="color:red">@Details.CreateBy</td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold">วันที่สร้าง :</td>
+                            <td>@Details.CreateDate</td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold">ประเภทหนังสือ :</td>
+                            <td>@Details.TypeName</td>
+                        </tr>
+                        @{
+                            if (Details.TypeCode == "01")
+                            {
+                                <tr>
+                                    <td class="font-weight-bold"> วันที่ตามเอกสาร:</td>
+                                    <td>@Details.DateOfdoc</td>
+                                </tr>
+                            }
+                        }
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-12">
+        <div class="panel">
+            <div class="panel-hdr">
+                <h2><i class='subheader-icon fal fa-list-alt'></i> เลขที่หนังสือ</h2>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+                    @{
+                        if (Details.ArchiveNumber == "")
+                        {
+                            <table class="table">
+                                <tr>
+                                    <td class="text-right" style="width:200px;">ต้องการออกเลขที่หนังสือ:</td>
+                                    <td class="text-left"><input type="checkbox" name="IsChecked" id="IsChecked"></td>
+                                    <td class="text-left" style="width:100px;"></td>
+                                </tr>
+                                <tr style="display:none" id="ShowArchiveNumber">
+                                    <td class="text-right">@ViewBag.PrefixCode:</td>
+                                    <td class="text-left">(@ViewBag.LastArchiveNumber)</td>
+                                    <td><input type="button" class="btn btn-success btn-xs form-control" id="GetArchiveNumber" data-archiveid="@ViewBag.LastArchiveNumber" value="ออกเลขหนังสือ"></td>
+                                </tr>
+                            </table>
+                        }
+                        else
+                        {
+                            <table class="table">
+                                <tr>
+                                    <td class="text-right" style="width:200px;">ต้องการออกเลขที่หนังสือ</td>
+                                    <td class="text-left" style="color:green">@Details.ArchiveNumber</td>
+                                    <td class="text-left"></td>
+                                </tr>
+                            </table>
+                        }
+                    }
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-12">
+        <div class="panel">
+            <div class="panel-hdr">
+                <h2><i class='subheader-icon fal fa-list-alt'></i>  ลงรับหนังสือ</h2>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+                    @{
+                        int ReceiveNumber = (ViewBag.LastReceiveNumber == null ? 1 : ViewBag.LastReceiveNumber);
+                    }
+                    <table class="table">
+                        <tr>
+                            <td class="text-right" style="width:200px;">เลขที่ลงรับ:</td>
+                            <td class="text-left" style="color:green">(@ReceiveNumber) <input type="hidden" id="ReceiveNumber" value="@ReceiveNumber"></td>
+                        </tr>
+
+                        @{
+                            if (ViewBag.LastStatus == "01")
+                            {
+                                <tr>
+                                    <td class="text-right">หมายเหตุ:</td>
+                                    <td class="text-left"><textarea rows="4" class="col-lg-12 form-control" id="Comment"></textarea></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-right"></td>
+                                    <td class="text-right">
+                                        <a href="javascript:void(0)" class="btn btn-danger" id="reply"><i class="fal fa-reply"></i> ปฏิเสธการรับ</a>
+                                        <a href="javascript:void(0)" class="btn btn-success" id="receive"><i class="fal fa-book"></i> ลงรับหนังสือ</a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-12">
+        <div class="panel">
+            <div class="panel-hdr">
+                <h2><i class='subheader-icon fal fa-list-alt'></i>   ดำเนินการต่อ</h2>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+
+                    <form id="JsonForm" enctype="multipart/form-data"
+                          asp-antiforgery="true"
+                          data-bv-message="This value is not valid"
+                          data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
+                          data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
+                          data-bv-feedbackicons-validating="glyphicon glyphicon-refresh"
+                          novalidate>
+                        <div class="panel-content">
+                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                <div class="form-group">
+                                    <label class="form-label"><strong> ต้องการแจ้งเวียน </strong> </label>
+                                    <input type="checkbox" id="IsCirculation" name="IsCirculation">
+                                    <input type="hidden" name="Circulation" id="Circulation" value="">
+                                </div>
+                                <div class="form-group" style="display:none" id="_IsCirculation">
+                                    <label class="form-label"><strong>ส่งถึง (หนังสือเวียน) </strong> <span style="color:red">*</span></label>
+                                    <select name="DestinationOrg[]" id="DestinationOrg" asp-items="(IEnumerable<SelectListItem>)@ViewBag.Org" style="width:100%;"
+                                            data-bv-notempty="true"
+                                            data-bv-notempty-message="กรุณาเลือก"
+                                            data-bv-stringlength="true"
+                                            multiple="multiple">
+                                        <optgroup label="ทั้งหมด"></optgroup>
+                                    </select>
+                                </div>
+                                <div class="form-group" id="show_IsCirculation">
+                                    <label class="form-label"><strong> ชื่อหน่วยงานงานที่จะดำเนินการต่อ </strong> <span style="color:red">*</span></label>
+                                    <select asp-items="ViewBag.Org" id="OrgId" name="OrgId"
+                                            data-bv-notempty="true"
+                                            data-bv-notempty-message="กรุณาเลือกข้อมูล">
+                                        <option value="">--- กรุณาเลือก ---</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label"><strong>เพื่อ </strong> <span style="color:red">*</span></label>
+                                    <select asp-items="ViewBag.Command" id="CommandCode" name="CommandCode"
+                                            data-bv-notempty="true"
+                                            data-bv-notempty-message="กรุณาเลือกข้อมูล">
+                                        <option value="">--- กรุณาเลือก ---</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label"><strong>หมายเหตุ </strong></label>
+                                    <textarea id="Comment" name="Comment" rows="3" class="form-control"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" value="@ViewBag.ArchiveId" id="ArchiveId" name="ArchiveId">
+
+                        @{
+                            if (ViewBag.LastStatus == "01" || ViewBag.LastStatus == "02")
+                            {
+                                <div class="panel-content border-faded border-left-0 border-right-0 align-items-center m-3 pt-3 text-right">
+                                    <button class="btn btn-info ml-auto" type="button" id="Submit"><i class="fal fa-forward"></i> ดำเนินการต่อ</button>
+                                    <button class="btn btn-success ml-auto" type="button" id="forword"><i class="fal fa-save"></i> เสร็จสิ้น(จัดเก็บ)</button>
+                                </div>
+                            }
+                        }
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" value="@ViewBag.ArchiveId" id="ArchiveId">

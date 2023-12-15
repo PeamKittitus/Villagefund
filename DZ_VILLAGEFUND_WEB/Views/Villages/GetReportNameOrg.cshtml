@@ -1,0 +1,27 @@
+﻿@model IEnumerable<DZ_VILLAGEFUND_WEB.ViewModels.Villages.ReportViewModel>
+
+<table id="JsonTable" class="table table-bordered table-hover table-striped w-100">
+    <thead class="bg-primary-600">
+        <tr>
+            <th class="text-center" style="width:50px">ลำดับ</th>
+            <th class="text-center">เขต</th>
+            <th class="text-center">ชื่อกองทุนหมู่บ้าน</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int Rows = 1;
+            foreach (var Get in Model)
+            {
+                <tr>
+                    <td class="text-center">@Rows.</td>
+                    <td class="text-left">@Get.Province</td>
+                    <td class="text-left">@Get.Name</td>
+                </tr>
+
+                Rows++;
+            }
+        }
+
+    </tbody>
+</table>

@@ -1,0 +1,57 @@
+﻿@model IEnumerable<DZ_VILLAGEFUND_WEB.ViewModels.EAccount.TransactionActivityViewModel>
+@{
+    decimal TotalAmount = 0;
+    decimal TotalRealAmount = 0;
+    decimal TotalTotalAmout = 0;
+}
+
+<table id="JsonTable" class="table table-bordered table-hover table-striped w-100">
+    <thead class="bg-primary-600">
+        <tr>
+            <th class="text-center" style="width:50px">ลำดับ</th>
+            <th>ชื่อแผนงาน/โครงการ</th>
+            <th>ยอดขอเบิก</th>
+            <th>ยอดใช้จ่ายตามจริง</th>
+            <th>คงเหลือ</th>
+            <th class="text-center">วันที่ทำรายการ</th>
+            <th class="text-center">สถานะ</th>
+            <th style="width:150px;"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int Rows = 1;
+            foreach (var Get in Model)
+            {
+                <tr>
+                    <td class="text-center">@Rows.</td>
+                    <td>@Get.AccChartName</td>
+                    <td class="text-right">@(Get.Amount.ToString("N"))</td>
+                    <td class="text-right">@((Get.RealAmount).ToString("N"))</td>
+                    <td class="text-right">@((Get.TotalAmout).ToString("N"))</td>
+                    <td class="text-center">@Get.ReceiverDate</td>
+                    <td class="text-center">@Get.IsFinish</td>
+                    <td class="text-center">
+                        <a href="javascript:void(0);" data-val="@Get.TransactionAccActivityId" data-type="@Get.AccountType" class="btn btn-xs btn-warning edit" title="Edit"><i class="fal fa-edit"></i> แก้ไข </a>
+                        <a href="javascript:void(0);" data-val="@Get.TransactionAccActivityId" class="btn btn-xs btn-danger  delete" title="Delete"><i class="fal fa-times"></i> ลบ </a>
+                    </td>
+                </tr>
+
+                Rows++;
+                TotalAmount += Get.Amount;
+                TotalRealAmount += Get.RealAmount;
+                TotalTotalAmout += Get.TotalAmout;
+            }
+        }
+
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="2" class="text-right">รวม:</td>
+            <td class="text-right">@TotalAmount.ToString("N")</td>
+            <td class="text-right">@TotalRealAmount.ToString("N")</td>
+            <td class="text-right">@TotalTotalAmout.ToString("N")</td>
+            <td colspan="3" class="text-center"></td>
+        </tr>
+    </tfoot>
+</table>

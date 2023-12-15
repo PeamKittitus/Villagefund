@@ -1,0 +1,91 @@
+﻿@{
+    ViewData["Title"] = "ดูสมาชิก";
+
+    var GetPermission = ViewBag.Permission;
+}
+
+<ol class="breadcrumb page-breadcrumb">
+    <li class="breadcrumb-item"><a href="/Home/Index">หน้าหลัก</a></li>
+    <li class="breadcrumb-item"><a href="/Villages/VillageIndex">ข้อทะเบียนกองทุนหมู่บ้าน</a></li>
+    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+</ol>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel">
+            <div class="panel-hdr">
+                <h2><i class='subheader-icon fal fa-users'></i>  @ViewData["Title"]</h2>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+
+                    <div id="JsonData"></div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" id="VillageId" value="@ViewBag.VillageId" />
+
+@section Scripts{
+    <link rel="stylesheet" type="text/css" href="/css/notifications/toastr/toastr.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/datagrid/datatables/datatables.bundle.css">
+    <link rel="stylesheet" href="~/css/notifications/sweetalert2/sweetalert2.bundle.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/formplugins/select2/select2.bundle.css">
+    <script src="~/js/datagrid/datatables/datatables.bundle.js"></script>
+    <script src="~/js/datagrid/datatables/datatables.export.js"></script>
+    <script src="~/js/notifications/toastr/toastr.js"></script>
+    <script src="~/js/notifications/sweetalert2/sweetalert2.bundle.js"></script>
+    <script src="~/js/formplugins/select2/select2.bundle.js"></script>
+    <script>
+        $(function () {
+
+            $("#JsonData").html('<img  src="/img/loading.gif" width="200">');
+            $.get("/Members/GetViewsMember", { "VillageId": $("#VillageId").val() }, function (JsonResult) {
+                setTimeout(function () {
+                    $("#JsonData").html(JsonResult);
+                    $('#JsonTable').dataTable(
+                        {
+                            responsive: true,
+                            lengthChange: false,
+                            dom: "<'row mb-3'<'col-sm-12 col-md-6 d-flex align-items-center justify-content-start'f><'col-sm-12 col-md-6 d-flex align-items-center justify-content-end'lB>>" +
+                                "<'row'<'col-sm-12'tr>>" +
+                                "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+                            buttons: [
+                                {
+                                    extend: 'print',
+                                    text: 'สั่งพิมพ์',
+                                    titleAttr: 'Print Table',
+                                    className: 'btn-outline-primary btn-sm'
+                                }
+                            ]
+                        });
+
+                    $(".renew").on("click", function () {
+                        const MemberId = $(this).attr('data-val');
+                        $.ajax({
+                            url: '/Members/MemberRenewal',
+                            type: 'PUT',
+                            data: { 'MemberId': MemberId },
+                            success: function (response) {
+                                if (response.valid == true) {
+                                    toastr.success(response.message);
+                                    setTimeout(function () {
+                                        window.location.href = "";
+                                    }, 700);
+                                }
+                                else {
+                                    toastr.error('แจ้งเตือน! ' + response.message);
+                                }
+                            }
+                        });
+                    });
+
+                }, 200);
+            });
+
+        });
+    </script>
+}

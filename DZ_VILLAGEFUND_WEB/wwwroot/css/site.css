@@ -1,0 +1,96 @@
+﻿@font-face {
+    font-family: Helvetica;
+    src: url('/fonts/Kanit-Light.ttf');
+}
+
+
+html {
+    font-family: Helvetica;
+}
+
+body {
+    font-family: Helvetica;
+}
+
+.set-icon-lock-size {
+    font-size: 1.5rem;
+    color: red;
+    font-weight: bold
+}
+
+.set-icon-unlock-size {
+    font-size: 1.5rem;
+    color: green;
+    font-weight: bold
+}
+
+.page-logo {
+    background-color: #099cb2;
+}
+
+.nav-menu li a > [class*='fa-'], .nav-menu li a > .ni {
+    color:#fff;
+}
+
+.btn-primary {
+    background-color: #039dab;
+    border-color: #039dab;
+    color:#fff;
+}
+
+.btn-warning {
+    background-color: orange;
+    border-color: orange;
+    color: #fff;
+}
+
+.btn-danger {
+    color: #fff;
+    background-color: red;
+    border-color: red;
+}
+
+.btn-info {
+    color: #fff;
+    background-color: #09d7f7;
+    border-color: #09d7f7;
+}
+
+.btn-outline-primary {
+    color: #fff;
+    background-color: #09d7f7;
+    border-color: #09d7f7;
+}
+
+.menu-item, label.menu-open-button {
+    background-color: #09d7f7;
+    border-color: #09d7f7;
+}
+
+.nav-function-top .page-header {
+    background-color: #049dab;
+}
+
+.bg-trans-gradient {
+    background: linear-gradient(250deg, #039dab, #9ed8e1);
+}
+
+a {
+    color: #039dab;
+}
+
+.bg-primary-600 {
+    background-color: #049dab;
+    color: white;
+}
+
+.page-item.active .page-link {
+    z-index: 1;
+    color: #fff;
+    background-color: #049dab;
+    border-color: #049dab;
+}
+
+.progress-bar {
+    background-color: #049dab;
+}

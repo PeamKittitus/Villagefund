@@ -1,0 +1,102 @@
+﻿@model IEnumerable<DZ_VILLAGEFUND_WEB.ViewModels.EAccount.ViewStructures>
+@{
+    var GetPermission = ViewBag.Permission as DZ_VILLAGEFUND_WEB.ViewModels.Settings.PermissionViewModel;
+}
+<table id="JsonTable" class="table table-bordered table-hover table-striped w-100">
+    <thead class="bg-primary-600">
+        <tr>
+            <th class="text-center">ลำดับ</th>
+            <th>รหัสโครงการ</th>
+            <th>ชื่อแผนงาน/โครงการ</th>
+            <th>กลุ่ม</th>
+            <th>ฝ่าย</th>
+            <th class="text-center">วันที่เริ่มต้น-สิ้นสุดโครงการ</th>
+            <th class="text-center">กรอบวงเงินงบประมาณ (บาท)</th>
+            <th class="text-center"> งบประมาณ (บาท)</th>
+            <th class="text-center"> สถานะ</th>
+            <th style="width:250px;"></th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @{
+            int Rows = 1;
+            foreach (var Get in Model.Where(w => w.ParentId == 0).OrderBy(f => f.AccountBudgetd))
+            {
+                <tr>
+                    <td class="text-center"> @Rows.</td>
+                    <td>@Get.ProjectCode</td>
+                    <td>- @Get.ProjectName</td>
+                    <th>@Get.LookupValueDivision</th>
+                    <th>@Get.LookupValueDepartment</th>
+                    <td> -</td>
+                    <td class="text-right"> @Get.Amount.ToString("N")</td>
+                    <td class="text-left"> -</td>
+                    <td class="text-center">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input UpdateStatus" data-value="@Get.Status" data-val="@Get.AccountBudgetd" id="insert-@Rows" @(Get.Status == true ? "checked" : "")>
+                            <label class="custom-control-label" for="insert-@Rows"></label>
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        @{
+                            if (GetPermission.Insert == true)
+                            {
+                                <a href="javascript:void(0);" data-val="@Get.AccountBudgetd" class="btn btn-xs btn-success addParent" title="Create"><i class="fal fa-plus"></i> เพิ่มโครงการย่อย </a>
+                            }
+                            if (GetPermission.Update == true)
+                            {
+                                <a href="javascript:void(0);" data-parent="MAIN" data-val="@Get.AccountBudgetd" class="btn btn-xs btn-warning edit" title="Edit"><i class="fal fa-edit"></i> แก้ไข </a>
+                            }
+                            if (GetPermission.Delete == true)
+                            {
+                                <a href="javascript:void(0);" data-val="@Get.AccountBudgetd" class="btn btn-xs btn-danger  delete" title="Delete"><i class="fal fa-times"></i> ลบ </a>
+                            }
+                        }
+                    </td>
+                </tr>
+
+                int Rows2 = 1;
+                foreach (var Get2 in Model.Where(w => w.ParentId == Get.AccountBudgetd).OrderBy(f => f.AccountBudgetd))
+                {
+                    <tr>
+                        <td class="text-right"> @Rows.@Rows2.</td>
+                        <td style="padding-left:2rem"> @Get2.ProjectCode</td>
+                        <td style="padding-left:2rem">-@Get2.ProjectName</td>
+                        <th>@Get2.LookupValueDivision</th>
+                        <th>@Get2.LookupValueDepartment</th>
+                        <td> @Get2.StartEndDate</td>
+                        <td class="text-right"> -</td>
+                        <td class="text-right"> @Get2.SubAmount.ToString("N")</td>
+                        <td class="text-center">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input UpdateStatus" data-val="@Get2.AccountBudgetd" id="insert-@Rows-@Rows2" @(Get2.Status == true ? "checked" : "")>
+                                <label class="custom-control-label" for="insert-@Rows-@Rows2"></label>
+                            </div>
+                        </td>
+                        <td class="text-center">
+
+                            @{
+                                if (GetPermission.Update == true)
+                                {
+                                    <a href="javascript:void(0);" data-parent="PARENT" data-val="@Get2.AccountBudgetd" class="btn btn-xs btn-warning edit" title="Edit"><i class="fal fa-edit"></i> แก้ไข </a>
+                                }
+
+                                if (GetPermission.Delete == true)
+                                {
+                                    <a href="javascript:void(0);" data-val="@Get2.AccountBudgetd" class="btn btn-xs btn-danger  delete" title="Delete"><i class="fal fa-times"></i> ลบ </a>
+                                }
+                            }
+
+                        </td>
+                    </tr>
+
+                    Rows2++;
+                }
+
+                Rows++;
+            }
+        }
+
+    </tbody>
+</table>

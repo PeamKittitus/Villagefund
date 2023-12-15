@@ -1,0 +1,300 @@
+﻿
+@{
+    // detail document
+    var Details = ViewBag.Details as DZ_VILLAGEFUND_WEB.ViewModels.EOffice.ArchiveViewDetailViewModel;
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel">
+            <div class="panel-hdr">
+                <h2><i class='subheader-icon fal fa-list-alt'></i> รายละเอียดหนังสือ</h2>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+                    <table>
+                        <tr>
+                            <td class="font-weight-bold" style="width:150px;">สร้างโดย :</td>
+                            <td style="color:red">@Details.CreateBy</td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold">วันที่สร้าง :</td>
+                            <td>@Details.CreateDate</td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold">ประเภทหนังสือ :</td>
+                            <td>@Details.TypeName</td>
+                        </tr>
+                        @{
+                            if (Details.TypeCode == "01")
+                            {
+                                <tr>
+                                    <td class="font-weight-bold"> วันที่ตามเอกสาร:</td>
+                                    <td>@Details.DateOfdoc</td>
+                                </tr>
+                            }
+                        }
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-12">
+        <div class="panel">
+            <div class="panel-hdr">
+                <h2><i class='subheader-icon fal fa-list-alt'></i> ข้อมูลหนังสือ</h2>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <ul>
+                                <li>
+                                    เรียน
+                                    <ul class="text-success">
+                                        <li style="color: #666">@Details.Dear</li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    ชื่อหนังสือ
+                                    <ul class="text-success">
+                                        <li style="color: #666">@Details.Title</li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    รายละเอียดหนังสือ
+                                    <ul class="text-success">
+                                        <li style="color: #666">@Details.Message</li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    ชั้นความลับ
+                                    <ul class="text-success">
+                                        <li style="color: #666">@Details.AssesLevelName</li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    ความเร่งด่วน
+                                    <ul class="text-success">
+                                        <li style="color: #666">@Details.ExpedotionName</li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    ปี พ.ศ.
+                                    <ul class="text-success">
+                                        <li style="color: #666">@Details.DocumentYear</li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    วันที่ลงหนังสือ
+                                    <ul class="text-success">
+                                        <li style="color: #666">@Details.DateOfdoc</li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    เลขหนังสือ
+                                    <ul class="text-success">
+                                        <li style="color: green;font-weight:bold">@(Details.ArchiveNumber == "" ? "-" : Details.ArchiveNumber)</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-12">
+        <div class="panel">
+            <div class="panel-hdr">
+                <h2><i class='subheader-icon fal fa-list-alt'></i> เส้นทางหนังสือ</h2>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+
+                    <a href="javascript:void(0);" class="btn btn-default" style="margin-bottom:5px;">@ViewBag.StartOrgtName  <i class="fal fa-arrow-right"></i></a>
+
+                    @{
+                        var Transactions = ViewBag.TrasactionModels as IEnumerable<DZ_VILLAGEFUND_WEB.ViewModels.EOffice.Transaction>;
+                        foreach (var Transaction in Transactions)
+                        {
+                            if (Transaction.StatusId == "01")
+                            {
+                                <a href="javascript:void(0);" class="btn btn-danger" style="margin-bottom:5px;">
+                                    @Transaction.OrgtName <div class="spinner-border spinner-border-sm" style="font-size:0.5rem" role="status"><span class="sr-only"></span></div>
+                                </a>
+                            }
+                            if (Transaction.StatusId == "02")
+                            {
+                                <a href="javascript:void(0);" class="btn btn-success" style="margin-bottom:5px;">
+                                    @Transaction.OrgtName <i class="fal fa-refresh fa-spin"></i>
+                                </a>
+                            }
+                            if (Transaction.StatusId == "03")
+                            {
+                                <a href="javascript:void(0);" class="btn btn-default" style="margin-bottom:5px;">
+                                    @Transaction.OrgtName <i class="fal fa-arrow-right"></i>
+                                </a>
+                            }
+                            if (Transaction.StatusId == "04")
+                            {
+                                <a href="javascript:void(0);" class="btn btn-warning" style="margin-bottom:5px;">
+                                    @Transaction.OrgtName <i class="fal fa-reply"></i>
+                                </a>
+                            }
+                            if (Transaction.StatusId == "05")
+                            {
+                                <a href="javascript:void(0);" class="btn btn-success" style="margin-bottom:5px;">
+                                    @Transaction.OrgtName <i class="fal fa-check"></i>
+                                </a>
+                            }
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-12">
+        <div class="panel">
+            <div class="panel-hdr">
+                <h2><i class='subheader-icon fal fa-list-alt'></i>  รายละเอียดการรับหนังสือ</h2>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover ">
+                            <thead>
+                                <tr>
+                                    <th class="text-center font-weight-bold">ลำดับ</th>
+                                    <th class="font-weight-bold">ส่งวันที่</th>
+                                    <th class="font-weight-bold">ถึง</th>
+                                    <th class="font-weight-bold text-center">เลขลงรับ</th>
+                                    <th class="font-weight-bold">ผู้รับ</th>
+                                    <th class="font-weight-bold">รับวันที่</th>
+                                    <th class="font-weight-bold text-center">หมายเหตุ</th>
+                                    <th class="font-weight-bold">สถานะ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    var TransactionDetails = ViewBag.TransactionDetailModels as IEnumerable<DZ_VILLAGEFUND_WEB.ViewModels.EOffice.TransactionDetails>;
+                                    if (TransactionDetails.Count() > 0)
+                                    {
+                                        int Rows = 1;
+                                        foreach (var Get in TransactionDetails)
+                                        {
+                                            <tr>
+                                                <td class="text-center">@Rows.</td>
+                                                <td>@Get.SendDate</td>
+                                                <td>@Get.ToOrg</td>
+                                                <td class="text-center">@Get.ReceiveNumber</td>
+                                                <td>@(Get.ReceiveUserName == null ? "-" : Get.ReceiveUserName)</td>
+                                                <td>@(Get.StatusCode == "01" || Get.StatusCode == "04" ? "-" :Get.ReceiveDate)</td>
+                                                <td class="text-center"> <i class="fal fa-search" title="@Get.Comment"></i> </td>
+                                                <td>
+                                                    @{
+                                                        if (Get.StatusCode == "01" || Get.StatusCode == "04")
+                                                        {
+                                                            <span style="color:red">@Get.StatusName</span>
+                                                        }
+                                                        else if (Get.StatusCode == "03")
+                                                        {
+                                                            <span style="color:green">@Get.StatusName</span>
+                                                        }
+                                                        else if (Get.StatusCode == "03" || Get.StatusCode == "02")
+                                                        {
+                                                            <span style="color:orange">@Get.StatusName</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span style="color:green">@Get.StatusName</span>
+                                                        }
+                                                    }
+                                                </td>
+                                            </tr>
+
+                                            Rows++;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td class="text-center" colspan="8">--- ไม่มีข้อมูล ---</td>
+                                        </tr>
+                                    }
+                                }
+
+
+                            </tbody>
+                        </table>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-12">
+        <div class="panel">
+            <div class="panel-hdr">
+                <h2><i class='subheader-icon fal fa-list-alt'></i>  เอกสารแนบ</h2>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+
+
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="text-center font-weight-bold" style="width:50px;">ลำดับ</th>
+                                    <th class="font-weight-bold">ชื่อเอกสาร</th>
+                                    <th class="font-weight-bold text-center">หมายเหตุ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    var ArchiveFiles = ViewBag.FileModels as IEnumerable<DZ_VILLAGEFUND_WEB.ViewModels.EOffice.ArchiveFiles>;
+                                    if (ArchiveFiles.Count() > 0)
+                                    {
+                                        int Rows = 1;
+                                        foreach (var Get in ArchiveFiles)
+                                        {
+                                            <tr>
+                                                <td class="text-center">@Rows.</td>
+                                                <td>@Get.TitleFileName</td>
+                                                <td class="text-center">
+                                                    <a href="/uploads/e-office/@Get.FileName" class="btn btn-warning btn-xs"> <i class="fal fa-download"></i> ดาวน์โหลด</a>
+                                                </td>
+                                            </tr>
+
+                                            Rows++;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td class="text-center" colspan="3">--- ไม่มีข้อมูล ---</td>
+                                        </tr>
+                                    }
+                                }
+
+
+                            </tbody>
+                        </table>
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

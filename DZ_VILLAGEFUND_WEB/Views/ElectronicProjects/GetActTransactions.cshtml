@@ -1,0 +1,56 @@
+﻿@model IEnumerable<DZ_VILLAGEFUND_WEB.ViewModels.EAccount.TransactionActivityViewModel>
+@{
+    decimal TotalIncome = 0;
+    decimal TotalExpense = 0;
+    decimal Total = 0;
+}
+
+<table id="JsonTable" class="table table-bordered table-hover table-striped w-100">
+    <thead class="bg-primary-600">
+        <tr>
+            <th class="text-center" style="width:50px">ลำดับ</th>
+            <th>รายการรับ/จ่าย</th>
+            <th>รับเงินจาก/จ่ายให้</th>
+            <th>รับ</th>
+            <th>จ่าย</th>
+            <th>ประเภทรายการ</th>
+
+            <th class="text-center">วันที่ทำรายการ</th>
+            <th class="text-center">เอกสารแนบ</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int Rows = 1;
+            foreach (var Get in Model)
+            {
+                <tr>
+                    <td class="text-center">@Rows.</td>
+                    <td>@Get.AccChartName</td>
+                    <td class="text-center">@Get.Receiver</td>
+                    <td class="text-right">@(Get.AccountType == true ? Get.Amount.ToString("N") : "0.00")</td>
+                    <td class="text-right">@(Get.AccountType == false ? Get.Amount.ToString("N") : "0.00")</td>
+                    <td class="text-center">@Get.TransactionType</td>
+                    <td class="text-center">@Get.ReceiverDate</td>
+                    <td class="text-center"> <a href="javascript:(0)" class="viewDocument" style="font-size:1rem" data-id="@Get.TransactionAccActivityId"><i class="fal fa-file-excel"></i> </a></td>
+
+                </tr>
+
+                Rows++;
+                TotalIncome += Get.AccountType == true ? Get.Amount : 0;
+                TotalExpense += Get.AccountType == false ? Get.Amount : 0;
+                Total = TotalIncome - TotalExpense;
+            }
+        }
+
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="3" class="text-right">รวม:</td>
+            <td class="text-right">@TotalIncome.ToString("N")</td>
+            <td class="text-right">@TotalExpense.ToString("N")</td>
+            <td colspan="4" class="text-center"></td>
+        </tr>
+    </tfoot>
+</table>

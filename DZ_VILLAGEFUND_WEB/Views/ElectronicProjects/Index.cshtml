@@ -1,0 +1,73 @@
+﻿@{
+    ViewData["Title"] = "การจัดการโครงการ";
+
+    var GetPermission = ViewBag.Permission as DZ_VILLAGEFUND_WEB.ViewModels.Settings.PermissionViewModel;
+}
+
+<ol class="breadcrumb page-breadcrumb">
+    <li class="breadcrumb-item"><a href="/Home/Index">หน้าหลัก</a></li>
+    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+</ol>
+@if(GetPermission.Insert)
+{
+    <div class="d-flex justify-content-start flex-wrap demo">
+    <div class="btn-group">
+        <a href="/ElectronicProjects/CreateProject" class="btn btn-light" id="Create">
+            <i class="fal fa-plus-circle mr-1 fs-xxl color-primary-600"></i><br />
+            <span class="fs-nano color-primary-600"> ยื่นโครงการ</span>
+        </a>
+    </div>
+</div>
+}
+<div class="row">
+    <div class="col-lg-4 mb-2">
+        <select id="CurrentBudgetYear">
+
+            @{
+                int CurrentBudgetYear = ViewBag.CurrentBudgetYear;
+                for (int y = CurrentBudgetYear + 1; (y >= CurrentBudgetYear - 5); y--)
+                {
+                    if (y == CurrentBudgetYear)
+                    {
+                        <option selected value="@y">@y</option>
+                    }
+                    else
+                    {
+                        <option value="@y">@y</option>
+                    }
+                }
+            }
+
+        </select>
+    </div>
+    <div class="col-lg-12">
+        <div class="panel">
+            <div class="panel-hdr">
+                <h2><i class='subheader-icon fal fa-book'></i>  @ViewData["Title"]</h2>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+
+                    <div id="JsonData"></div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <link rel="stylesheet" type="text/css" href="/css/notifications/toastr/toastr.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/datagrid/datatables/datatables.bundle.css">
+    <link rel="stylesheet" href="~/css/notifications/sweetalert2/sweetalert2.bundle.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/formplugins/select2/select2.bundle.css">
+    <script src="~/js/Validation/bootstrapValidator.min.js"></script>
+    <script src="~/js/datagrid/datatables/datatables.bundle.js"></script>
+    <script src="~/js/datagrid/datatables/datatables.export.js"></script>
+    <script src="~/js/notifications/toastr/toastr.js"></script>
+    <script src="~/js/notifications/sweetalert2/sweetalert2.bundle.js"></script>
+    <script src="~/js/formplugins/select2/select2.bundle.js"></script>
+    <script src="~/js/NumberFormat.js"></script>
+    <script src="~/customJs/eproject/Index.js"></script>
+}

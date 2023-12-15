@@ -1,0 +1,99 @@
+﻿@model IEnumerable<DZ_VILLAGEFUND_WEB.ViewModels.News.ListNewsViewModel>
+@{
+    var GetPermission = ViewBag.Permission;
+}
+
+<table id="JsonTable" class="table table-bordered table-hover table-striped w-100">
+    <thead class="bg-primary-600">
+        <tr>
+            <th class="text-center" style="width:50px">ลำดับ</th>
+            <th>ชื่อเรื่อง</th>
+            <th class="text-center">ผู้รับข่าวสาร</th>
+            <th class="text-center">วันที่สร้างรายการ</th>
+            <th class="text-center">ประเภทข่าวสาร</th>
+            <th class="text-center">สถานะข่าวสาร</th>
+            <th class="text-center" style="width:160px;">จัดการข้อมูล</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @{
+            int Rows = 1;
+            foreach (var Get in Model)
+            {
+                <tr>
+                    <td class="text-center">@Rows.</td>
+                    <td> @Get.TransactionTitle</td>
+                    <td class="text-center" style="width:150px;">
+                        @{
+                            if (Get.TransactionType == true)
+                            {
+                                <a href="/NewsLatter/ViewsUser?NewsId=@Get.TransactionNewsId" class="btn btn-sm btn-success" title="View"><i class="fal fa-eye"></i> ดูสมาชิก </a>
+                            }
+                            else
+                            {
+                                <label>สาธารณะ</label>
+                            }
+                        }
+                    </td>
+                    <td class="text-center" style="width:100px;">@Get.UpdateDate</td>
+                    <td class="text-center" style="width:100px;">
+                        @{
+                            if (Get.TransactionType == true)
+                            {
+                                <label>สมาชิก</label>
+                            }
+                            else
+                            {
+                                <label>สาธารณะ</label>
+                            }
+                        }
+
+                    </td>
+                    <td class="text-center" style="width:80px;">
+
+                        @{
+                            if (Get.TransactionType == true)
+                            {
+                                if (Get.IsActive == true)
+                                {
+                                    <i class="fal fa-check-circle" style="color:green;font-size:1rem"></i> <span style="color:green;">ใช้งาน</span>
+                                }
+                                else if (Get.IsActive == false)
+                                {
+                                    <i class="fal fa-times-circle" style="color:red;font-size:1rem"></i> <span style="color:red;">ปิดการใช้งาน</span>
+                                }
+                            }
+                            else
+                            {
+                                if (Get.IsActive == true)
+                                {
+                                    if (Get.IsApprove == true)
+                                    {
+                                        <i class="fal fa-check-circle" style="color:green;font-size:1rem"></i> <span style="color:green;">ใช้งาน</span>
+                                    }
+                                    else{
+                                        <i class="fal fa-clock" style="color:orange;font-size:1rem"></i> <span style="color:orange;">รออนุมัติ</span>
+                                    }
+                                }
+                                else if (Get.IsActive == false)
+                                {
+                                    <i class="fal fa-times-circle" style="color:red;font-size:1rem"></i> <span style="color:red;">ปิดการใช้งาน</span>
+                                }
+                            }
+                        }
+
+                    </td>
+                    <td class="text-center" width="20%">
+                        <a href="/Home/News?Id=@Get.TransactionNewsId" target="_blank" class="btn btn-xs btn-info" title="View"><i class="fal fa-eye"></i> ดู </a>
+                        <a href="javascript:void(0);" data-val="@Get.TransactionNewsId" style="visibility:@(GetPermission.Update == false ? "hidden" : "")" class="btn btn-xs btn-warning edit" title="Edit"><i class="fal fa-edit"></i> แก้ไข </a>
+                        <a href="javascript:void(0);" data-val="@Get.TransactionNewsId" style="visibility:@(GetPermission.Delete == false ? "hidden" : "")" class="btn btn-xs btn-danger  delete" title="Delete"><i class="fal fa-times"></i> ลบ </a>
+                    </td>
+                </tr>
+
+                Rows++;
+            }
+        }
+
+    </tbody>
+</table>

@@ -1,0 +1,160 @@
+﻿@model IEnumerable<DZ_VILLAGEFUND_WEB.Models.SystemMenus>
+@{
+    ViewData["Title"] = "หน้าหลัก";
+    Layout = "~/Views/Shared/_OutsideLayout.cshtml";
+    int colposter = 3;
+    string colorbg = "#B0E4EF";
+    string fontsizing = "2rem";
+}
+<style>
+    a:link {
+        color: #B0E4EF;
+        text-decoration: none;
+    }
+
+    a:visited {
+        color: #B0E4EF;
+        text-decoration: none;
+    }
+
+    a:hover {
+        color: #B0E4EF;
+        text-decoration: none;
+    }
+
+    a:active {
+        color: #B0E4EF;
+        text-decoration: none;
+    }
+</style>
+
+<div class="page-wrapper">
+    <div class="page-inner">
+        <div class="page-content-wrapper">
+            <header class="page-header" role="banner" style="background-color: @colorbg">
+                <div class="hidden-md-down dropdown-icon-menu position-relative">
+                    <img src="/img/demo/villagefund_1.png" alt="กองทุนหมู่บ้าน (สทบ.)" width="270" aria-roledescription="logo">
+                </div>
+                <div class="ml-auto d-flex">
+                    <a href="#" data-toggle="dropdown" title="@ViewBag.GetdataUser.Email" class="header-icon d-flex align-items-center justify-content-center ml-2" aria-expanded="false">
+                        <img src="/img/demo/avatars/user-avatar-vfoc.png" class="profile-image rounded-circle" alt="@ViewBag.GetdataUser.Email">
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-animated dropdown-lg" x-placement="bottom-start" style="position: absolute; will-change: top, left; top: 66px; left: 973px;">
+                        <div class="dropdown-header bg-trans-gradient d-flex flex-row py-4 rounded-top">
+                            <div class="d-flex flex-row align-items-center mt-1 mb-1 color-white">
+                                <span class="mr-2">
+                                    <img src="/img/demo/avatars/user-avatar-vfoc.png" class="rounded-circle profile-image" alt="@ViewBag.GetdataUser.Email">
+                                </span>
+                                <div class="info-card-text">
+                                    <div class="fs-lg text-truncate text-truncate-lg">@ViewBag.GetdataUser.FirstName @ViewBag.GetdataUser.LastName</div>
+                                    <span class="text-truncate text-truncate-md opacity-80">@ViewBag.GetdataUser.Email</span>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="/Home/ProfileData" class="dropdown-item">
+                            <span data-i18n="drpdwn.settings"> แก้ไขข้อมูลส่วนตัว</span>
+                        </a>
+                        <div class="dropdown-divider m-0"></div>
+                        <a href="#" class="dropdown-item" data-action="app-fullscreen">
+                            <span data-i18n="drpdwn.fullscreen"> แสดงเติมจอ</span>
+                            <i class="float-right text-muted fw-n">F11</i>
+                        </a>
+                        <div class="dropdown-divider m-0"></div>
+                        <a class="dropdown-item fw-500 pt-3 pb-3" href="/Identity/Account/Logout?returnUrl=%2F">
+                            <span data-i18n="drpdwn.page-logout"> ออกจากระบบ</span>
+                            <span class="float-right fw-n"></span>
+                        </a>
+                    </div>
+                </div>
+            </header>
+            <main id="js-page-content" role="main" class="page-content">
+                <div class="row mt-6 mb-6">
+                    <h1 class="subheader-title text-center col-lg-12">
+                        <span class="font-weight-bold">ระบบจัดการ โครงการบริหารกองทุนหมู่บ้านและชุมชนเมืองด้วยระบบเทคโนโลยีสารสนเทศ (VFOC Platform)</span>
+                    </h1>
+                    <h4 class="text-center col-lg-12 mt-3">
+                        <span class="font-weight-bold">ระบบบริหารจัดการข้อมูลและการจัดเก็บของกองทุนหมู่บ้านและชุมชนเมืองในรูปแบบแพลตฟอร์มเดียวกัน ซึ่งโครงการได้ออกแบบให้เป็น "VFOC Platform" โดยจะเชื่อมโยงไปยังทุกระบบ</span>
+                    </h4>
+                </div>
+
+                <div class="row col-lg-12">
+                    @{
+                        foreach (var item in Model.OrderBy(o => o.Id))
+                        {
+                            if (item.IsLink == true)
+                            {
+                                <div class="col-lg-@colposter col-xl-@colposter mb-1">
+                                    <div class="card p-1 rounded-plus" style="background-color: @colorbg">
+                                        <a href="javascript:void(0)" class="activeToken" data-menuid="@item.Id">
+                                            <div class="row ">
+                                                <div class="col-lg-12">
+                                                    <div class="d-flex flex-column align-items-center justify-content-center p-4" style="background-color: @colorbg;">
+
+                                                        <img src="@item.ImageMenu" class="img-responsive" style="width:100%">
+
+                                                    </div>
+                                                </div>
+                                                <div class="col-12">
+                                                    <div class="text-center py-3" style="background-color:@colorbg">
+                                                        <h1 class="mb-0 fw-700" style="font-size:@fontsizing;color:#039dab">@item.MenuName</h1>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="col-lg-@colposter col-xl-@colposter mb-1">
+                                    <div class="card p-1 rounded-plus" style="background-color: @colorbg">
+                                        <a href="@item.PathLink">
+                                            <div class="row ">
+                                                <div class="col-lg-12">
+                                                    <div class="d-flex flex-column align-items-center justify-content-center p-4" style="background-color: @colorbg;">
+
+                                                        <img src="@item.ImageMenu" class="img-responsive" style="width:100%">
+
+                                                    </div>
+                                                </div>
+                                                <div class="col-12">
+                                                    <div class="text-center py-3" style="background-color:@colorbg">
+                                                        <h1 class="mb-0 fw-700" style="font-size:@fontsizing;color:#039dab">@item.MenuName </h1>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            }
+
+                        }
+                    }
+                </div>
+
+            </main>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript" src="~/customJs/home/Index.js"></script>
+    <script type="text/javascript">
+        $(function () {
+
+
+            //active token
+            $(".activeToken").click(function () {
+                var MenuId = $(this).attr("data-menuid");
+                $.get("/Home/RedirectToOutSite", { "MenuId": MenuId }, function (Result) {
+                    if (Result.valid == true) {
+                        console.log("Console log ==>" + Result.Data);
+                        window.open(Result.data, '_blank');
+                    }
+                });
+            });
+
+        });
+    </script>
+}

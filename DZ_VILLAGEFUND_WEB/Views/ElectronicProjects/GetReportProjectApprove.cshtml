@@ -1,0 +1,33 @@
+﻿@model IEnumerable<DZ_VILLAGEFUND_WEB.ViewModels.EProjects.ProjectListViewModel>
+
+<table id="JsonTable" class="table table-bordered table-hover table-striped w-100">
+    <thead class="bg-primary-600">
+        <tr>
+            <th class="text-center" style="width:50px">ลำดับ</th>
+            <th class="text-center">รหัสกองทุนหมู่บ้าน</th>
+            <th>ชื่อกองทุนหมู่บ้าน/ชุมชน</th>
+            <th class="text-center">อนุมัติ</th>
+            <th class="text-center">รออนุมัติ</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int Rows = 1;
+            foreach (var Get in Model)
+            {
+                <tr>
+                    <td class="text-center">@Rows.</td>
+                    <td class="text-center">@Get.VillageCodeText</td>
+                    <td>@Get.VillageName</td>
+                    <td class="text-right">@Get.StatusApprove</td>
+                    <td class="text-right">@Get.StatusPendingApprove</td>
+
+                </tr>
+
+                Rows++;
+            }
+        }
+
+    </tbody>
+</table>

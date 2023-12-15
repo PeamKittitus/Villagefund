@@ -1,0 +1,37 @@
+﻿@model IEnumerable<DZ_VILLAGEFUND_WEB.ViewModels.Villages.ReportViewModel>
+
+<table id="JsonTable" class="table table-bordered table-hover table-striped w-100">
+    <thead class="bg-primary-600">
+        <tr>
+            <th class="text-center" style="width:50px">ลำดับ</th>
+            <th class="text-center">ปี</th>
+            <th class="text-center">เดือน</th>
+            <th class="text-center">คำขอขึ้นทะเบียน</th>
+            <th class="text-center">คำขอแก้ไข</th>
+            <th class="text-center">คำขอยกเลิก</th>
+            <th class="text-center">คำขอต่ออายุ</th>
+            <th class="text-center">คำขอทั้งหมด</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int Rows = 1;
+            foreach (var Get in Model)
+            {
+                <tr>
+                    <td class="text-center">@Rows.</td>
+                    <td class="text-center">@Get.Year</td>
+                    <td class="text-left">@Get.Month</td>
+                    <td class="text-center">@Get.AmountReq.ToString("N0")</td>
+                    <td class="text-center">@Get.AmountEdit.ToString("N0")</td>
+                    <td class="text-center">@Get.AmountCancle.ToString("N0")</td>
+                    <td class="text-center">@Get.AmountExp.ToString("N0")</td>
+                    <td class="text-center">@Get.Amount.ToString("N0")</td>
+                </tr>
+
+                Rows++;
+            }
+        }
+
+    </tbody>
+</table>

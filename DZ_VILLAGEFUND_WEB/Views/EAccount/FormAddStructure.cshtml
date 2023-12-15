@@ -1,0 +1,292 @@
+﻿@model DZ_VILLAGEFUND_WEB.Models.AccountBudgetViewModel
+@{ 
+    ViewData["Title"] = "สร้างใหม่";
+}
+
+<ol class="breadcrumb page-breadcrumb">
+    <li class="breadcrumb-item"><a href="/Home/Index">หน้าหลัก</a></li>
+    <li class="breadcrumb-item"><a href="/EAccount/StructureIndex">ผังบัญชีงบประมาณโครงการ</a></li>
+    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+</ol>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel">
+            <div class="panel-hdr">
+                <h2><i class='subheader-icon fal fa-list-alt'></i>  @ViewData["Title"]</h2>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <form id="JsonForm" enctype="multipart/form-data"
+                                  asp-antiforgery="true"
+                                  data-bv-message="This value is not valid"
+                                  data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
+                                  data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
+                                  data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
+                                <div class="panel-content">
+                                    <div class="col-lg-12 col-md-12 col-sm-12">
+                                        <div class="form-group">
+                                            <label class="form-label"> ปีงบประมาณ</label>
+                                            <select asp-for="BudgetYear" class="form-control col-lg-12 col-md-12 col-sm-12">
+                                                @{
+                                                    int CurrentBudgetYear = ViewBag.CurrentBudgetYear;
+                                                    for (int y = CurrentBudgetYear; (y >= CurrentBudgetYear - 5); y--)
+                                                    {
+                                                        if (y == CurrentBudgetYear)
+                                                        {
+                                                            <option selected value="@y">@y</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@y">@y</option>
+                                                        }
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="form-label"><strong> ชื่องบประมาณโครงการ</strong> <span style="color:red">*</span></label>
+                                            <input type="text" asp-for="AccName" class="form-control col-lg-12 col-md-12 col-sm-12"
+                                                   data-bv-notempty="true"
+                                                   data-bv-notempty-message="กรุณากรอกข้อมูล" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label"><strong> จำนวนเงิน</strong> <span style="color:red">*</span></label>
+                                            <input type="text" asp-for="Amount" class="form-control col-lg-12 col-md-12 col-sm-12" />
+                                        </div>
+                                        <div class="row"  hidden>
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label class="form-label"> วันที่เริ่มโครงการ<span style="color:red"> *</span> </label>
+                                                    <section id="widget-grid" style="margin-bottom:12px;">
+                                                        <div class="row">
+                                                            <div class="col-lg-2">
+                                                                <select name="StartDay" id="StartDay" style="width:100%;"></select>
+                                                            </div>
+                                                            <div class="col-lg-5">
+                                                                <input id="CurrentStartMonth" type="hidden" value="@(Model != null ? Model._AccStart.Month : DateTime.Now.Month)" />
+                                                                <select name="StartMonth" id="StartMonth" style="width:100%;">
+                                                                    @{
+                                                                        string[] MonthName = { "", "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม" };
+                                                                        int m1 = 0;
+                                                                        foreach (var _MonthName in MonthName)
+                                                                        {
+                                                                            if (m1 == DateTime.Now.Month)
+                                                                            {
+                                                                                <option value="@m1" selected>@MonthName[m1]</option>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <option value="@m1">@MonthName[m1]</option>
+                                                                            }
+                                                                            m1++;
+                                                                        }
+                                                                    }
+
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-lg-5">
+                                                                <select name="StartYear" id="StartYear" style="width:100%;">
+                                                                    @{
+                                                                        for (int y = DateTime.Now.Year + 1; y >= (DateTime.Now.Year - 1); y--)
+                                                                        {
+                                                                            if (y == DateTime.Now.Year)
+                                                                            {
+                                                                                <option value="@y" selected>@(y+543)</option>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <option value="@y">@(y+543)</option>
+                                                                            }
+
+                                                                        }
+                                                                    }
+
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </section>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label class="form-label">วันที่สิ้นสุดโครงการ <span style="color:red">*</span></label>
+                                                    <section id="widget-grid" style="margin-bottom:12px;">
+                                                        <div class="row">
+                                                            <div class="col-lg-2">
+                                                                <select name="EndDay" id="EndDay" style="width:100%;"></select>
+                                                            </div>
+                                                            <div class="col-lg-5">
+                                                                <select name="EndMonth" id="EndMonth" style="width:100%;">
+                                                                    @{
+                                                                        string[] EndMonthName = { "", "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม" };
+                                                                        int mm1 = 0;
+                                                                        foreach (var _MonthName in EndMonthName)
+                                                                        {
+                                                                            if (mm1 == DateTime.Now.Month)
+                                                                            {
+                                                                                <option value="@mm1" selected>@MonthName[mm1]</option>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <option value="@mm1">@MonthName[mm1]</option>
+                                                                            }
+                                                                            mm1++;
+                                                                        }
+                                                                    }
+
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-lg-5">
+
+                                                                <select name="EndYear" id="EndYear" style="width:100%;">
+                                                                    @{
+                                                                        for (int y = DateTime.Now.Year + 1; y >= (DateTime.Now.Year - 1); y--)
+                                                                        {
+                                                                            if (y == DateTime.Now.Year)
+                                                                            {
+                                                                                <option value="@y" selected>@(y+543)</option>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <option value="@y">@(y+543)</option>
+                                                                            }
+
+                                                                        }
+                                                                    }
+
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </section>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" hidden>
+                                            <label class="form-label"><strong> แหล่งที่มา/วัตถุประสงค์</strong> </label>
+                                            <textarea type="text" asp-for="Qualification" class="form-control col-lg-12 col-md-12 col-sm-12"
+                                                      data-bv-notempty="true"
+                                                      data-bv-notempty-message="กรุณากรอกข้อมูล"></textarea>
+                                        </div>
+
+                                        <input type="hidden" asp-for="IsActive" value="false">
+
+                                        <div class="panel-content border-faded border-left-0 border-right-0 border-bottom-0 d-flex flex-row align-items-center m-3 pt-3">
+                                            <button class="btn btn-primary ml-auto" type="button" id="Submit"> บันทึก</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts{
+    <link rel="stylesheet" type="text/css" href="/css/notifications/toastr/toastr.css">
+    <link rel="stylesheet" href="~/css/notifications/sweetalert2/sweetalert2.bundle.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/formplugins/select2/select2.bundle.css">
+    <link rel="stylesheet" type="text/css" href="/css/formplugins/summernote/summernote.css">
+    <script src="~/js/Validation/bootstrapValidator.min.js"></script>
+    <script src="~/js/datagrid/datatables/datatables.bundle.js"></script>
+    <script src="~/js/datagrid/datatables/datatables.export.js"></script>
+    <script src="~/js/notifications/toastr/toastr.js"></script>
+    <script src="~/js/notifications/sweetalert2/sweetalert2.bundle.js"></script>
+    <script src="~/js/formplugins/select2/select2.bundle.js"></script>
+    <script src="~/js/NumberFormat.js"></script>
+    <script src="~/js/formplugins/summernote/summernote.js"></script>
+    <script>
+        $(function () {
+            /* init */
+            $('#Qualification').summernote({
+                height: 300,
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'underline', 'clear']],
+                    ['fontsize', ['fontsize']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']],
+                    ['insert', ['link']],
+                    ['view', ['fullscreen', 'codeview', 'help']]
+                ]
+            });
+            $('#Amount').autoNumeric('init', { aSign: '' });
+            $("#BudgetYear").select2();
+            $("#StartYear").select2();
+            $("#EndYear").select2();
+            $("#StartMonth").select2();
+            $("#EndMonth").select2();
+            $("#StartDay").select2();
+            $("#EndDay").select2();
+
+            //Start Date
+            var $change = $("#StartYear , #StartMonth");
+            $change.change(function () {
+                $.get("/TimeAttendance/GetDay", { "Month": $("#StartMonth").val(), "Year": $("#StartYear").val() }, function (rs) {
+                    $("#StartDay").empty();
+                    $.each(rs, function (i, val) {
+                        $("#StartDay").append($("<option></option>").attr("value", val.value).attr("selected", val.selected).text(val.text));
+                    });
+                });
+            });
+            $("#StartYear").val($("#StartYear").val()).change();
+
+            //end Date
+            var $change = $("#EndYear , #EndMonth");
+            $change.change(function () {
+                $.get("/TimeAttendance/GetDay", { "Month": $("#EndMonth").val(), "Year": $("#EndYear").val() }, function (rs) {
+                    $("#EndDay").empty();
+                    $.each(rs, function (i, val) {
+                        $("#EndDay").append($("<option></option>").attr("value", val.value).attr("selected", val.selected).text(val.text));
+                    });
+                });
+            });
+            $("#EndYear").val($("#EndYear").val()).change();
+
+            $('#JsonForm').bootstrapValidator();
+            $("#Submit").click(function () {
+
+                if ($('#Amount').val() == 0) {
+                    toastr.error('แจ้งเตือน! กรุณากรอกจำนวนเงิน');
+                    return null;
+                }
+
+                $('#JsonForm').data("bootstrapValidator").validate();
+                if ($('#JsonForm').data("bootstrapValidator").isValid() == true) {
+                    $('#Amount').autoNumeric('init', { aSep: '.', aDec: ',', mDec: '0' });
+                    var Data = new FormData($("#JsonForm")[0]);
+                    $.ajax(
+                        {
+                            type: "POST",
+                            url: "/EAccount/FormAddStructure",
+                            contentType: false,
+                            processData: false,
+                            data: Data,
+                            success: function (result) {
+                                if (result.valid == true) {
+                                    toastr.success(result.message);
+                                    setTimeout(function () {
+                                        window.location.href = "/EAccount/StructureIndex";
+                                    }, 700);
+                                }
+                                else {
+                                    toastr.error('Error! ' + result.message);
+                                }
+                            }
+                        });
+                }
+            });
+        });
+    </script>
+}

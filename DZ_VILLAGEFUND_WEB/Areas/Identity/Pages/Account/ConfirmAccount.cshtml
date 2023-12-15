@@ -1,0 +1,153 @@
+﻿@page
+@model ConfirmAccount
+@{
+    Layout = "~/Views/Shared/_OutsideLayout.cshtml";
+    ViewData["Title"] = "ลงทะเบียนใช้งานระบบ";
+}
+
+
+<div class="page-inner bg-brand-gradient" style="background-color: #9ed8e1">
+    <div class="page-content-wrapper bg-transparent m-0">
+        <div class="height-10 w-100 shadow-lg px-4 bg-brand-gradient" style="background-color: #FFFFFF">
+            <div class="d-flex align-items-center container p-0">
+                <div class="page-logo width-mobile-auto m-0 align-items-center justify-content-center p-0 bg-transparent bg-img-none shadow-0 height-9">
+                    <a href="/Identity/Account/Login?ReturnUrl=%2F" class="page-logo-link press-scale-down d-flex align-items-center">
+                        <img src="/img/demo/villagefund_1.png" class="img-responsive" style="width:271px">
+                    </a>
+                </div>
+
+            </div>
+        </div>
+        <div class="flex-1" style="background: url(/img/svg/pattern-1.svg) no-repeat center bottom fixed; background-size: cover; margin-top: 1rem;">
+            <div class="container py-4 py-lg-5 my-lg-5 px-4 px-sm-0">
+
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3"></div>
+                    <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                        @{
+                            if (ViewData["SuccessMessage"].ToString() == "")
+                            {
+                                <div class="card p-4 rounded-plus bg-faded">
+                                    <h1 class="text-dark text-center fw-300 mb-3 d-sm-block">ยืนยันรหัส OTP </h1>
+                                    <form id="account" method="post">
+                                        <div class="form-group">
+                                            <label class="form-label" for="OTP">รหัส OTP</label>
+                                            <input type="text" asp-for="Input.OTP" class="form-control" placeholder="OTP" value="@ViewData["OTP"]" maxlength="6">
+                                            <i class="clear-input"><ion-icon name="close-circle"></ion-icon></i>
+                                        </div>
+                                        @if (!ViewData.ModelState.IsValid)
+                                        {
+                                            <span style="color:red">@Html.ValidationSummary()</span>
+                                        }
+                                        <input type="hidden" asp-for="Input.UserId" value="@ViewData["UserId"]">
+                                        <div class="row no-gutters">
+                                            <div class="col-lg-12 pr-lg-1 my-2">
+                                                <button type="submit" class="btn btn-success btn-block btn-lg"><i class="fal fa-user"></i> ยืนยัน </button>
+                                            </div>
+                                        </div>
+                                        <div class="mt-4 text-center">
+                                            <a href="javascript:void(0)" class="btn btn-warning mt-5" data-userid="@ViewData["UserId"]" id="resend"> ขอ OTP อีกครั้ง</a>
+                                            <a href="/Identity/Account/Login?ReturnUrl=%2F" class="btn btn-success mt-5">กลับสู่หน้าหลัก</a>
+                                        </div>
+                                        @if (!ViewData.ModelState.IsValid)
+                                        {
+                                            <span style="color:red">@Html.ValidationSummary()</span>
+                                        }
+                                    </form>
+                                </div>
+                            }
+                            else
+                            {
+                                if (ViewData["SuccessMessage"].ToString() == "success")
+                                {
+                                    <div class="card p-4 rounded-plus bg-faded mt-4 text-center">
+                                        <h1 class="text-dark text-center fw-300 mb-3 d-sm-block">ยืนยันรหัส OTP </h1>
+                                        <hr />
+                                        <span style="color: green; font-size: 1.5rem; padding-top: 50px;">ยืนยันสำเร็จ</span>
+                                        <a href="/Identity/Account/Login?ReturnUrl=%2F" class="btn btn-success mt-5">กลับสู่หน้าหลัก</a>
+                                    </div>
+                                }
+                                else if (ViewData["SuccessMessage"].ToString() == "unsuccess")
+                                {
+                                    <div class="card p-4 rounded-plus bg-faded mt-4 text-center">
+                                        <h1 class="text-dark text-center fw-300 mb-3 d-sm-block">ยืนยันรหัส OTP </h1>
+                                        <hr />
+                                        <span style="color: red; font-size: 1.5rem; padding-top:20px;"> @ViewData["Message"] </span>
+                                        <a href="javascript:void(0)" class="btn btn-warning mt-5" data-userid="@ViewData["UserId"]" id="resend"> ขอ OTP อีกครั้ง</a>
+                                        <a href="/Identity/Account/Login?ReturnUrl=%2F" class="btn btn-success mt-5">กลับสู่หน้าหลัก</a>
+                                    </div>
+
+                                }
+                            }
+                        }
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3"></div>
+                    <input type="hidden" value="@ViewData["UserId"]" id="UserId" />
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <link rel="stylesheet" type="text/css" href="/css/notifications/toastr/toastr.css">
+    <link rel="stylesheet" href="~/css/notifications/sweetalert2/sweetalert2.bundle.css">
+    <script src="~/js/notifications/toastr/toastr.js"></script>
+    <script src="~/js/notifications/sweetalert2/sweetalert2.bundle.js"></script>
+    <script>
+        $(function () {
+            $("#resend").click(function () {
+                var UserId = $(this).attr("data-userid");
+                Swal.fire(
+                    {
+                        title: "แจ้งเตือนจากระบบ",
+                        text: "ยืนยันการทำรายการ",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonText: "ตกลง",
+                        cancelButtonText: "ยกเลิก",
+                        closeOnConfirm: false
+                    }).then(function (isConfirm) {
+                        if (isConfirm.value == true) {
+                            $.get("/Settings/ResendEmail", { "UserId": UserId }, function (Result) {
+                                if (Result.valid == true) {
+                                    Swal.fire(
+                                        {
+                                            title: "แจ้งเตือนจากระบบ",
+                                            text: Result.message,
+                                            type: "success",
+                                            showCancelButton: true,
+                                            confirmButtonText: "ตกลง",
+                                            cancelButtonText: "ยกเลิก",
+                                            closeOnConfirm: false
+                                        }).then(function (isConfirm) {
+                                            if (isConfirm.value == true) {
+                                                window.location.href = "/Identity/Account/ConfirmAccount?Id=" + $("#UserId").val();
+                                            }
+                                        });
+                                }
+                                else {
+                                    Swal.fire(
+                                        {
+                                            title: "แจ้งเตือนจากระบบ",
+                                            text: Result.message,
+                                            type: "warning",
+                                            showCancelButton: true,
+                                            confirmButtonText: "ตกลง",
+                                            cancelButtonText: "ยกเลิก",
+                                            closeOnConfirm: false
+                                        }).then(function (isConfirm) {
+                                            if (isConfirm.value == true) {
+
+                                            }
+                                        });
+                                }
+                            });
+                        }
+                    });
+            });
+        });
+    </script>
+}

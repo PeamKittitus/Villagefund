@@ -1,0 +1,44 @@
+﻿@model IEnumerable<DZ_VILLAGEFUND_WEB.ViewModels.Villages.VillagesViewModel>
+
+<table id="JsonTable" class="table table-bordered table-hover table-striped w-100">
+    <thead class="bg-primary-600">
+        <tr>
+            <th class="text-center" style="width:50px">ลำดับ</th>
+            <th>ชื่อนิติบุคคล</th>
+            <th>รหัสกองทุนหมู่บ้าน</th>
+            <th>รหัสนิติบุคลคล</th>
+            <th class="text-center">สถานะ</th>
+            <th class="text-center" style="width:160px;"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int Row = 1;
+            foreach (var Village in Model)
+            {
+                <tr>
+                    <td class="text-center"> @Row.</td>
+                    <td> @Village.VillageName      </td>
+                    <td> @Village.VillageCode      </td>
+                    <td> @Village.VillageBbdId     </td>
+                    <td class="text-center"> <i class="fal fa-lock-alt set-icon-lock-size"></i> </td>
+                    <td class="text-center" style="width:100px;">
+                        @if (ViewBag.Type == 4 )
+                        {
+                            <text>รออนุมัติ</text>
+                        }
+                        else if (ViewBag.Type ==1 )
+                        {
+                            <a href="javascript:void(0);" data-val="@Village.VillageId" class="btn btn-sm btn-success edit" title="Edit"><i class="fal fa-edit"></i>  แก้ไข</a>
+                        }
+                        else
+                        {
+                            <a href="javascript:void(0);" data-val="@Village.VillageId" class="btn btn-sm btn-success edit" title="Edit"> <i class="fal fa-edit"></i> ยื่นแก้ไขข้อมูล </a>
+                        }
+                    </td>
+                </tr>
+                Row++;
+            }
+        }
+    </tbody>
+</table>

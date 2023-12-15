@@ -1,0 +1,56 @@
+﻿@model IEnumerable<DZ_VILLAGEFUND_WEB.ViewModels.EProjects.ReportSummarizeProject>
+
+<table id="JsonTable" class="table table-bordered table-hover table-striped w-100">
+    <thead class="bg-primary-600">
+        <tr>
+            <th>ลำดับ</th>
+            <th>รหัสกองทุน</th>
+            <th>ชื่อกองทุนหมู่บ้าน/ชุมชน</th>
+            <th>หมู่ที่</th>
+            <th>ตำบล/แขวง</th>
+            <th>อำเภอ/เขต</th>
+            <th>จังหวัด</th>
+            <th>จำนวนโครงการ</th>
+            <th>รวมงบประมาณ</th>
+            <th>ร่าง</th>
+            <th>รอตรวจสอบ</th>
+            <th>ส่งกลับแก้ไข</th>
+            <th>รออนุมัติ</th>
+            <th>ไม่อนุมัติ</th>
+            <th>อนุมัติ</th>
+
+
+
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int Rows = 1;
+            foreach (var Get in Model)
+            {
+                <tr>
+                    <td>@Rows</td>
+                    <td>@Get.FundCode</td>
+                    <td>@Get.Village</td>
+                    <td>@Get.Moo</td>
+                    <td>@Get.SubDistrict</td>
+                    <td>@Get.District</td>
+                    <td>@Get.Province</td>
+                    <td class="text-right">@Get.ProjectCount</td>
+                    <td class="text-right">@Get.Budget</td>
+                    <td class="text-right">@Get.Draft</td>
+                    <td class="text-right">@Get.WaitingForCheck</td>
+                    <td class="text-right">@Get.SendBackEdit</td>
+                    <td class="text-right">@Get.PendingApproval</td>
+                    <td class="text-right">@Get.Disapproved</td>
+                    <td class="text-right">@Get.Approve</td>
+
+
+                </tr>
+
+                Rows++;
+            }
+        }
+
+    </tbody>
+</table>

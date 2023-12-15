@@ -1,0 +1,59 @@
+﻿@model IEnumerable<DZ_VILLAGEFUND_WEB.Models.TransacionAccountBudget>
+@{
+    var Village = ViewBag.Village as List<DZ_VILLAGEFUND_WEB.Models.Village>;
+    var Helper = ViewBag.Helper as DZ_VILLAGEFUND_WEB.Helpers.Utility;
+    var AccountBudget = ViewBag.AccountBudget as List<DZ_VILLAGEFUND_WEB.Models.AccountBudget>;
+    var OrgName = ViewBag.OrgName as List<DZ_VILLAGEFUND_WEB.Models.SystemOrgStructures>;
+    var BookBank = ViewBag.BookBank as List<DZ_VILLAGEFUND_WEB.Models.AccountBookBank>;
+    var BankMaster = ViewBag.BankMaster as List<DZ_VILLAGEFUND_WEB.Models.AccountBankMaster>;
+
+}
+<table id="JsonTable" class="table table-bordered table-hover table-striped w-100">
+    <thead>
+        <tr>
+            <th>ที่</th>
+            <th>รหัสกองทุน</th>
+            <th>ผู้รับ (กทบ./สาขา)</th>
+            <th>โครงการ</th>
+            <th>ธนาคาร</th>
+            <th>เลขที่บัญชี</th>
+            <th>ชื่อบัญชี</th>
+            <th>จำนวนเงิน</th>
+            <th>วันที่โอนเงิน</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int Row = 1;
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Row</td>
+                    <td>@AccountBudget.Where(w => w.AccountBudgetd == item.AccountBudgetd).Select(s => s.AccName).FirstOrDefault()</td>
+                    <td>
+                        @{
+                            var _Village = Village.Where(w => w.VillageId == item.ReceiverOrgId).Select(s => s.VillageName).FirstOrDefault();
+                            if (_Village != null)
+                            {
+                                <text>@_Village</text>
+                            }
+                            else
+                            {
+                                <text>@OrgName.Where(w => w.OrgId == item.ReceiverOrgId).Select(s => s.OrgName).FirstOrDefault()</text>
+                            }
+                        }
+                    </td>
+                    <td>@AccountBudget.Where(w => w.AccountBudgetd == item.AccountBudgetd).Select(s => s.AccName).FirstOrDefault()</td>
+                    <td>@BankMaster.Where(w => w.BankId == BookBank.Where(w => w.ProjectBbId == item.SenderBookBankId).Select(s => s.BankCode).FirstOrDefault()).Select(s => s.BankName).FirstOrDefault()</td>
+                    <td>@BookBank.Where(w => w.ProjectBbId == item.SenderBookBankId).Select(s => s.BookBankId).FirstOrDefault()</td>
+                    <td>@BookBank.Where(w => w.ProjectBbId == item.SenderBookBankId).Select(s => s.BookBankName).FirstOrDefault()</td>
+                    <td>@item.Amount</td>
+                    <td>@Helper.getDateThai(item.SenderDate)</td>
+
+                </tr>
+                Row++;
+            }
+        }
+
+    </tbody>
+</table>

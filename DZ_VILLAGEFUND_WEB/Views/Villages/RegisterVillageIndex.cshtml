@@ -1,0 +1,100 @@
+﻿@{
+    // title page
+    ViewData["Title"] = "ยื่นคำขอขึ้นทะเบียนกองทุนหมู่บ้าน";
+    var GetPermission = ViewBag.Permission as DZ_VILLAGEFUND_WEB.ViewModels.Settings.PermissionViewModel;
+}
+
+<ol class="breadcrumb page-breadcrumb">
+    <li class="breadcrumb-item"><a href="/Home/Index">หน้าหลัก</a></li>
+    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+</ol>
+
+<div class="d-flex justify-content-start flex-wrap demo">
+    @{
+        if (ViewBag.EditCheck == null)
+        {
+            if (ViewBag.PendingCheck == null)
+            {
+                if (ViewBag.CheckVillage == null)
+                {
+                    if (GetPermission.Insert)
+                    {
+                        <div class="btn-group">
+                            <a href="/Villages/FormAddVillage" class="btn btn-light">
+                                <i class="fal fa-plus-circle mr-1 fs-xxl color-primary-600"></i><br />
+                                <span class="fs-nano color-primary-600">ยื่นคำขอขึ้นทะเบียน</span>
+                            </a>
+                        </div>
+                    }
+                }
+                else
+                {
+                    if (GetPermission.Update)
+                    {
+                        <div class="btn-group">
+                            <a href="/Villages/FormAddVillage" class="btn btn-light">
+                                <i class="fal fa-plus-circle mr-1 fs-xxl color-primary-600"></i><br />
+                                <span class="fs-nano color-primary-600">แก้ไขคำขอขึ้นทะเบียน</span>
+                            </a>
+                        </div>
+                    }
+
+                }
+            }
+            else
+            {
+                <div class="btn-group">
+                    <a href="javascript:void(0)" class="btn btn-light">
+                        <i class="fal fa-clock mr-1 fs-xxl color-primary-600"></i><br />
+                        <span class="fs-nano color-primary-600">คำขอขึ้นทะเบียนกำลังรอการอนุมัติ</span>
+                    </a>
+                </div>
+            }
+        }
+        else
+        {
+            if (GetPermission.Update)
+            {
+                <div class="btn-group">
+                    <a href="/Villages/FormEditVillageRegister" class="btn btn-light">
+                        <i class="fal fa-pencil mr-1 fs-xxl color-primary-600"></i><br />
+                        <span class="fs-nano color-primary-600">แก้ไขคำขอขึ้นทะเบียน</span>
+                    </a>
+                </div>
+            }
+
+        }
+
+
+    }
+
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel">
+            <div class="panel-hdr">
+                <h2><i class='subheader-icon fal fa-home'></i>  @ViewData["Title"]</h2>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+
+                    <div id="JsonData"></div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <link rel="stylesheet" type="text/css" href="/css/notifications/toastr/toastr.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/datagrid/datatables/datatables.bundle.css">
+    <link rel="stylesheet" href="~/css/notifications/sweetalert2/sweetalert2.bundle.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/formplugins/select2/select2.bundle.css">
+    <script src="~/js/datagrid/datatables/datatables.bundle.js"></script>
+    <script src="~/js/datagrid/datatables/datatables.export.js"></script>
+    <script src="~/js/notifications/toastr/toastr.js"></script>
+    <script src="~/js/notifications/sweetalert2/sweetalert2.bundle.js"></script>
+    <script src="~/customJs/villages/RegisterRequest.js"></script>
+}

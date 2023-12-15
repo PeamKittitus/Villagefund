@@ -1,0 +1,51 @@
+﻿@model IEnumerable<DZ_VILLAGEFUND_WEB.ViewModels.EAccount.LedgerReportViewModel>
+@{
+    decimal Total = 0;
+}
+
+<table id="JsonTable" class="table table-bordered table-hover table-striped w-100">
+    <thead class="bg-primary-600">
+        <tr>
+            <th class="text-center" style="width:50px"><input type="checkbox" id="check-all" /></th>
+            <th class="text-center">วันที่</th>
+            <th class="text-center">ผู้รับ</th>
+            @{
+                if (@ViewBag.AccountType == true)
+                {
+                    <th class="text-center">รายการรับ</th>
+                }
+                else
+                {
+                    <th class="text-center">รายการจ่าย</th>
+                }
+            }
+        </tr>
+    </thead>
+    <tbody>
+    @{
+        foreach (var Get in Model)
+        {
+            <tr>
+                <td class="text-center">  <input type="checkbox" name="check-item" class="check-item" value="@Get.Id" /></td>
+                <td class="text-center">@Get.ReceiverDate</td>
+                <td>@Get.Receiver</td>
+                <td class="text-right">@(Get.Amount > 0 ? Get.Amount.ToString("N") : "0.00")</td>
+            </tr>
+
+            Total += Get.Amount > 0 ? Get.Amount : 0;
+        }
+    }
+
+    </tbody>
+    @{
+        if (Model.Count() > 0)
+        {
+            <tfoot>
+                <tr>
+                    <td colspan="3" class="text-right">รวม:</td>
+                    <td class="text-right">@Total.ToString("N")</td>
+                </tr>
+            </tfoot>
+        }
+    }
+</table>

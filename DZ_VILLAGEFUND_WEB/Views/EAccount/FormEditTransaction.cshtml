@@ -1,0 +1,275 @@
+﻿@model DZ_VILLAGEFUND_WEB.Models.TransacionAccountBudget
+@{
+    ViewData["Title"] = "แก้ไข";
+
+    var GetPermission = ViewBag.Permission as DZ_VILLAGEFUND_WEB.ViewModels.Settings.PermissionViewModel;
+}
+
+<ol class="breadcrumb page-breadcrumb">
+    <li class="breadcrumb-item"><a href="/Home/Index">หน้าหลัก</a></li>
+    <li class="breadcrumb-item"><a href="/EAccount/Index">เบิกจ่ายงบประมาณ</a></li>
+    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+</ol>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel">
+            <div class="panel-hdr">
+                <h2><i class='subheader-icon fal fa-list-alt'></i>  @ViewData["Title"]</h2>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+
+                    <div class="row">
+                        <div class="col-lg-2"></div>
+                        <div class="col-lg-8">
+                            <form id="JsonForm" enctype="multipart/form-data" novalidate
+                                  asp-antiforgery="true"
+                                  data-bv-message="This value is not valid"
+                                  data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
+                                  data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
+                                  data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
+                                <div class="panel-content">
+                                    <div class="col-lg-12 col-md-12 col-sm-12">
+                                        <label style="color: red; font-size: 1.2rem"> หน่วยงานต้นทาง (สทบ.)</label>
+                                        <hr />
+                                        <div class="form-group">
+                                            <label class="form-label"> ผังบัญชีโครงการ</label>
+                                            @Html.DropDownList("AccountBudgetd", (IEnumerable<SelectListItem>)ViewBag.AccountBudgetd, new { @class = "col-lg-12 col-md-12 col-sm-12" })
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label"> ชื่อบัญชี</label>
+                                            @Html.DropDownList("SenderBookBankId", (IEnumerable<SelectListItem>)ViewBag.BookBank, new { @class = "col-lg-12 col-md-12 col-sm-12" })
+                                        </div>
+
+
+                                        <label style="color: red; margin-top: 1.2rem; font-size: 1.2rem "> หน่วยงานปลายทาง (สาขา)</label>
+                                        <hr />
+                                        @{
+                                            if (ViewBag.RoleUser == "HeadQuarterAdmin")
+                                            {
+                                                int IsOrgType = ViewBag.OrgType;
+
+                                                <div class="form-group">
+                                                    <label class="form-label"> เลือกประเภทหน่วยงาน  </label>
+                                                    <select name="OrgType" id="OrgType">
+                                                        @{
+                                                            if (IsOrgType == 1)
+                                                            {
+                                                                <option value="1" selected>สทบ.สาขา</option>
+                                                                <option value="0">กองทุนหมูบ้าน</option>
+                                                            }
+                                                            else
+                                                            {
+                                                                <option value="1" >สทบ.สาขา</option>
+                                                                <option value="0" selected>กองทุนหมูบ้าน</option>
+                                                            }
+                                                        }
+
+
+                                                    </select>
+                                                </div>
+                                            }
+                                        }
+
+                                        <div id="IsHeadBrance">
+                                            <div class="form-group">
+                                                <label class="form-label"> กองทุนหมูบ้าน</label>
+                                                <input type="hidden" id="_Village" value="@Model.ReceiverOrgId">
+                                                @Html.DropDownList("Village", (IEnumerable<SelectListItem>)ViewBag.Village, new { @class = "col-lg-12 col-md-12 col-sm-12" })
+                                            </div>
+                                        </div>
+                                        <div id="IsBrance" style="display:none;">
+                                            <div class="form-group">
+                                                <label class="form-label"> สทบ.สาขา</label>
+                                                @Html.DropDownList("VillageBrance", (IEnumerable<SelectListItem>)ViewBag.BranceOrg, new { @class = "col-lg-12 col-md-12 col-sm-12" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group mt-4">
+                                            <label class="form-label"> ชื่อบัญชี <span style="color:red">*</span></label>
+                                            <select asp-for="ReceiverBookBankId"
+                                                    data-bv-notempty="true"
+                                                    data-bv-notempty-message="กรุณาเลือกข้อมูลข้อมูล"></select>
+                                            <input type="hidden" name="ReceiverBookBankIdHidden" id="ReceiverBookBankIdHidden" value="@Model.ReceiverBookBankId" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label"> จำนวนเงิน <span style="color:red">*</span></label>
+                                            <input type="text" asp-for="Amount" class="col-lg-12 col-md-12 col-sm-12 form-control"
+                                                   data-bv-notempty="true"
+                                                   data-bv-notempty-message="กรุณากรอกข้อมูล" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label"> เอกสารแนบ <label style="color:red"> (ขนาดไฟล์ของเอกสารแนบรวมไม่เกิน 50MB/1ครั้ง) </label></label>
+                                            <input type="file" name="FileUpload" id="FileUpload" class="col-lg-12 col-md-12 col-sm-12 form-control"
+                                                   accept=".pdf,.docx,.xlsx"
+                                                   pattern="^.*\.(docx|DOCX|pdf|PDF|xlsx|XLSX)$"
+                                                   data-bv-message="รองรับนามสกุลไฟล์ (xlsx,docx,pdf) เท่านั้น" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <input type="hidden" asp-for="TransactionAccBudgeId" />
+
+                                <div class="panel-content border-faded border-left-0 border-right-0 border-bottom-0 d-flex flex-row align-items-center m-3 pt-3">
+                                    <button class="btn btn-primary ml-auto" type="button" id="Submit">บันทึก</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-lg-2"></div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <link rel="stylesheet" type="text/css" href="/css/notifications/toastr/toastr.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/formplugins/select2/select2.bundle.css">
+    <script src="~/js/Validation/bootstrapValidator.min.js"></script>
+    <script src="~/js/notifications/toastr/toastr.js"></script>
+    <script src="~/js/formplugins/select2/select2.bundle.js"></script>
+    <script src="~/js/NumberFormat.js"></script>
+    <script>
+        $(function () {
+            $("#OrgType").select2();
+            // กองทุนหมู่บ้าน
+            $("#VillageBrance").select2();
+            $("#VillageBrance").change(function () {
+                $.get("/EAccount/GetBookBankByOrgId", { "OrgId": $(this).val() }, function (JsonResult) {
+                    $("#ReceiverBookBankId").empty();
+                    $("#ReceiverOrgId").val();
+                    $.each(JsonResult, function (i, val) {
+                        if ($("#_Village").val() == val.value) {
+                            $("#ReceiverBookBankId").append($("<option selected></option>").attr("value", val.value).text(val.text));
+                        }
+                        else {
+                            $("#ReceiverBookBankId").append($("<option></option>").attr("value", val.value).text(val.text));
+                        }
+
+                    });
+                    $("#ReceiverBookBankId").select2();
+                });
+            });
+            $("#VillageBrance").val($("#VillageBrance").val()).change();
+
+            $("#Village").select2();
+            $("#Village").change(function () {
+                $.get("/EAccount/GetBookBankByVillageId", { "VillageId": $(this).val() }, function (JsonResult) {
+                    $("#ReceiverBookBankId").empty();
+                    $("#ReceiverOrgId").val();
+                   
+                    $.each(JsonResult, function (i, val) {
+                        if ($("#ReceiverBookBankIdHidden").val() == val.value) {
+                            $("#ReceiverBookBankId").append($("<option selected></option>").attr("value", val.value).text(val.text));
+                        }
+                        else {
+                            $("#ReceiverBookBankId").append($("<option></option>").attr("value", val.value).text(val.text));
+                        }
+                    });
+                    $("#ReceiverBookBankId").select2();
+                });
+            });
+            $("#Village").val($("#Village").val()).change();
+
+            $('#Amount').autoNumeric('init', { aSign: '' });
+
+            $("#SenderBookBankId").select2();
+            $("#ReceiverBookBankId").select2();
+            $("#AccountBudgetd").select2();
+
+
+
+
+            $('#OrgType').change(function () {
+                if (this.value == 1) {
+                    $("#IsHeadBrance").hide();
+                    $("#IsBrance").show();
+
+                    // กองทุน
+                    $("#VillageBrance").change(function () {
+                        $.get("/EAccount/GetBookBankByOrgId", { "OrgId": $(this).val() }, function (JsonResult) {
+                            $("#ReceiverBookBankId").empty();
+                            $("#ReceiverOrgId").val();
+                            $.each(JsonResult, function (i, val) {
+                                if ($("#ReceiverBookBankIdHidden").val() == val.value) {
+                                    $("#ReceiverBookBankId").append($("<option selected></option>").attr("value", val.value).text(val.text));
+                                }
+                                else {
+                                    $("#ReceiverBookBankId").append($("<option></option>").attr("value", val.value).text(val.text));
+                                }
+                            });
+                            $("#ReceiverBookBankId").select2();
+                        });
+                    });
+                    $("#VillageBrance").val($("#VillageBrance").val()).change();
+
+                }
+                else if (this.value == 0) {
+                    $("#IsHeadBrance").show();
+                    $("#IsBrance").hide();
+
+                    // กองทุน
+                    $("#Village").change(function () {
+                        $.get("/EAccount/GetBookBankByVillageId", { "VillageId": $(this).val() }, function (JsonResult) {
+                            $("#ReceiverBookBankId").empty();
+                            $("#ReceiverOrgId").val();
+                            $.each(JsonResult, function (i, val) {
+                                if ($("#ReceiverBookBankIdHidden").val() == val.value) {
+                                    $("#ReceiverBookBankId").append($("<option selected></option>").attr("value", val.value).text(val.text));
+                                }
+                                else {
+                                    $("#ReceiverBookBankId").append($("<option></option>").attr("value", val.value).text(val.text));
+                                }
+                            });
+                            $("#ReceiverBookBankId").select2();
+                        });
+                    });
+                    $("#Village").val($("#Village").val()).change();
+                }
+            });
+            $("#OrgType").val($("#OrgType").val()).change();
+
+
+            $('#JsonForm').bootstrapValidator();
+            $("#Submit").click(function () {
+                if ($("#Amount").val() == 0 || $("#Amount").val() == "") {
+                    toastr.error('แจ้งเตือน! กรุณากรอกจำนวนเงิน ');
+                }
+
+                $('#JsonForm').data("bootstrapValidator").validate();
+                if ($('#JsonForm').data("bootstrapValidator").isValid() == true) {
+                    $('#Amount').autoNumeric('init', { aSep: '.', aDec: ',', mDec: '0' });
+                    var Data = new FormData($("#JsonForm")[0]); JsonForm
+                    $.ajax(
+                        {
+                            type: "POST",
+                            url: "/EAccount/FormEdittransaction",
+                            contentType: false,
+                            processData: false,
+                            data: Data,
+                            success: function (result) {
+                                if (result.valid == true) {
+                                    toastr.success(result.message);
+                                    setTimeout(function () {
+                                        window.location.href = "/EAccount/Index";
+                                    }, 700);
+                                }
+                                else {
+                                    toastr.error('แจ้งเตือน! ' + result.message);
+                                }
+                            },
+                            error: function (error) {
+                                if (error.status == "413") {
+                                    toastr.error('แจ้งเตือน! ' + "ขนาดไฟล์ต้องไม่เกิน 50MB/1ครั้ง");
+                                } else {
+                                    toastr.error('แจ้งเตือน! ' + error.status);
+                                }
+                            }
+                        });
+                }
+            });
+        });
+
+    </script>
+
+}

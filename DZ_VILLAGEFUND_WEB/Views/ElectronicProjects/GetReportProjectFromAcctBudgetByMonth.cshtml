@@ -1,0 +1,67 @@
+﻿@model IEnumerable<DZ_VILLAGEFUND_WEB.ViewModels.EProjects.EprojectStructures>
+<table id="JsonTable" class="table table-bordered table-hover table-striped w-100">
+    <thead>
+        <tr>
+            <th class="text-center">ลำดับ</th>
+            <th>รหัสโครงการ</th>
+            <th>ชื่อโครงการ</th>
+            <th class="text-center">วันที่เริ่มต้น-สิ้นสุดโครงการ</th>
+            <th class="text-center"> วงเงินงบประมาณ (บาท)</th>
+            <th class="text-center"> งบประมาณของกองทุน (บาท)</th>
+            <th class="text-center"> สถานะโครงการ</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            if (Model.Count() > 0)
+            {
+                int Rows = 1;
+                foreach (var Get in Model.Where(w => w.ParentId == 0).OrderBy(f => f.AccountBudgetd))
+                {
+                    <tr>
+                        <td class="text-center"> @Rows.</td>
+                        <td>@Get.ProjectCode</td>
+                        <td>- @Get.ProjectName</td>
+                        <td> -</td>
+                        <td class="text-right"> @Get.Amount.ToString("N")</td>
+                        <td class="text-right">-</td>
+                        <td class="text-center">
+                            @(Get.Status == true ? "เปิด" : "ปิด")
+                        </td>
+
+                    </tr>
+
+                    int Rows2 = 1;
+                    foreach (var Get2 in Model.Where(w => w.ParentId == Get.AccountBudgetd).OrderBy(f => f.AccountBudgetd))
+                    {
+                        <tr>
+                            <td class="text-right"> @Rows.@Rows2.</td>
+                            <td> @Get2.ProjectCode</td>
+                            <td style="padding-left:4rem">- @Get2.ProjectName</td>
+                            <td> @Get2.StartEndDate</td>
+                            <td class="text-right"> @Get2.Amount.ToString("N")</td>
+                            <td class="text-right"> @Get2.SubAmount.ToString("N")</td>
+                            <td class="text-center">
+                                @(Get2.Status == true ? "เปิด" : "ปิด")
+                            </td>
+
+                        </tr>
+
+                        Rows2++;
+                    }
+
+                    Rows++;
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="8" class="text-center">--- ไม่มีข้อมูล ---</td>
+                </tr>
+            }
+
+        }
+    </tbody>
+
+</table>

@@ -1,0 +1,445 @@
+﻿@model DZ_VILLAGEFUND_WEB.Models.TransactionMemberVillage
+@{
+    ViewData["Title"] = " เพิ่มข้อมูลสมาชิก";
+}
+<ol class="breadcrumb page-breadcrumb">
+    <li class="breadcrumb-item"><a href="/Home/Index">หน้าหลัก</a></li>
+    <li class="breadcrumb-item"><a href="/Villages/VillageIndex">ข้อมูลทะเบียนกองทุนหมู่บ้าน</a></li>
+    <li class="breadcrumb-item"><a href="/Villages/VillageEdit?VillageId=@ViewBag.VillageId">ยืนคำขอเปลี่ยนแปลงข้อมูล</a></li>
+    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+</ol>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel">
+            <div class="panel-hdr">
+                <h2><i class='subheader-icon fal fa-list-alt'></i>  @ViewData["Title"]</h2>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+
+                    <div class="row">
+                        <div class="col-lg-2"></div>
+                        <div class="col-lg-8">
+                            <form id="JsonForm" enctype="multipart/form-data" novalidate
+                                  asp-antiforgery="true"
+                                  data-bv-message="This value is not valid"
+                                  data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
+                                  data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
+                                  data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
+                                <div class="panel-content">
+                                    <div class="col-lg-12 col-md-12 col-sm-12">
+                                        <div class="form-group">
+                                            <label class="form-label">รหัสสมาชิก <span style="color:red">*</span></label>
+                                            <input type="text" asp-for="MemberCode" value="@ViewBag.MemberCode" class="form-control col-lg-12 col-md-12 col-sm-12" disabled>
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="checkbox" asp-for="NoCitizenId" /> <label class="form-label">ไม่มีบัตรประชาชน</label>
+                                        </div>
+                                        <div class="form-group" id="_CitizenId">
+                                            <label class="form-label">รหัสประจำตัวประชาชน <span style="color:red">*</span></label>
+                                            <input type="text" asp-for="CitizenId" class="form-control col-lg-12 col-md-12 col-sm-12"
+                                                   maxlength="13"
+                                                   data-bv-notempty="true"
+                                                   data-bv-notempty-message="กรุณากรอกข้อมูล"
+                                                   data-bv-stringlength="true"
+                                                   data-bv-stringlength-min="13"
+                                                   data-bv-stringlength-message="กรุณากรอกข้อมูลให้ครบ 13 หลัก"
+                                                   pattern="^[0-9]*$"
+                                                   data-bv-message="กรุณากรอกเฉพาะตัวเลข">
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <article class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                                                    <label class="form-label">ชื่อ <span style="color:red">*</span></label>
+                                                    <input type="text" asp-for="MemberFirstName" class="form-control col-lg-12 col-md-12 col-sm-12"
+                                                           data-bv-notempty="true"
+                                                           data-bv-notempty-message="กรุณากรอกข้อมูล">
+                                                </article>
+                                                <article class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                                                    <label class="form-label">นามสกุล <span style="color:red">*</span></label>
+                                                    <input type="text" asp-for="MemberLastName" class="form-control col-lg-12 col-md-12 col-sm-12"
+                                                           data-bv-notempty="true"
+                                                           data-bv-notempty-message="กรุณากรอกข้อมูล">
+                                                </article>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">เพศ <span style="color:red">*</span></label>
+                                            @Html.DropDownList("Gender", (IEnumerable<SelectListItem>)ViewBag.Gender, new { @class = "width:100%" })
+                                            <input type="number" asp-for="GenderId" maxlength="10" class="form-control col-lg-12 col-md-12 col-sm-12"
+                                                   data-bv-notempty="true"
+                                                   data-bv-notempty-message="กรุณากรอกข้อมูล" hidden>
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="checkbox" asp-for="NoBirthDate" /> <label class="form-label">ไม่ระบุวันเกิด</label>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">วัน/เดือน/ปี เกิด<span style="color:red">*</span></label>
+                                            <div class="row">
+                                                <div class="col-lg-2">
+                                                    <input type="hidden" id="CurrentDay" value="@(Model != null ? Model.MemberBirthDate.Day : DateTime.Now.Day)">
+                                                    <select name="Day" asp-items="(IEnumerable<SelectListItem>)@ViewBag.Day" id="Day" style="width:100%;"></select>
+                                                </div>
+                                                <div class="col-lg-5">
+                                                    <input id="CurrentMonth" type="hidden" value="@(Model != null ? Model.MemberBirthDate.Month : DateTime.Now.Month)" />
+                                                    <select name="Month" asp-items="(IEnumerable<SelectListItem>)@ViewBag.Month" id="Month" style="width:100%;"></select>
+                                                </div>
+                                                <div class="col-lg-5">
+                                                    <input id="CurrentYear" type="hidden" value="@(Model != null ? Model.MemberBirthDate.Year : DateTime.Now.Year)" />
+                                                    <select name="Year" asp-items="(IEnumerable<SelectListItem>)@ViewBag.Year" id="Year" style="width:100%;"></select>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">เบอร์โทรติดต่อ <span style="color:red">*</span></label>
+                                            <input type="text" asp-for="Phone" class="form-control col-lg-12 col-md-12 col-sm-12"
+                                                   data-bv-notempty="true"
+                                                   data-bv-message="กรุณากรอกข้อมูลให้ถูกต้อง"
+                                                   pattern="^[0-9]*$"
+                                                   data-bv-notempty-message="กรุณากรอกข้อมูล">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">
+                                                อาชีพสมาชิก<span style="color:red">*</span>
+                                            </label>
+                                            <select asp-for="MemberOccupation" class="form-control col-lg-12 col-md-12 col-sm-12" asp-items="(IEnumerable<SelectListItem>)@ViewBag.Occuption" style="width:100%;"
+                                                    data-bv-notempty="true"
+                                                    data-bv-notempty-message="กรุณากรอกข้อมูล">
+                                            </select>
+                                        </div>
+                                        <div class="form-group" id="otherOccupationInput" style="display: none;">
+                                            <input type="text" asp-for="MemberOccupationOther" class="form-control col-lg-12 col-md-12 col-sm-12"
+                                                   data-bv-notempty="true"
+                                                   data-bv-notempty-message="กรุณากรอกข้อมูล">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">ที่อยู่สมาชิก <span style="color:red">*</span></label>
+                                            <input type="text" asp-for="MemberAddress" class="form-control col-lg-12 col-md-12 col-sm-12"
+                                                   data-bv-notempty="true"
+                                                   data-bv-notempty-message="กรุณากรอกข้อมูล">
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                                <label class="form-label"> ตำแหน่ง<span style="color:red">*</span> </label>
+                                                <select asp-for="MemberPositionId" asp-items="(IEnumerable<SelectListItem>)@ViewBag.MemberPosition" style="width:100%;"
+                                                        data-bv-notempty="true"
+                                                        data-bv-notempty-message="กรุณาเลือก"
+                                                        data-bv-stringlength="true">
+                                                </select>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                                <label class="form-label"> สถานะสมาชิก<span style="color:red">*</span> </label>
+                                                <select asp-for="MemberStatusId" asp-items="(IEnumerable<SelectListItem>)@ViewBag.MemberStatusIds" style="width:100%;"
+                                                        data-bv-notempty="true"
+                                                        data-bv-notempty-message="กรุณาเลือก"
+                                                        data-bv-stringlength="true">
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="row">
+                                            <div class="col-lg-12 col-md-6 col-sm-6" id="_KickOffComment" style="display:none">
+                                                <label class="form-label"> สาเหตุการลาออก<span style="color:red">*</span> </label>
+                                                <input type="text" id="KickOffComment" name="KickOffComment" class="form-control" />
+                                            </div>
+
+                                            <div class="col-lg-12 col-md-6 col-sm-6" id="_EndDate" style="display:none">
+                                                <label class="form-label"> วันที่ลาออก<span style="color:red">*</span> </label>
+                                                <div class="row">
+                                                    <div class="col-lg-2">
+                                                        <input type="hidden" id="MemberEndCurrentDay" value="@DateTime.Now.Day">
+                                                        <select id="MemberEndDay" asp-items="(IEnumerable<SelectListItem>)@ViewBag.Day" id="Day" style="width:100%;"></select>
+                                                    </div>
+                                                    <div class="col-lg-5">
+                                                        <input type="hidden" id="MemberEndCurrentMonth" value="@DateTime.Now.Month">
+                                                        <select id="MemberEndMonth" asp-items="(IEnumerable<SelectListItem>)@ViewBag.Month" id="Month" style="width:100%;"></select>
+                                                    </div>
+                                                    <div class="col-lg-5">
+                                                        <input type="hidden" id="MemberEndCurrentYear" value="@DateTime.Now.Year">
+                                                        <select id="MemberEndYear" asp-items="(IEnumerable<SelectListItem>)@ViewBag.Year" id="Year" style="width:100%;"></select>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <br />
+
+                                        <div class="form-group">
+                                            <label class="form-label">วันที่เริ่มเป็นสมาชิก<span style="color:red">*</span></label>
+                                            <div class="row">
+                                                <div class="col-lg-2">
+                                                    <input type="hidden" id="MemberCurrentDay" value="@DateTime.Now.Day">
+                                                    <select id="MemberDay" asp-items="(IEnumerable<SelectListItem>)@ViewBag.Day" id="Day" style="width:100%;"></select>
+                                                </div>
+                                                <div class="col-lg-5">
+                                                    <input type="hidden" id="MemberCurrentMonth" value="@DateTime.Now.Month">
+                                                    <select id="MemberMonth" asp-items="(IEnumerable<SelectListItem>)@ViewBag.Month" id="Month" style="width:100%;"></select>
+                                                </div>
+                                                <div class="col-lg-5">
+                                                    <input type="hidden" id="MemberCurrentYear" value="@DateTime.Now.Year">
+                                                    <select id="MemberYear" asp-items="(IEnumerable<SelectListItem>)@ViewBag.Year" id="Year" style="width:100%;"></select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-lg-12 col-md-6 col-sm-6" id="_Connection" style="display:none">
+                                                <label class="form-label"> ระดับเครือข่าย<span style="color:red">*</span> </label>
+                                                <select id="Connection" name="Connection" multiple="multiple">
+                                                    <option value="ระดับตำบล">ระดับตำบล</option>
+                                                    <option value="ระดับอำเภอ">ระดับอำเภอ</option>
+                                                    <option value="ระดับจังหวัด">ระดับจังหวัด</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <input asp-for="MemberId" hidden />
+                                        <input asp-for="TransactionVillageId" value="@ViewBag.TransactionVillageId" hidden />
+                                        <input asp-for="VillageId" hidden />
+                                        <hr />
+                                    </div>
+                                </div>
+                                <div class="panel-content border-faded border-left-0 border-right-0 border-bottom-0 d-flex flex-row align-items-center m-3 pt-3">
+                                    <button class="btn btn-primary ml-auto" type="button" id="Submit">บันทึก</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-lg-2"></div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts{
+    <link rel="stylesheet" type="text/css" href="/css/notifications/toastr/toastr.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/formplugins/select2/select2.bundle.css">
+    <link rel="stylesheet" type="text/css" href="/lib/datepicker/datepicker.css">
+    <link rel="stylesheet" type="text/css" href="/lib/datepicker/datepicker.css">
+    <script src="~/js/Validation/bootstrapValidator.min.js"></script>
+    <script src="~/js/notifications/toastr/toastr.js"></script>
+    <script src="~/js/formplugins/select2/select2.bundle.js"></script>
+    <script src="~/lib/datepicker/bootstrap-datepicker.js"></script>
+    <script src="~/lib/datepicker/bootstrap-datepicker.th.js"></script>
+    <script src="~/lib/datepicker/bootstrap-datepicker-thai.js"></script>
+    <script src="~/customJs/middlewarejs/ThaiPersonalIdValidator.js"></script>
+    <script>
+        $(function () {
+
+            $('#JsonForm').bootstrapValidator();
+
+            $(".datepicker").datepicker();
+
+            //Gender Selection
+            $("#Gender").select2();
+            if ($("#GenderId").attr("value") != "") {
+                $("#Gender").val($("#GenderId").val()).change();
+            }
+            else {
+                $("#Gender").val($("#Gender").val()).change();
+            }
+            $("#Gender").change(function () {
+                $("#GenderId").val($("#Gender").val());
+            });
+
+            //ไม่ระบุบัตรประชาชน
+            $("#NoCitizenId").change(function () {
+                if ($("#NoCitizenId").is(":checked") == true) {
+                    $("#CitizenId").prop("disabled", true);
+                } else {
+                    $("#CitizenId").prop("disabled", false);
+                }
+            });
+            //ไม่ระบุบัตรวันเกิด
+            $("#NoBirthDate").change(function () {
+                if ($("#NoBirthDate").is(":checked") == true) {
+                    $("#Day").prop("disabled", true);
+                    $("#Month").prop("disabled", true);
+                    $("#Year").prop("disabled", true);
+                } else {
+                    $("#Day").prop("disabled", false);
+                    $("#Month").prop("disabled", false);
+                    $("#Year").prop("disabled", false);
+                }
+            });
+
+            // Master อาชีพ
+            $("#MemberOccupation").select2();
+            $("#MemberOccupation").change(function () {
+                if ($(this).val() == "0") {
+                    $("#otherOccupationInput").show();
+                } else {
+                    $("#otherOccupation").val("-");
+                    $("#otherOccupationInput").hide();
+                }
+            });
+            $("#MemberOccupation").val($("#MemberOccupation").val()).change();
+
+            //MemberPosition Selection
+            $("#MemberPositionId").select2();
+            $("#MemberPositionId").val($("#MemberPositionId").val());
+
+
+            //MemberStatusIds Selection
+            $("#MemberStatusId").select2();
+            $("#MemberStatusId").val($("#MemberStatusId").val()).change();
+
+            //Birth Date
+            var $change = $("#Month , #Year");
+            $change.change(function () {
+                $.get("/TimeAttendance/GetDay", { "Day": $("#Day").val() == null ? $("#CurrentDay").val() : $("#Day").val(), "Month": $("#Month").val(), "Year": $("#Year").val() }, function (rs) {
+                    $("#Day").empty();
+                    $.each(rs, function (i, val) {
+                        $("#Day").append($("<option></option>").attr("value", val.value).attr("selected", val.selected).text(val.text));
+                    });
+                });
+                $("#Day").val($("#Day").val()).change();
+            });
+            $("#Month").val($("#CurrentMonth").val()).change();
+            $("#Year").val($("#CurrentYear").val()).change();
+            //Beuiful date
+            var $Date = $("#Day, #Month , #Year");
+            $Date.select2();
+
+            //Member Date
+            $("#MemberMonth, #MemberYear").change(function () {
+                $.get("/TimeAttendance/GetDay", { "Day": $("#MemberDay").val() == null ? $("#MemberCurrentDay").val() : $("#MemberDay").val(), "Month": $("#MemberMonth").val(), "Year": $("#MemberYear").val() }, function (rs) {
+                    $("#MemberDay").empty();
+                    $.each(rs, function (i, val) {
+                        $("#MemberDay").append($("<option></option>").attr("value", val.value).attr("selected", val.selected).text(val.text));
+                    });
+                });
+                $("#MemberDay").val($("#MemberDay").val()).change();
+            });
+            $("#MemberMonth").val($("#MemberCurrentMonth").val()).change();
+            $("#MemberYear").val($("#MemberCurrentYear").val()).change();
+
+            var $MemberDate = $("#MemberDay, #MemberMonth, #MemberYear");
+            $MemberDate.select2();
+
+            //Add Member
+            $("#Submit").click(function () {
+                $('#JsonForm').data("bootstrapValidator").validate();
+
+                //ตรวจสอบหมายเลขบัตรประชาชน import from /customJs/middlewarejs/ThaiPersonalIdValidator.js
+                if ($("#NoCitizenId")[0].checked != true) {
+                    alert();
+                    if (chkDigitPid($("#CitizenId").val()) == false) {
+                        var customErrorContainer = document.querySelector('small[data-bv-validator="regexp"][data-bv-for="CitizenId"][data-bv-result="VALID"][style="display: none;"]');
+                        customErrorContainer.style.display = 'block'
+                        customErrorContainer.textContent = 'กรุณากรอกเลขบัตรประชาชนให้ถูกต้อง';
+                        return null;
+                    }
+                }
+
+                if ($('#JsonForm').data("bootstrapValidator").isValid() == true) {
+                    var Data = new FormData($("#JsonForm")[0]); JsonForm
+                    Data.set("Connection", $("#Connection").val());
+                    Data.set("MemberCode", $("#MemberCode").val());
+                    if ($("#NoBirthDate")[0].checked == true) {
+                        Data.set("Month", 1);
+                        Data.set("Day", 1);
+                        Data.set("Year", 1900);
+                    }
+
+                    //Check วันที่ลาออก
+                    if ($(MemberStatusId).val() === '2') {
+                        Data.set("MemberEndDate", getDateFromSelects($("#MemberEndDay").val(), $("#MemberEndMonth").val(), $("#MemberEndYear").val()));
+                    }
+
+                    $.ajax(
+                        {
+                            type: "POST",
+                            url: "/Members/AddMember",
+                            contentType: false,
+                            processData: false,
+                            data: Data,
+                            success: function (result) {
+                                if (result.valid == true) {
+                                    toastr.success(result.message);
+                                    setTimeout(function () {
+                                        window.location.href = "/Villages/VillageEdit?VillageId=" + $("#VillageId").val();
+                                    }, 700);
+                                }
+                                else {
+                                    toastr.error('Error!' + result.message);
+                                    setTimeout(function () {
+                                        window.location.href = "";
+                                    }, 700);
+                                }
+                            }
+                        });
+                }
+            });
+
+            //สาเหตุการลาออก
+            $("#MemberStatusId").change(function () {
+                if ($(this).val() === '2') {
+                    $("#_KickOffComment,#_EndDate").attr('style', 'display:block;padding:10px');
+
+                    //Member EndDate
+                    $("#MemberEndMonth, #MemberEndYear").change(function () {
+                        $.get("/TimeAttendance/GetDay", { "Day": $("#MemberEndDay").val() == null ? $("#MemberEndCurrentDay").val() : $("#MemberEndDay").val(), "Month": $("#MemberEndMonth").val(), "Year": $("#MemberEndYear").val() }, function (rs) {
+                            $("#MemberEndDay").empty();
+                            $.each(rs, function (i, val) {
+                                $("#MemberEndDay").append($("<option></option>").attr("value", val.value).attr("selected", val.selected).text(val.text));
+                            });
+                        });
+                        $("#MemberEndDay").val($("#MemberEndDay").val()).change();
+                    });
+                    $("#MemberEndMonth").val($("#MemberEndCurrentMonth").val()).change();
+                    $("#MemberEndYear").val($("#MemberEndCurrentYear").val()).change();
+
+                    let $MemberDate = $("#MemberEndDay, #MemberEndMonth, #MemberEndYear");
+                    $MemberDate.select2();
+
+                } else {
+                    $("#_KickOffComment,#_EndDate").attr('style', 'display:none');
+                }
+            });
+
+            //ระดับเครือข่าย
+            $("#MemberPositionId").change(function () {
+
+                $("#Connection").select2({
+                    closeOnSelect: false,
+                    placeholder: "กรุณาเลือก",
+                    allowHtml: true,
+                    allowClear: true,
+                    tags: true
+                });
+
+                if ($(this).val() !== '12') {
+                    $("#_Connection").attr('style', 'display:block');
+
+                } else {
+                    $("#_Connection").attr('style', 'display:none');
+                }
+            });
+            $("#MemberPositionId").val($("#MemberPositionId").val()).change();
+
+
+        });
+
+        function getDateFromSelects(dd, mm, yyyy) {
+
+            const gregorianDate = new Date(parseInt(yyyy), parseInt(mm) - 1, parseInt(dd));
+
+            // Format Gregorian date as HTML date string
+            const year = gregorianDate.getFullYear();
+            const month = (gregorianDate.getMonth() + 1).toString().padStart(2, "0");
+            const day = gregorianDate.getDate().toString().padStart(2, "0");
+            const htmlDateString = `${year}-${month}-${day}`;
+
+            return htmlDateString;
+        }
+
+    </script>
+
+}

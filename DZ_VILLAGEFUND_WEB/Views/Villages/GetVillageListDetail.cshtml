@@ -1,0 +1,33 @@
+﻿@model IEnumerable<DZ_VILLAGEFUND_WEB.ViewModels.Villages.AdminVillageViewIndex>
+<table id="JsonTable" class="table table-bordered table-hover table-striped w-100">
+    <thead class="bg-primary-600">
+        <tr>
+            <th class="text-center" style="width:50px">ลำดับ</th>
+            <th>รหัสกองทุนหมู่บ้าน</th>
+            <th>ชื่อนิติบุคคล</th>
+            <th>รหัสนิติบุคคล</th>
+            <td>ประธานกองทุน</td>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int Rows = 1;
+            foreach (var Village in Model)
+            {
+                <tr>
+                    <td class="text-center">@Rows.</td>
+                    <td>@Village.VillageCodeText </td>
+                    <td >
+                        <a href="/Villages/VillageDetail?VillageId=@Village.VillageId">@Village.VillageName</a>
+                    </td>
+                    <td>@Village.VillageBbdId</td>
+                    <td>@Village.President</td>
+                </tr>
+                Rows++;
+
+            }
+        }
+
+
+    </tbody>
+</table>

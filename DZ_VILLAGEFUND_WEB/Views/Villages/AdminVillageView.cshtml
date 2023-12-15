@@ -1,0 +1,484 @@
+﻿@model DZ_VILLAGEFUND_WEB.Models.TransactionVillage
+@{
+    ViewData["Title"] = "พิจารณาอนุมัติ";
+    var Role = ViewBag.Role;
+    var Helper = ViewBag.Helper as DZ_VILLAGEFUND_WEB.Helpers.Utility;
+}
+<ol class="breadcrumb page-breadcrumb">
+    <li class="breadcrumb-item"><a href="/Home/Index">หน้าหลัก</a></li>
+    <li class="breadcrumb-item"><a href="/Villages/AdminVillagesIndex">พิจารณาอนุมัติ</a></li>
+    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+</ol>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel">
+            <div class="panel-hdr">
+                <h2><i class='subheader-icon fal fa-list-alt'></i>  @ViewData["Title"]</h2>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+
+                    <div class="row">
+                        <div class="col-lg-2"></div>
+                        <div class="col-lg-8">
+                            <form id="JsonForm" enctype="multipart/form-data" novalidate
+                                  asp-antiforgery="true"
+                                  data-bv-message="This value is not valid"
+                                  data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
+                                  data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
+                                  data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
+                                <div class="panel-content">
+                                    <div class="col-lg-12 col-md-12 col-sm-12">
+                                        <div class="form-group">
+                                            <label class="form-label">รหัสกองทุนหมู่บ้าน </label>
+                                            <input type="text" asp-for="VillageCodeText" class="form-control col-lg-12 col-md-12 col-sm-12"
+                                                   data-bv-notempty="true"
+                                                   maxlength="10"
+                                                   data-bv-notempty-message="กรุณากรอกข้อมูล">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">รหัสนิติบุคคล </label>
+                                            <input type="text" asp-for="VillageBbdId" class="form-control col-lg-12 col-md-12 col-sm-12"
+                                                   data-bv-notempty="true"
+                                                   maxlength="13"
+                                                   data-bv-stringlength-min="13"
+                                                   data-bv-notempty-message="กรุณากรอกข้อมูล">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">เลขทะเบียนใบนิติบุคคล </label>
+                                            <input type="text" asp-for="VillageBbdCode" class="form-control col-lg-12 col-md-12 col-sm-12"
+                                                   data-bv-notempty="true"
+                                                   maxlength="13"
+                                                   data-bv-stringlength-min="13"
+                                                   data-bv-notempty-message="กรุณากรอกข้อมูล">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">ชื่อนิติบุคคล </label>
+                                            <input type="text" asp-for="VillageName" maxlength="13" class="form-control col-lg-12 col-md-12 col-sm-12"
+                                                   data-bv-notempty="true"
+                                                   data-bv-notempty-message="กรุณากรอกข้อมูล">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">เบอร์โทรศัพท์ </label>
+                                            <input type="text" asp-for="Phone" maxlength="10" class="form-control col-lg-12 col-md-12 col-sm-12"
+                                                   data-bv-notempty="true"
+                                                   data-bv-notempty-message="กรุณากรอกข้อมูล">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">อีเมล (e-mail) </label>
+                                            <input type="email" asp-for="Email" class="form-control col-lg-12 col-md-12 col-sm-12"
+                                                   data-bv-notempty="true"
+                                                   data-bv-notempty-message="กรุณากรอกข้อมูล"
+                                                   data-bv-emailaddress="true"
+                                                   data-bv-emailaddress-message="อีเมล (e-mail) ไม่ถูกต้อง">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="form-label">
+                                                วันที่จัดตั้ง
+                                            </label>
+                                            <input type="text" id="ViewBbdDate" maxlength="13" class="form-control col-lg-12 col-md-12 col-sm-12"
+                                                   data-bv-notempty="true"
+                                                   data-bv-notempty-message="กรุณากรอกข้อมูล"
+                                                   data-provide="datepicker" data-date-language="th-th"
+                                                   value="@ViewBag.BdbDate">
+                                            <input type="date" value="BbdDate" maxlength="13" class="form-control col-lg-12 col-md-12 col-sm-12"
+                                                   data-bv-notempty="true"
+                                                   data-bv-notempty-message="กรุณากรอกข้อมูล" hidden>
+                                        </div>
+                                        <div class="row">
+                                            <article class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                                                <label class="form-label">
+                                                    วันที่เริ่มต้นสมาชิก
+                                                </label>
+                                                <input type="text" id="ViewBbdDate" maxlength="13" class="form-control col-lg-12 col-md-12 col-sm-12"
+                                                       data-bv-notempty="true"
+                                                       data-bv-notempty-message="กรุณากรอกข้อมูล"
+                                                       data-provide="datepicker" data-date-language="th-th"
+                                                       value="@ViewBag.StartDate">
+                                            </article>
+                                            <article class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                                                <label class="form-label">
+                                                    วันที่สิ้นสุดสมาชิก
+                                                </label>
+                                                <input type="text" id="ViewBbdDate" maxlength="13" class="form-control col-lg-12 col-md-12 col-sm-12"
+                                                       data-bv-notempty="true"
+                                                       data-bv-notempty-message="กรุณากรอกข้อมูล"
+                                                       data-provide="datepicker" data-date-language="th-th"
+                                                       value="@ViewBag.EndDate">
+                                            </article>
+                                        </div>
+                                        <br />
+                                        <div class="row">
+                                            <article class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                                                <label class="form-label"> ที่อยู่นิติบุคคล </label>
+                                                <input type="text" asp-for="VillageAddress" maxlength="10" class="form-control col-lg-12 col-md-12 col-sm-6"
+                                                       data-bv-notempty="true"
+                                                       data-bv-notempty-message="กรุณากรอกข้อมูล">
+                                            </article>
+                                            <article class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                                                <label class="form-label">หมู่ที่ </label>
+                                                <input type="number" asp-for="VillageMoo" class="form-control col-lg-12 col-md-12 col-sm-6"
+                                                       data-bv-notempty="true"
+                                                       data-bv-notempty-message="กรุณากรอกข้อมูล">
+                                            </article>
+
+                                            <article class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
+                                                <label class="form-label"> จังหวัด </label>
+                                                <input type="text" value="@ViewBag.Province" maxlength="10" class="form-control col-lg-12 col-md-12 col-sm-6"
+                                                       data-bv-notempty="true"
+                                                       data-bv-notempty-message="กรุณากรอกข้อมูล">
+                                            </article>
+                                            <article class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
+                                                <label class="form-label">อำเภอ/เขต </label>
+                                                <input type="text" value="@ViewBag.District" class="form-control col-lg-12 col-md-12 col-sm-6"
+                                                       data-bv-notempty="true"
+                                                       data-bv-notempty-message="กรุณากรอกข้อมูล">
+                                            </article>
+                                            <article class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
+                                                <label class="form-label">ตำบล/แขวง </label>
+                                                <input type="text" value="@ViewBag.SubDistrict" class="form-control col-lg-12 col-md-12 col-sm-6"
+                                                       data-bv-notempty="true"
+                                                       data-bv-notempty-message="กรุณากรอกข้อมูล">
+                                            </article>
+
+                                        </div>
+                                        <div class="row">
+                                            <article class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
+                                                <label class="form-label">ไปรษณีย์</label>
+                                                <input type="number" asp-for="PostCode" class="form-control col-lg-12 col-md-12 col-sm-4"
+                                                       data-bv-notempty="true"
+                                                       data-bv-notempty-message="กรุณากรอกข้อมูล">
+                                            </article>
+                                        </div>
+                                        <br />
+                                        <div class="form-group">
+                                            <h3>สมาชิกกองทุนหมู่บ้าน</h3>
+                                        </div>
+                                        <div class="form-group">
+                                            <div id="JsonDataMember" style="overflow-x:auto">
+                                                <table id="JsonTable" class="table table-bordered table-hover table-striped w-100">
+                                                    <thead class="bg-primary-600">
+                                                        <tr>
+                                                            <th class="text-center" style="width:50px">ลำดับ</th>
+                                                            <th>รหัสสมาชิก</th>
+                                                            <th>ชื่อ-สกุล</th>
+                                                            <th>ตำแหน่ง</th>
+                                                            <th>สถานะ</th>
+                                                            <th>ระดับเครือข่าย</th>
+                                                            <th>หมายเหตุ</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @{
+                                                            var Members = ViewBag.Members as IEnumerable<DZ_VILLAGEFUND_WEB.ViewModels.Members.Member>;
+                                                            int Row = 1;
+                                                            if (Members.Count() > 0)
+                                                            {
+                                                                foreach (var Village in Members)
+                                                                {
+                                                                    <tr>
+                                                                        <td class="text-center"> @Row. </td>
+                                                                        <td> @Village.MemberCode      </td>
+                                                                        <td> @Village.FullName     </td>
+                                                                        <td> @Village.MemberPosition </td>
+                                                                        <td> @Village.MemberStatus </td>
+                                                                        <td> @Village.Connection </td>
+                                                                        <td> @Village.Remark </td>
+                                                                    </tr>
+                                                                    Row++;
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                <tr>
+                                                                    <td class="text-center" colspan="5">
+                                                                        ---ไม่มีข้อมูล---
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="form-group">
+                                            <h3>ไฟล์แนบ</h3>
+                                        </div>
+                                        <div id="FileAttachDoc" style="overflow-x:auto">
+                                            <table id="FileDocument" class="table table-bordered table-hover table-striped w-100" style="width:100%;overflow-x:auto">
+                                                <thead class="bg-primary-600">
+                                                    <tr>
+                                                        <th class="text-center" style="width:50px">ลำดับ</th>
+                                                        <th>ชื่อเอกสาร</th>
+                                                        <th class="text-center">อนุมัติเอกสาร</th>
+                                                        <th class="text-center">วันที่อัปโหลด</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @{
+                                                        var Files = ViewBag.Files as IEnumerable<DZ_VILLAGEFUND_WEB.Models.TransactionFileVillage>;
+                                                        int Row2 = 1;
+                                                        if (Files.Count() > 0)
+                                                        {
+                                                            foreach (var File in Files)
+                                                            {
+                                                                <tr>
+                                                                    <td class="text-center">@Row2 .</td>
+                                                                    <td> <a href="/uploads/village/@File.GencodeFileName"> @File.FileName</a> </td>
+                                                                    <td class="text-center">
+                                                                        @if (File.Approvemark == true)
+                                                                        {
+                                                                            <i class="fal fa-check-circle" style="color:green;font-size:1rem"></i>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <a href="javascript:void(0)" data-val="@File.TransactionFileId" class="approvemark">
+                                                                                <i class="fal fa-times-circle" style="color:red;font-size:1rem" title="คลิกเพื่่ออนุมัติเอกสาร"></i>
+                                                                            </a>
+                                                                        }
+                                                                    </td>
+                                                                    <td class="text-center"> @Helper.getDateThai(File.UpdateDate) </td>
+                                                                </tr>
+                                                                Row2++;
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <tr>
+                                                                <td class="text-center" colspan="4">
+                                                                    ---ไม่มีไฟล์---
+                                                                </td>
+                                                            </tr>
+                                                        }
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <br />
+                                        <label style="color:red;margin-top:2rem;font-size:1rem"> บัญชีธนาคารตั้งต้น</label>
+                                        <hr />
+                                        <div id="FileBookbank" style="overflow-x:auto">
+                                            <table id="JsonTable" class="table table-bordered table-hover table-striped w-100">
+                                                <thead class="bg-primary-600">
+                                                    <tr>
+                                                        <th class="text-center" style="width:50px">ลำดับ</th>
+                                                        <th>ชื่อบัญชี</th>
+                                                        <th>ธนาคาร</th>
+                                                        <th class="text-center" style="width:100px;">เอกสารแนบ</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @{
+                                                        var BookbankFiles = ViewBag.BookbankFiles as IEnumerable<DZ_VILLAGEFUND_WEB.ViewModels.EAccount.BookBankListViewModel>;
+                                                        if (BookbankFiles.Count() > 0)
+                                                        {
+                                                            int Row3 = 1;
+                                                            foreach (var Get in BookbankFiles)
+                                                            {
+                                                                <tr>
+                                                                    <td class="text-center">@Row3.</td>
+                                                                    <td>@Get.AccountName</td>
+                                                                    <td>@Get.BankName</td>
+                                                                    <td class="text-center"> <a href="javascript:(0)" class="viewDocument" style="font-size:1rem" data-id="@Get.Id"><i class="fal fa-file-excel"></i> </a></td>
+                                                                </tr>
+
+                                                                Row3++;
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <tr>
+                                                                <td class="text-center" colspan="4">
+                                                                    ---ไม่มีข้อมูล---
+                                                                </td>
+                                                            </tr>
+                                                        }
+                                                    }
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="form-group">
+                                            <h3>สำนักงานเขต</h3>
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.DropDownList("OrgId", (IEnumerable<SelectListItem>)ViewBag.Orgs)
+                                        </div>
+                                    </div>
+                                </div>
+                                <input asp-for="ProvinceId" hidden />
+                                <input asp-for="DistrictId" hidden />
+                                <input asp-for="SubDistrictId" hidden />
+                                <input type="hidden" id="type" value="@ViewBag.Type" />
+                            </form>
+                            <div class="row">
+                                <div class="col-md-12" style="text-align:right">
+                                    <button class="btn btn-success ml-auto Approved" type="button" data-status="1" value="@Model.TransactionVillageId"> @(Role == "BranchAdmin" || Role == "ProvinceAdmin" ? "ผ่าน" : "อนุมัติ") </button>
+                                    <button class="btn btn-primary ml-auto DisApproved" type="button" data-status="2" value="@Model.TransactionVillageId">@(Role == "BranchAdmin" || Role == "ProvinceAdmin" ? "ไม่ผ่าน" : "ไม่อนุมัติ")</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2"></div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- view document  -->
+<div class="modal fade default-example-modal-right-lg" id="ViewDataModal" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title h4"><i class="fal fa-file-excel"></i> เอกสารแนบ</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true"><i class="fal fa-times"></i></span> </button>
+            </div>
+            <div class="modal-body">
+
+                <span id="JsonViewData"></span>
+
+            </div>
+            <div class="modal-footer"> </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <link rel="stylesheet" type="text/css" href="/css/notifications/toastr/toastr.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/formplugins/select2/select2.bundle.css">
+    <link rel="stylesheet" href="~/css/notifications/sweetalert2/sweetalert2.bundle.css">
+    <script src="~/js/notifications/toastr/toastr.js"></script>
+    <script src="~/js/formplugins/select2/select2.bundle.js"></script>
+    <script src="~/lib/datepicker/bootstrap-datepicker.js"></script>
+    <script src="~/lib/datepicker/bootstrap-datepicker.th.js"></script>
+    <script src="~/lib/datepicker/bootstrap-datepicker-thai.js"></script>
+    <script src="~/js/notifications/sweetalert2/sweetalert2.bundle.js"></script>
+    <script>
+        $(function () {
+            $('form').find(':input:not(:disabled)').prop('disabled', true);
+            $('#OrgId').prop('disabled', false);
+            $("#OrgId").select2();
+
+            $(function () {
+
+                /*
+                 * Approve
+                 */
+                $(".Approved").click(function () {
+                    const TransactionVillageId = $(this).val();
+                    Swal.fire(
+                        {
+                            title: "ยืนยันการทำรายการ",
+                            text: "คุณต้องการทำรายการนี้ หรือไม่?",
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonText: "ยืนยัน",
+                            cancelButtonText: "ยกเลิก",
+                            closeOnConfirm: false
+                        }).then(function (isConfirm) {
+                            if (isConfirm.value == true) {
+                                $.ajax({
+                                    url: '/Villages/VillagesApprove',
+                                    type: 'PUT',
+                                    data: { 'TransactionVillageId': TransactionVillageId, 'OrgId': $("#OrgId").val(), 'Type': $("#type").val() },
+                                    success: function (response) {
+                                        if (response.valid == true) {
+                                            toastr.success(response.message);
+                                            setTimeout(function () {
+                                                window.location.href = "/Villages/AdminVillagesIndex";
+                                            }, 700);
+                                        }
+                                        else {
+                                            toastr.error('แจ้งเตือน! ' + response.message);
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                });
+
+                // None Aprrove
+                $(".DisApproved").click(function () {
+                    const TransactionVillageId = $(this).val();
+                    Swal.fire(
+                        {
+                            title: "ยืนยันการทำรายการ",
+                            text: "คุณต้องการทำรายการนี้ หรือไม่?",
+                            type: "warning",
+                            html: '<input type="text" id="comment" class="form-control" placeholder="สาเหตุที่ไม่อนุมัติ">',
+                            showCancelButton: true,
+                            confirmButtonText: "ยืนยัน",
+                            cancelButtonText: "ยกเลิก",
+                            closeOnConfirm: false
+                        }).then(function (isConfirm) {
+                            if (isConfirm.value == true) {
+                                $.ajax({
+                                    url: '/Villages/Disapproved',
+                                    type: 'PUT',
+                                    data: { 'TransactionVillageId': TransactionVillageId, 'Comment': $("#comment").val() },
+                                    success: function (response) {
+                                        if (response.valid == true) {
+                                            toastr.success(response.message);
+                                            setTimeout(function () {
+                                                window.location.href = "/Villages/AdminVillagesIndex";
+                                            }, 700);
+                                        }
+                                        else {
+                                            toastr.error('แจ้งเตือน! ' + response.message);
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                });
+
+            });
+
+        });
+
+        //approve file
+        $(".approvemark").on("click", function () {
+            const TransactionFileId = $(this).attr("data-val");
+            Swal.fire(
+                {
+                    title: "ยืนยันการทำรายการ",
+                    text: "คุณต้องการทำรายการนี้ หรือไม่?",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "ยืนยัน",
+                    cancelButtonText: "ยกเลิก",
+                    closeOnConfirm: false
+                }).then(function (isConfirm) {
+                    if (isConfirm.value == true) {
+                        $.get("/Villages/UpdateVillageFileStatus", { "TransactionFileId": TransactionFileId }, function (re) {
+                            if (re.valid == true) {
+                                toastr.success(re.message);
+                                setTimeout(function () {
+                                    window.location.href = "";
+                                }, 700);
+                            }
+                            else {
+                                toastr.error('Error!' + re.message);
+                                setTimeout(function () {
+                                    window.location.href = "";
+                                }, 700);
+                            }
+                        });
+                    }
+                });
+        });
+
+        // view Bookbank document
+        $("#FileBookbank").on("click", '.viewDocument', function () {
+            $.get("/EAccount/ViewBookbankDocuments", { "BookbankId": $(this).attr("data-id") }, function (JsonResult) {
+                $("#JsonViewData").html(JsonResult);
+                $("#ViewDataModal").modal('show');
+            });
+        });
+
+    </script>
+}

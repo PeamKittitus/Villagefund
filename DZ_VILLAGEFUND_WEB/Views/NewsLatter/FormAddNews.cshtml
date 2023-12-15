@@ -1,0 +1,310 @@
+﻿@model DZ_VILLAGEFUND_WEB.ViewModels.News.TransactionNewsViewModel
+@{
+    ViewData["Title"] = "สร้างใหม่";
+
+    var GetPermission = ViewBag.Permission;
+}
+
+<ol class="breadcrumb page-breadcrumb">
+    <li class="breadcrumb-item"><a href="/Home/Index">หน้าหลัก</a></li>
+    <li class="breadcrumb-item"><a href="/NewsLatter/Index">จัดการข่าวสาร</a></li>
+    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+</ol>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel">
+            <div class="panel-hdr">
+                <h2><i class='subheader-icon fal fa-list-alt'></i>  @ViewData["Title"]</h2>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+
+                    <div class="row">
+                        <div class="col-lg-2"></div>
+                        <div class="col-lg-8">
+                            <form id="JsonForm" enctype="multipart/form-data" novalidate
+                                  asp-antiforgery="true"
+                                  data-bv-message="This value is not valid"
+                                  data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
+                                  data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
+                                  data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
+                                <div class="panel-content">
+                                    <div class="col-lg-12 col-md-12 col-sm-12">
+                                        <div class="form-group">
+                                            <label class="form-label">เลือกประเภทผู้รับข่าวสาร </label><br />
+                                            @Html.DropDownList("TransactionType", (IEnumerable<SelectListItem>)ViewBag.TransactionType, new { @class = "form-control col-lg-12 col-md-12 col-sm-12" })
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">ประเภทข่าวสาร </label><br />
+                                            @Html.DropDownList("LookupId", (IEnumerable<SelectListItem>)ViewBag.LookupId, new { @class = "form-control col-lg-12 col-md-12 col-sm-12" })
+                                        </div>
+                                        <div id="UserField" class="form-group" style="display:none">
+                                            <label class="form-label">ผู้รับข่าวสาร <span style="color:red">*</span></label>
+                                            @*          <select id="UserIds" asp-items="(IEnumerable<SelectListItem>)@ViewBag.UserId"
+                                            data-bv-notempty="true"
+                                            data-bv-notempty-message="กรุณาเลือก"
+                                            data-bv-stringlength="true"
+                                            multiple="multiple">
+                                            <optgroup label="ทั้งหมด"></optgroup>
+                                            </select>*@
+                                            <input asp-for="UserId" data-bv-notempty="true" type="hidden" />
+                                            <input id="UserIdSub" type="hidden" value="@ViewBag.UserIdSub" />
+                                            <input type="text" id="InputBox" class="form-control col-lg-12 col-md-12 col-sm-12" placeholder="เลือกผู้รับข่าวสาร" autocomplete="off" />
+                                            <small id="alert" class="help-block">กรุณากรอกข้อมูล</small>
+                                        </div>
+                                        <hr />
+                                        <div class="form-group">
+                                            <label class="form-label">วันที่เริ่มต้นข่าวสาร <span style="color:red">*</span></label>
+                                            <div class="col-lg-12">
+                                                <div class="row">
+                                                    <div class="col-lg-4">
+                                                        <input type="hidden" id="DayofDocHidden" value="">
+                                                        <select name="StartDay" asp-items="(IEnumerable<SelectListItem>)@ViewBag.Day" id="DayofDoc" style="width:100%;"></select>
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <input id="CurrentMonthofDoc" type="hidden" value="@(DateTime.Now.Month)" />
+                                                        <select name="StartMonth" asp-items="(IEnumerable<SelectListItem>)@ViewBag.Month" id="MonthofDoc" style="width:100%;"></select>
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <input id="CurrentYearofDoc" type="hidden" value="@(DateTime.Now.Year)" />
+                                                        <select name="StartYear" asp-items="(IEnumerable<SelectListItem>)@ViewBag.Year" id="YearofDoc" style="width:100%;"></select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">วันที่สิ้นสุดข่าวสาร <span style="color:red">*</span></label>
+                                            <div class="col-lg-12">
+                                                <div class="row">
+                                                    <div class="col-lg-4">
+                                                        <input type="hidden" id="DayofDocHidden" value="">
+                                                        <select name="EndDay" asp-items="(IEnumerable<SelectListItem>)@ViewBag.Day" id="EndDay" style="width:100%;"></select>
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <input id="CurrentEndMonth" type="hidden" value="@(DateTime.Now.Month)" />
+                                                        <select name="EndMonth" asp-items="(IEnumerable<SelectListItem>)@ViewBag.Month" id="EndMonth" style="width:100%;"></select>
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <input id="CurrentEndYear" type="hidden" value="@(DateTime.Now.Year)" />
+                                                        <select name="EndYear" asp-items="(IEnumerable<SelectListItem>)@ViewBag.Year" id="EndYear" style="width:100%;"></select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-lg-2">
+                                                    <label class="form-label">สถานะใช้งาน </label>
+                                                    <input type="checkbox" id="Active">
+                                                    <input type="hidden" asp-for="IsActive" />
+                                                    <span style="color:red">ใช้งาน</span>
+                                                </div>
+                                                <div class="col-lg-2" id="flagactive" style="display:none">
+                                                    <label class="form-label">แจ้งเตือน </label>
+                                                    <input type="checkbox" id="Email">
+                                                    <input type="hidden" asp-for="IsEmail" />
+                                                    <span style="color:red">อีเมล</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group mt-3">
+                                            <label class="form-label">เอกสารแนบไฟล์ </label>
+                                            <input type="file" class="form-control" name="FileName" multiple
+                                                   accept=".xlsx,.docx,.pdf"
+                                                   pattern="^.*\.(xlsx|XLSX|docx|DOCX|pdf|PDF)$" />
+                                            <label>ขนาดไฟล์ของเอกสารแนบรวมไม่เกิน 50MB/1ครั้ง </label>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">หัวข้อข่าวสาร <span style="color:red">*</span></label>
+                                            <textarea type="text" asp-for="TransactionTitle" class="form-control col-lg-12 col-md-12 col-sm-12"
+                                                      data-bv-notempty="true"
+                                                      data-bv-notempty-message="กรุณากรอกข้อมูล" rows="2"></textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">รายละเอียดข่าวสาร </label>
+                                            <textarea type="text" asp-for="TransactionDetail" class="form-control col-lg-12 col-md-12 col-sm-12"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel-content border-faded border-left-0 border-right-0 border-bottom-0 d-flex flex-row align-items-center m-3 pt-3">
+                                    <button class="btn btn-primary ml-auto" style="visibility:@(GetPermission.Insert == false ? "hidden" : "")" type="button" id="Submit">บันทึก</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-lg-2"></div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    @*Hide Not found Bootstrap Icon*@
+    <style>
+        .input-group-btn {
+            display: none;
+        }
+
+        .multiselect-container {
+            width: 100% !important;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" href="/css/notifications/toastr/toastr.css">
+    <link rel="stylesheet" type="text/css" href="/css/formplugins/summernote/summernote.css">
+    <link rel="stylesheet" type="text/css" href="/lib/datepicker/datepicker.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/formplugins/select2/select2.bundle.css">
+    <link rel="stylesheet" href="~/css/bootstrap-multiselect.css" type="text/css" />
+    <script src="~/js/Validation/bootstrapValidator.min.js"></script>
+    <script src="~/js/notifications/toastr/toastr.js"></script>
+    <script src="~/js/formplugins/select2/select2.bundle.js"></script>
+    <script src="~/js/formplugins/summernote/summernote.js"></script>
+    <script src="~/lib/datepicker/bootstrap-datepicker.js"></script>
+    <script src="~/lib/datepicker/bootstrap-datepicker.th.js"></script>
+    <script src="~/lib/datepicker/bootstrap-datepicker-thai.js"></script>
+    <script type="text/javascript" src="~/js/bootstrap-multiselect.js"></script>
+
+    <link rel="stylesheet" href="~/lib/style.css">
+    <script src="~/lib/comboTreePlugin.js" type="text/javascript"></script>
+
+    <script type="text/javascript">
+        let selectedId, type = 0;
+        jQuery(document).ready(function ($) {
+            comboTree3 = $('#InputBox').comboTree({
+                source: JSON.parse($('#UserIdSub').val()),
+                isMultiple: true,
+                cascadeSelect: true,
+                withSelectAll: true,
+                collapse: false
+            });
+            comboTree3.setSource(JSON.parse($('#UserIdSub').val()));
+            comboTree3.onChange(function () {
+                selectedId = this.getSelectedIds();
+            });
+        });
+
+        $(function () {
+
+            //$('#UserIds').multiselect({
+            //    buttonWidth: '100%',
+            //    enableClickableOptGroups: true,
+            //    enableFiltering: true,
+            //    maxHeight: 200,
+            //    numberDisplayed: 1
+            //});
+
+            $("#alert").hide();
+            $("#LookupId").select2();
+            $("#TransactionType").select2();
+            $("#TransactionType").change(function () {
+                if ($("#TransactionType").val() == "true") {
+                    $("#UserField").attr("style", "display:block");
+                    $("#flagactive").attr("style", "display:block");
+                    $("#IsActive").attr('checked', false);
+                    type = 1;
+                } else {
+                    $("#UserField").attr("style", "display:none");
+                    $("#flagactive").attr("style", "display:none");
+                    $("#IsActive").attr('checked', true);
+                    type = 0;
+                }
+            });
+            //$("#TransactionType").val($("#TransactionType").val()).change();
+
+            $('#TransactionDetail').summernote({
+                height: 500,
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'underline', 'clear']],
+                    ['fontsize', ['fontsize']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']],
+                    ['insert', ['link']],
+                    ['view', ['fullscreen', 'codeview', 'help']]
+                ]
+            });
+
+            //Start Date
+            var $change = $("#MonthofDoc , #YearofDoc");
+            $change.change(function () {
+                // alert($("#MonthofDoc").val()+"/////"+$("#YearofDoc").val());
+                $.get("/TimeAttendance/GetDay", { "Day": $("#DayofDoc").val(), "Month": $("#MonthofDoc").val(), "Year": $("#YearofDoc").val() }, function (rs) {
+                    $("#DayofDoc").empty();
+                    $.each(rs, function (i, val) {
+                        $("#DayofDoc").append($("<option></option>").attr("value", val.value).attr("selected", val.selected).text(val.text));
+                    });
+                    $("#DayofDoc").select2();
+                });
+                $("#DayofDoc").val($("#DayofDoc").val()).change();
+            });
+            $("#MonthofDoc").val($("#CurrentMonthofDoc").val()).change();
+            $("#YearofDoc").val($("#CurrentYearofDoc").val()).change();
+
+            //End Date
+            var $change = $("#EndMonth , #EndYear");
+            $change.change(function () {
+                // alert($("#EndMonth").val()+"/////"+$("#EndYear").val());
+                $.get("/TimeAttendance/GetDay", { "Day": $("#EndDay").val(), "Month": $("#EndMonth").val(), "Year": $("#EndYear").val() }, function (rs) {
+                    $("#EndDay").empty();
+                    $.each(rs, function (i, val) {
+                        $("#EndDay").append($("<option></option>").attr("value", val.value).attr("selected", val.selected).text(val.text));
+                    });
+                    $("#EndDay").select2();
+                });
+                $("#EndDay").val($("#EndDay").val()).change();
+            });
+            $("#EndMonth").val($("#CurrentEndMonth").val()).change();
+            $("#EndYear").val($("#CurrentEndYear").val()).change();
+            //Beuiful date
+            var $Date = $("#MonthofDoc, #YearofDoc , #EndMonth , #EndYear");
+            $Date.select2();
+
+            //Submit
+            $('#JsonForm').bootstrapValidator();
+            $("#Submit").click(function () {
+                $("#UserId").val(selectedId);
+                if ($("#UserId").val().length == 0)
+                    $("#alert").show();
+                else
+                    $("#alert").hide();
+                $("#LookupId").val($("#LookupId").val());
+                $('#JsonForm').data("bootstrapValidator").validate();
+                if ($("#Active").is(':checked')) {
+                    $("#IsActive").val("true");
+                }
+                if ($("#Email").is(':checked')) {
+                    $("#IsEmail").val("true");
+                }
+                if ($('#JsonForm').data("bootstrapValidator").isValid() == true && ($("#UserId").val().length > 0 || type == 0)) {
+                    var Data = new FormData($("#JsonForm")[0]);
+                    $.ajax(
+                        {
+                            type: "POST",
+                            url: "/NewsLatter/FormAddNews",
+                            contentType: false,
+                            processData: false,
+                            data: Data,
+                            success: function (result) {
+                                if (result.valid == true) {
+                                    toastr.success(result.message);
+                                    setTimeout(function () {
+                                        window.location.href = "/NewsLatter/Index";
+                                    }, 700);
+                                }
+                                else {
+                                    toastr.error('Error!' + result.message);
+                                    setTimeout(function () {
+                                        window.location.href = "";
+                                    }, 700);
+                                }
+                            }
+                        });
+                }
+            });
+        });
+
+    </script>
+
+}

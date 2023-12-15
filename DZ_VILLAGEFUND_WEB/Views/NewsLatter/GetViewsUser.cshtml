@@ -1,0 +1,43 @@
+﻿@model IEnumerable<DZ_VILLAGEFUND_WEB.ViewModels.News.NewsReader>
+@{
+    var GetPermission = ViewBag.Permission;
+}
+
+<table id="JsonTable" class="table table-bordered table-hover table-striped w-100">
+    <thead class="bg-primary-600">
+        <tr>
+            <th class="text-center" style="width:50px">ลำดับ</th>
+            <th class="text-center">ผู้รับข่าวสาร</th>
+            <th class="text-center">สถานะ</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @{
+            int Rows = 1;
+            foreach (var Get in Model)
+            {
+                <tr>
+                    <td class="text-center">@Rows.</td>
+                    <td> @Get.UserName </td>
+                    <td class="text-center" style="width:300px;">
+                        @{
+                            if (Get.IsRead == true)
+                            {
+                                <i class="fal fa-check-circle" style="color:green;font-size:1rem"></i> <span style="color:green;">อ่านแล้ว</span>
+                            }
+                            else
+                            {
+                                <i class="fal fa-times-circle" style="color:red;font-size:1rem"></i> <span style="color:red;">ยังไม่อ่าน</span>
+                            }
+                        }
+
+                    </td>
+                </tr>
+
+                Rows++;
+            }
+        }
+
+    </tbody>
+</table>

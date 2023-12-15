@@ -1,0 +1,27 @@
+﻿@model IEnumerable<DZ_VILLAGEFUND_WEB.ViewModels.EAccount.ReportActTransactionProvince>
+
+<table id="JsonTable" class="table table-bordered table-hover table-striped w-55">
+    <thead class="bg-primary-600">
+        <tr>
+            <th class="text-center border" style="width:50px">ที่</th>
+            <th class="border">รายชื่อธนาคารสำหรับจังหวัด @ViewBag.ProvinceName</th>
+            <th class="text-center border" style="width:100px">กองทุน</th>
+            <th class="text-right border" style="width:150px">งบประมาณ</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int Row = 1;
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td class="text-center">@Row</td>
+                    <td>@item.BookbankName</td>
+                    <td class="text-center">@item.VillageNumber</td>
+                    <td class="text-right">@item.Amount.ToString("N")</td>
+                </tr>
+                Row++;
+            }
+        }
+    </tbody>
+</table>

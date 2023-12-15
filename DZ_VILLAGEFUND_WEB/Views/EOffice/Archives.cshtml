@@ -1,0 +1,209 @@
+﻿@{
+    ViewData["Title"] = "ทะเบียนหนังสือส่ง";
+}
+<ol class="breadcrumb page-breadcrumb">
+    <li class="breadcrumb-item"><a href="/Home/Index">หน้าหลัก</a></li>
+    <li class="breadcrumb-item"><a href="javascript:void(0)">E-Office</a></li>
+    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+</ol>
+
+<!-- Archives Filter -->
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel">
+            <div class="panel-hdr">
+                <h2><i class='subheader-icon fal fa-list-alt'></i>  @ViewData["Title"]</h2>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+                    <div class="col-lg-12">
+                        <form id="JsonForm" enctype="multipart/form-data" novalidate
+                              asp-antiforgery="true"
+                              data-bv-message="This value is not valid"
+                              data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
+                              data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
+                              data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
+                            <div class="panel-content">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                            <label class="form-label"> สังกัด </label>
+                                            @Html.DropDownList("Organization", (IEnumerable<SelectListItem>)ViewBag.Organization, new { @style = "width:100%" })
+                                        </article>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
+                                            <label class="form-label">ประเภทหนังสือ </label>
+                                            @Html.DropDownList("ArchivesType", (IEnumerable<SelectListItem>)ViewBag.ArchivesType, new { @style = "width:100%" })
+                                        </article>
+                                        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
+                                            <label class="form-label"> เดือน </label>
+                                            @Html.DropDownList("Month", (IEnumerable<SelectListItem>)ViewBag.Month, new { @style = "width:100%" })
+                                        </article>
+                                        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
+                                            <label class="form-label"> ปี </label>
+                                            @Html.DropDownList("Year", (IEnumerable<SelectListItem>)ViewBag.BugetYear, new { @style = "width:100%" })
+                                        </article>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div>
+    <a href="/EOffice/FormAddArchives" class="btn btn-primary ml-auto" type="button" ><i class="fal fa-plus"></i>สร้างหนังสือ</a>
+</div>
+<br />
+<!-- Archives List -->
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel">
+            <div class="panel-hdr">
+                <h2><i class='subheader-icon fal fa-list-alt'></i>  @ViewData["Title"]</h2>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+
+                    <div id="JsonData"></div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ViewDataArchives -->
+<div class="modal fade default-example-modal-center-lg" id="ViewDataArchives" role="dialog" aria-hidden="false">
+    <div class="modal-dialog modal-dialog-center modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title h4"><i class="fal fa-list-alt"></i> รายละเอียดหนังสือ</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true"><i class="fal fa-times"></i></span> </button>
+            </div>
+            <div class="modal-body" style="font-size:0.9rem">
+
+                <span id="JsonViewDataArchives"></span>
+
+            </div>
+            <div class="modal-footer"> </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <link rel="stylesheet" type="text/css" href="/css/notifications/toastr/toastr.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/formplugins/select2/select2.bundle.css">
+    <link rel="stylesheet" type="text/css" href="/lib/datepicker/datepicker.css">
+    <link rel="stylesheet" href="~/css/notifications/sweetalert2/sweetalert2.bundle.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/datagrid/datatables/datatables.bundle.css">
+    
+    <script src="~/js/Validation/bootstrapValidator.min.js"></script>
+    <script src="~/js/notifications/toastr/toastr.js"></script>
+    <script src="~/js/notifications/sweetalert2/sweetalert2.bundle.js"></script>
+    <script src="~/js/formplugins/select2/select2.bundle.js"></script>
+    <script src="~/js/datagrid/datatables/datatables.bundle.js"></script>
+    <script src="~/js/datagrid/datatables/datatables.export.js"></script>
+    <script>
+
+        /*
+         * get data
+         * init table
+         */
+
+        //Beutiful DropDown
+        $("#Organization").select2();
+        $("#ArchivesType").select2();
+        $("#Month").select2();
+        $("#Year").select2();
+
+        //First Load
+        var Selected = $("#Organization , #ArchivesType, #Month ,#Year");
+        Selected.change(function () {
+            LoadData($("#Organization").val(), $("#ArchivesType").val(), $("#Year").val(), $("#Month").val());
+        });
+        $("#Organization").val($("#Organization").val()).change();
+
+        //Auto Load Every 1 minute
+        setInterval(function () {
+            LoadData($("#Organization").val(), $("#ArchivesType").val(), $("#Year").val(), $("#Month").val());
+        }, 60000);
+
+        // view document
+        $("#JsonData").on("click", ".ViewArchives", function () {
+            $.get("/EOffice/ViewDocuments", { "ArchiveId": $(this).attr("data-id") }, function (JsonForm) {
+                $("#JsonViewDataArchives").html(JsonForm);
+                $("#ViewDataArchives").modal("show");
+                $('#use-selector-label span').tooltip();
+            });
+        });
+
+        function LoadData(OrgId, Type, Year, Month) {
+            $("#JsonData").html('<img src="/img/loading.gif" width="200">');
+            $.get("/EOffice/GetArchives", { "OrgCode": OrgId, "TypeCode": Type, "Year": Year, "Month": Month }, function (JsonResult) {
+                $("#JsonData").html(JsonResult);
+                $('#JsonTable').dataTable(
+                    {
+                        "pageLength": 50,
+                        responsive: true,
+                        lengthChange: false
+                    });
+
+                // view document
+                $("#JsonTable").on("click", ".ViewDetail", function () {
+                    $.get("/EOffice/ViewDocuments", { "ArchiveId": $(this).attr("data-id") }, function (JsonForm) {
+                        $("#JsonViewDataArchives").html(JsonForm);
+                        $("#ViewDataArchives").modal("show");
+                    });
+                });
+
+                //Edit Archive
+                $("#JsonTable").on("click", ".edit", function () {
+                    window.location.href = "/EOffice/FormEditArchives?ArchivesId=" + $(this).attr("ArchiveId") + "&OrgCode=" + $(this).attr("OrgCode");
+                });
+                
+                //Delete Archive
+                $('#JsonData .deleteArchive').unbind().click(function () {
+                    const Id = $(this).attr("data-val");
+                    Swal.fire(
+                        {
+                            title: "ยืนยันการทำรายการ",
+                            text: "คุณต้องการลบรายการนี้ หรือไม่?",
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonText: "ยืนยัน",
+                            cancelButtonText: "ยกเลิก",
+                            closeOnConfirm: false
+                        }).then(function (isConfirm) {
+                            if (isConfirm.value == true) {
+                                $.get("/EOffice/DeleteArchives", { "Id": Id }, function (rs) {
+                                    if (rs.valid == true) {
+                                        toastr.success(rs.message);
+                                        setTimeout(function () {
+                                            window.location.href = "";
+                                        }, 1000);
+                                    }
+                                    else {
+                                        toastr.error('Error!' + rs.message);
+                                        setTimeout(function () {
+                                            window.location.href = "";
+                                        }, 1000);
+                                    }
+                                });
+                            }
+                        });
+                });
+
+            });
+        }
+
+
+    </script>
+
+
+}

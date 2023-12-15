@@ -1,0 +1,31 @@
+﻿@model IEnumerable<object>
+
+<table id="JsonTable" class="table table-bordered table-hover table-striped w-100">
+    <thead class="bg-primary-600">
+        <tr>
+            <th class="text-center" style="width:50px">ลำดับ</th>
+            <th class="text-center">กองทุนหมู่บ้าน</th>
+            <th class="text-center">รายชื่อ</th>
+            <th class="text-center">สถานะ</th>
+            <th class="text-center">เบอร์โทรศัพท์</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int Rows = 1;
+            foreach (var Get in Model)
+            {
+                <tr>
+                    <td class="text-center">@Rows.</td>
+                    <td class="text-left">@Get.GetType().GetProperty("VillageName").GetValue(Get, null)</td>
+                    <td class="text-left">คุณ @Get.GetType().GetProperty("Name").GetValue(Get, null)</td>
+                    <td class="text-left">@Get.GetType().GetProperty("Status").GetValue(Get, null)</td>
+                    <td class="text-center">@Get.GetType().GetProperty("Phone").GetValue(Get, null)</td>
+                </tr>
+
+                Rows++;
+            }
+        }
+
+    </tbody>
+</table>

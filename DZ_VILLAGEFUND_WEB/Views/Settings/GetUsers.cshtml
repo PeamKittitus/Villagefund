@@ -1,0 +1,54 @@
+﻿@model IEnumerable<DZ_VILLAGEFUND_WEB.ViewModels.Settings.ListUsersViewModel>
+@{
+    var GetPermission = ViewBag.Permission as DZ_VILLAGEFUND_WEB.ViewModels.Settings.PermissionViewModel;
+}
+
+
+<table id="JsonTable" class="table table-bordered table-hover table-striped w-100">
+    <thead class="bg-primary-600">
+        <tr>
+            <th class="text-center" style="width:50px">ลำดับ</th>
+            <th>ชื่อผู้ใช้งาน</th>
+            <th>ชื่อบัญชีผู้ใช้งาน</th>
+            <th>สิทธิผู้ใช้งาน</th>
+            <th class="text-center">สถานะผู้ใช้งาน</th>
+            <th class="text-center" style="width:160px;"></th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @{
+            int Rows = 1;
+            foreach (var Get in Model)
+            {
+                <tr>
+                    <td class="text-center">@Rows.</td>
+                    <td>@Get.FullName</td>
+                    <td>@Get.UserName</td>
+                    <td>@Get.RoleName</td>
+                    <td class="text-center">
+
+                        @{
+                            if (Get.Status == true)
+                            {
+                                <i class="fal fa-unlock-alt set-icon-unlock-size"></i>
+                            }
+                            else
+                            {
+                                <i class="fal fa-lock-alt set-icon-lock-size"></i>
+                            }
+                        }
+
+                    </td>
+                    <td class="text-center" style="width:100px;">
+                        <a href="javascript:void(0);" data-val="@Get.Id" style="visibility:@(GetPermission.Update == false ? "hidden" : "")" class="btn btn-sm btn-warning btn-xs edit" title="Edit"><i class="fal fa-edit"></i> แก้ไข </a>
+                        <a href="javascript:void(0);" data-val="@Get.Id" style="visibility:@(GetPermission.Delete == false ? "hidden" : "")" class="btn btn-sm btn-danger  btn-xs delete" title="Delete"><i class="fal fa-times"></i> ลบ </a>
+                    </td>
+                </tr>
+
+                Rows++;
+            }
+        }
+
+    </tbody>
+</table>

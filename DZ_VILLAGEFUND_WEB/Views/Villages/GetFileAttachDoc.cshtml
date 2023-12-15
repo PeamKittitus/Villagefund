@@ -1,0 +1,37 @@
+﻿@model IEnumerable<DZ_VILLAGEFUND_WEB.Models.TransactionFileVillage>
+@{
+    var Helper = ViewBag.Helper as DZ_VILLAGEFUND_WEB.Helpers.Utility;
+    var GetPermission = ViewBag.Permission as DZ_VILLAGEFUND_WEB.ViewModels.Settings.PermissionViewModel;
+}
+<div>
+    <table id="JsonTable" class="table table-bordered table-hover table-striped w-100" style="width:100%">
+        <thead class="bg-primary-600">
+            <tr>
+                <th class="text-center" style="width:50px">ลำดับ</th>
+                <th>ชื่อเอกสาร</th>
+                <th>วันที่อัปโหลด</th>
+                <th class="text-center">จัดการไฟล์</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int Row = 1;
+                foreach (var File in Model)
+                {
+                    <tr>
+                        <td class="text-center">@Row .</td>
+                        <td> <a href="/uploads/village/@File.GencodeFileName" download="@File.FileName" > @File.FileName</a> </td>
+                        <td> @Helper.getDateThai(File.UpdateDate)</td>
+                        <td class="text-center">
+                            @if(File.Approvemark != true)
+                            {
+                                <a href="javascript:void(0);" data-val="@File.TransactionFileId" class="btn btn-sm btn-danger deletefile" title="Delete" style="visibility:@(GetPermission.Delete == false ? "hidden" : "")"><i class="fal fa-delete"></i> ลบ</a>
+                            }
+                        </td>
+                    </tr>
+                    Row++;
+                }
+            }
+        </tbody>
+    </table>
+</div>

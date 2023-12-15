@@ -1,0 +1,19 @@
+﻿@model DZ_VILLAGEFUND_WEB.Models.Village
+<div class="form-group">
+    <section id="widget-grid" style="margin-bottom:12px;">
+        <div class="row">
+            <article class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
+                <label class="form-label">จังหวัด</label>
+                @Html.DropDownList("Province", (IEnumerable<SelectListItem>)ViewBag.ProvinceId ,new { @style = "width:100%",required = "required" })
+            </article>
+            <article class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
+                <label class="form-label">อำเภอ/เขต</label>
+                <div id="SelectDistric"></div>
+            </article>
+            <article class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
+                <label class="form-label">ตำบล/แขวง</label>
+                <div id="SelectSubDistric"></div>
+            </article>
+        </div>
+    </section>
+</div>

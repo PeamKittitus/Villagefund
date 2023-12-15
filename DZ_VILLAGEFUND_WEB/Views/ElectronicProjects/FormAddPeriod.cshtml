@@ -1,0 +1,78 @@
+﻿@model DZ_VILLAGEFUND_WEB.Models.ProjectActivity
+
+<form id="JsonForm" enctype="multipart/form-data"
+      asp-antiforgery="true"
+      data-bv-message="This value is not valid"
+      data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
+      data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
+      data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
+    <div class="panel-content">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            @*<div class="form-group">
+            <label class="form-label"><strong> งวดที่</strong> <span style="color:red"> *</span></label>
+            <input type="text" asp-for="ProjectActivityId" class="form-control col-lg-12 col-md-12 col-sm-12" maxlength="2"
+            data-bv-notempty="true"
+            data-bv-notempty-message="กรุณากรอกข้อมูล"
+            pattern="^[0-9]*$"
+            data-bv-message="เฉพาะตัวเลข" />
+            </div>*@
+            <div class="form-group">
+                <label class="form-label"><strong> กิจกรรม/โครงการ</strong> <span style="color:red"> *</span></label>
+                <textarea asp-for="ActivityDetail" class="form-control col-lg-12 col-md-12 col-sm-12"
+                          data-bv-notempty="true"
+                          data-bv-notempty-message="กรุณากรอกข้อมูล"></textarea>
+            </div>
+            <div class="form-group">
+                <label class="form-label"><strong> งบประมาณกิจกรรม</strong> <span style="color:red"> *</span></label>
+                <input type="text" asp-for="ActivityBudget" class="form-control col-lg-12 col-md-12 col-sm-12"
+                       data-bv-notempty="true"
+                       data-bv-notempty-message="กรุณากรอกข้อมูล">
+            </div>
+            <div class="form-group">
+                <label class="form-label"> วันที่เริ่ม<span style="color:red"> *</span> </label>
+                <section id="widget-grid" style="margin-bottom:12px;">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <input type="hidden" id="CurrentStartDay" value="@(Model != null ? Model.StartActivityDate.Day : DateTime.Now.Day)">
+                            <select name="StartDay" asp-items="(IEnumerable<SelectListItem>)@ViewBag.Day" id="StartDay" style="width:100%;"></select>
+                        </div>
+                        <div class="col-lg-4">
+                            <input id="CurrentStartMonth" type="hidden" value="@(Model != null ? Model.StartActivityDate.Month : DateTime.Now.Month)" />
+                            <select name="StartMonth" asp-items="(IEnumerable<SelectListItem>)@ViewBag.Month" id="StartMonth" style="width:100%;"></select>
+                        </div>
+                        <div class="col-lg-4">
+                            <input id="CurrentStartYear" type="hidden" value="@(Model != null ? Model.StartActivityDate.Year : DateTime.Now.Year)" />
+                            <select name="StartYear" asp-items="(IEnumerable<SelectListItem>)@ViewBag.Year" id="StartYear" style="width:100%;"></select>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div class="form-group">
+                <label class="form-label">วันที่สิ้นสุด <span style="color:red">*</span></label>
+                <section id="widget-grid" style="margin-bottom:12px;">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <input type="hidden" id="CurrentEndDay" value="@(Model != null ? Model.EndActivityDate.Day : DateTime.Now.Day)">
+                            <select name="EndDay" asp-items="(IEnumerable<SelectListItem>)@ViewBag.Day" id="EndDay" style="width:100%;"></select>
+                        </div>
+                        <div class="col-lg-4">
+                            <input id="CurrentEndMonth" type="hidden" value="@(Model != null ? Model.EndActivityDate.Month : DateTime.Now.Month)" />
+                            <select name="EndMonth" asp-items="(IEnumerable<SelectListItem>)@ViewBag.Month" id="EndMonth" style="width:100%;"></select>
+                        </div>
+                        <div class="col-lg-4">
+                            <input id="CurrentEndYear" type="hidden" value="@(Model != null ? Model.EndActivityDate.Year : DateTime.Now.Year)" />
+                            <select name="EndYear" asp-items="(IEnumerable<SelectListItem>)@ViewBag.Year" id="EndYear" style="width:100%;"></select>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <input type="hidden" asp-for="ProjectId" value="@ViewBag.ProjectId" />
+
+
+            <div class="panel-content border-faded border-left-0 border-right-0 border-bottom-0 d-flex flex-row align-items-center m-3 pt-3">
+                <button class="btn btn-primary ml-auto" type="button" id="Submit"> บันทึก</button>
+            </div>
+        </div>
+    </div>
+</form>

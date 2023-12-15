@@ -1,0 +1,78 @@
+﻿@model DZ_VILLAGEFUND_WEB.Models.AccountBookBank
+
+<form id="JsonForm" enctype="multipart/form-data"
+      asp-antiforgery="true"
+      data-bv-message="This value is not valid"
+      data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
+      data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
+      data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
+    <div class="panel-content">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="form-group">
+                <label class="form-label"> ธนาคาร</label>
+                @Html.DropDownList("BankCode", (IEnumerable<SelectListItem>)ViewBag.Banks)
+            </div>
+            <div class="form-group">
+                <label class="form-label"><strong> ชื่อบัญชี</strong> <span style="color:red">*</span></label>
+                <input type="text" asp-for="BookBankName" class="form-control col-lg-12 col-md-12 col-sm-12"
+                       data-bv-notempty="true"
+                       data-bv-notempty-message="กรุณากรอกข้อมูล" />
+            </div>
+            <div class="form-group">
+                <label class="form-label"><strong> หมายเลขบัญชี</strong> <span style="color:red">*</span></label>
+                <input type="text" asp-for="BookBankId" class="form-control col-lg-12 col-md-12 col-sm-12" maxlength="15"
+                       data-bv-notempty="true"
+                       data-bv-notempty-message="กรุณากรอกข้อมูล"
+                       pattern="^[0-9]*$"
+                       data-bv-message="เฉพาะตัวเลข">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label"><strong> ผู้มีอำนาจเบิกถอนเงินในบัญชีคนที่ 1</strong> <span style="color:red">*</span></label>
+                <input type="text" class="form-control col-lg-12 col-md-12 col-sm-12 withdraw-office-name" maxlength="190"
+                       value="@Model.WithdrawOfficeName.Split(",")[0]"
+                       data-bv-notempty="true"
+                       name="WithdrawOfficeName"
+                       data-bv-notempty-message="กรุณากรอกข้อมูล">
+            </div>
+            <div class="form-group">
+                <label class="form-label"><strong> ผู้มีอำนาจเบิกถอนเงินในบัญชีคนที่ 2</strong> <span style="color:red">*</span></label>
+                <input type="text" class="form-control col-lg-12 col-md-12 col-sm-12 withdraw-office-name" maxlength="190"
+                       value="@Model.WithdrawOfficeName.Split(",")[1]"
+                       data-bv-notempty="true"
+                       name="WithdrawOfficeName"
+                       data-bv-notempty-message="กรุณากรอกข้อมูล">
+            </div>
+            <div class="form-group">
+                <label class="form-label"><strong> ผู้มีอำนาจเบิกถอนเงินในบัญชีคนที่ 3</strong> <span style="color:red">*</span></label>
+                <input type="text" class="form-control col-lg-12 col-md-12 col-sm-12 withdraw-office-name" maxlength="190"
+                       value="@Model.WithdrawOfficeName.Split(",")[2]"
+                       data-bv-notempty="true"
+                       name="WithdrawOfficeName"
+                       data-bv-notempty-message="กรุณากรอกข้อมูล">
+            </div>
+            <div class="form-group">
+                <label class="form-label"><strong> ผู้มีอำนาจเบิกถอนเงินในบัญชีคนที่ 4 (ถ้ามี)</strong></label>
+                <input type="text" class="form-control col-lg-12 col-md-12 col-sm-12 withdraw-office-name" maxlength="190" value="@Model.WithdrawOfficeName.Split(",")[3]">
+            </div>
+            <div class="form-group">
+                <label class="form-label"><strong> ผู้มีอำนาจเบิกถอนเงินในบัญชีคนที่ 5 (ถ้ามี)</strong></label>
+                <input type="text" class="form-control col-lg-12 col-md-12 col-sm-12 withdraw-office-name" maxlength="190" value="@Model.WithdrawOfficeName.Split(",")[4]">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label"><strong> แนบไฟล์หน้าสมุดบัญชี</strong> </label>
+                <input type="file" class="form-control" name="BookbankFile" id="BookbankFile"
+                       accept="image/*, video/*, audio/*, .pdf, .docx, .xlsx, .zip, .rar, .ppt, .pptx" />
+            </div>
+
+            <input type="hidden" asp-for="ProjectBbId" />
+            <input type="hidden" asp-for="OrgId" />
+            <input type="hidden" asp-for="IsBrance" />
+
+            <div class="panel-content border-faded border-left-0 border-right-0 border-bottom-0 d-flex flex-row align-items-center m-3 pt-3">
+                <button class="btn btn-primary ml-auto" type="button" id="Submit"> บันทึก</button>
+            </div>
+        </div>
+    </div>
+</form>

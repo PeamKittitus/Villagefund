@@ -1,0 +1,89 @@
+﻿@model IEnumerable<DZ_VILLAGEFUND_WEB.ViewModels.EAccount.ReportApproveAndPendingActTransactionProvince>
+<table id="JsonTable" class="table table-bordered table-hover table-striped w-100">
+    <thead>
+        <tr>
+            <th>ที่</th>
+            <th>จังหวัด</th>
+            <th>อำเภอ/เขต</th>
+            <th>เป้าหมาย (กองทุน)</th>
+            <th>กองทุน (ยื่น)</th>
+            <th>ร้อยละ</th>
+            <th>โครงการ (ยื่น)</th>
+            <th>งบประมาณ (ยื่น)</th>
+            <th>กองทุน (อนุมัติแล้ว)</th>
+            <th>ร้อยละ</th>
+            <th>โครงการ (อนุมัติแล้ว)</th>
+            <th>งบประมาณ (อนุมัติแล้ว)</th>
+            <th>กองทุน (คงเหลือจากเป้าหมาย)</th>
+            <th>ร้อยละ</th>
+            <th>กองทุน (โอนเงินแล้ว)</th>
+            <th>ร้อยละ</th>
+            <th>โครงการ (โอนเงินแล้ว) </th>
+            <th>งบประมาณ (โอนเงินแล้ว)</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int Row = 1;
+            foreach (var item in Model.OrderBy(o => o.ProvinceId))
+            {
+                <tr>
+                    <td>@Row</td>
+                    <td>@item.ProvinceName</td>
+                    <td>@item.DistrictName</td>
+                    <td>@item.VillageNumberAll</td>
+                    <td>@item.PendingVillageNumber</td>
+                    <td>@((item.PendingVillageNumber * 100 / item.VillageNumberAll).ToString("N"))</td>
+                    <td>@item.PendingProjectNumber</td>
+                    <td>@item.PendingAmountProject</td>
+                    <td>@item.VillageNumber</td>
+                    <td>@((item.VillageNumber * 100 / item.VillageNumberAll).ToString("N"))</td>
+                    <td>@item.ProjectNumber</td>
+                    <td>@item.AmountProject</td>
+                    <td>@(item.VillageNumberAll - item.VillageNumber)</td>
+                    <td>@(((item.VillageNumberAll - item.VillageNumber) * 100 / item.VillageNumberAll).ToString("N"))</td>
+                    <td>@item._VillageNumber</td>
+                    <td>@((item._VillageNumber * 100 / item.VillageNumber).ToString("N"))</td>
+                    <td>@item._ProjectNumber</td>
+                    <td>@item._AmountProject</td>
+
+
+                </tr>
+                Row++;
+
+
+                @if (item == Model.Last())
+                {
+                    <tr>
+
+                        <td>@(Model.Count() + 1)</td>
+                        <td>รวมทั้งหมด</td>
+                        <td></td>
+                        <td>@Model.Sum(s => s.VillageNumberAll)</td>
+                        <td>@Model.Sum(s => s.PendingVillageNumber)</td>
+                        <td>@(((Model.Sum(s => s.PendingVillageNumber) * 100 / Model.Sum(s => s.VillageNumberAll))).ToString("N"))</td>
+                        <td>@Model.Sum(s => s.PendingProjectNumber)</td>
+                        <td>@Model.Sum(s => s.PendingAmountProject)</td>
+                        <td>@Model.Sum(s => s.VillageNumber)</td>
+                        <td>@(((Model.Sum(s => s.VillageNumber) * 100 / Model.Sum(s => s.VillageNumberAll))).ToString("N"))</td>
+                        <td>@Model.Sum(s => s.ProjectNumber)</td>
+                        <td>@Model.Sum(s => s.AmountProject)</td>
+                        <td>@(Model.Sum(s => s.VillageNumberAll) - Model.Sum(s => s.VillageNumber))</td>
+                        <td>@(((Model.Sum(s => s.VillageNumberAll) - Model.Sum(s => s.VillageNumber)) * 100 / Model.Sum(s => s.VillageNumber)).ToString("N"))</td>
+                        <td>@Model.Sum(s => s._VillageNumber)</td>
+                        <td>@((Model.Sum(s => s._VillageNumber) * 100 / Model.Sum(s => s.VillageNumber)).ToString("N"))</td>
+                        <td>@Model.Sum(s => s._ProjectNumber)</td>
+                        <td>@Model.Sum(s => s._AmountProject)</td>
+
+                    </tr>
+
+
+                }
+                
+
+            }
+        }
+    </tbody>
+
+</table>

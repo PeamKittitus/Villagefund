@@ -1,0 +1,48 @@
+﻿@model IEnumerable<DZ_VILLAGEFUND_WEB.Models.AccountBudget>
+@{
+    var Helper = ViewBag.Helper as DZ_VILLAGEFUND_WEB.Helpers.Utility;
+}
+<table id="JsonTable" class="table table-bordered table-hover table-striped w-100">
+    <thead class="bg-primary-600">
+        <tr>
+            <th class="text-center">ที่</th>
+            <th>ชื่อบัญชีงบประมาณโครงการ</th>
+            <th class="text-center">รหัสโครงการ</th>
+            <th class="text-center">วันที่เริ่มต้น-สิ้นสุดโครงการ</th>
+            <th class="text-center">วงเงินงบประมาณ (บาท)</th>
+            <th class="text-center">งบประมาณของกองทุน (บาท)</th>
+            <th class="text-center">สถานะโครงการ</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int Rows = 1;
+            foreach (var Get in Model)
+            {
+                <tr>
+                    <td class="text-center">@Rows</td>
+                    <td>@Get.AccName</td>
+                    <td class="text-center">@Get.AccCode</td>
+                    <td>@Helper.getDateThai(Get.AccStart) ถึง @Helper.getDateThai(Get.AccEndDate)</td>
+                    <td class="text-right">@Get.Amount.ToString("N")</td>
+                    <td class="text-right">@Get.SubAmount.ToString("N")</td>
+                    <td class="text-center">
+                        @if (Get.IsActive == true)
+                        {
+                            <text>เปิดโครงการ</text>
+                        }
+                        else
+                        {
+                            <text>ปิดโครงการ</text>
+                        }
+                    </td>
+
+                </tr>
+
+                Rows++;
+            }
+        }
+
+    </tbody>
+</table>

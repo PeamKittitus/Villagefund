@@ -1,0 +1,51 @@
+﻿@model IEnumerable<DZ_VILLAGEFUND_WEB.ViewModels.EProjects.PeriodViewModel>
+
+<table id="JsonTable" class="table table-bordered table-hover table-striped w-100">
+    <thead class="bg-primary-600">
+        <tr>
+            <th class="text-center" width="100">รหัส</th>
+            <th>ชื่อโครงการ</th>
+            <th>ชื่อกองทุน</th>
+            <th class="text-center">สถานะ</th>
+            <th class="text-center" style="width:100px;">กิจกรรม</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var Get in Model.OrderBy(o => o.ProjectName))
+        {
+            <tr>
+                <td class="text-center">@Get.ProjectCode</td>
+                <td>@Get.ProjectName</td>
+                <td>@Get.VillageName</td>
+                <td class="text-center">
+                    @{
+                        /*
+                        *  1 รอตรวจสอบ
+                        *  2 แก้ไข
+                        *  3 รออนุมัติ
+                        *  4 ไม่อนุมัติ
+                        *  5 อนุมัติ
+                        */
+                        if (Get.Status == 1 || Get.Status == 4)
+                        {
+                            <span style="color:red"> @Get.StatusName</span>
+                        }
+                        else if (Get.Status == 2 || Get.Status == 3)
+                        {
+                            <span style="color:orange"> @Get.StatusName</span>
+                        }
+                        else
+                        {
+                            <span style="color:green"> @Get.StatusName</span>
+                        }
+                    }
+
+                </td>
+                <td class="text-center">
+                    <a href="/ElectronicProjects/PeriodDetail?ProjectPeriodId=@Get.ProjectPeriodId&Record=@Get.Period&ProjectId=@Get.ProjectId" class="btn btn-xs btn-success"><i class="fal fa-paper-plane"></i>กิจกรรมที่ @Get.Period</a>
+                </td>
+            </tr>
+
+        }
+    </tbody>
+</table>

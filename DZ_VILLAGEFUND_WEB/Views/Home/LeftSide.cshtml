@@ -1,0 +1,67 @@
+﻿
+@{
+    var UserInfo = ViewBag.UserInfo as DZ_VILLAGEFUND_WEB.ViewModels.Home.UserInfoViewModel;
+}
+
+
+<div class="card mb-g rounded-top">
+    <div class="row no-gutters row-grid">
+        <div class="col-12">
+            <div class="d-flex flex-column align-items-center justify-content-center p-4">
+                <img src="/img/demo/avatars/user-avatar-vfoc.png" style="width:200px;" class="rounded-circle shadow-2 img-thumbnail" alt="@UserInfo.FullName">
+                <h5 class="mb-0 fw-700 text-center mt-3">
+                    @UserInfo.FullName
+                    <small class="text-muted mb-0">@UserInfo.OrgName </small>
+                    <small class="text-muted mb-0"> (@UserInfo.RoleName)</small>
+                </h5>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="text-center py-3">
+                <h5 class="mb-0 fw-700">
+                    764 <small class="text-muted mb-0"> Connections</small>
+                </h5>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="text-center py-3">
+                <h5 class="mb-0 fw-700">
+                    1,673  <small class="text-muted mb-0"> Followers</small>
+                </h5>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="p-3 text-center">
+                @*<a href="javascript:void(0);" class="btn-link font-weight-bold">Follow</a> <span class="text-primary d-inline-block mx-3">&#9679;</span>
+                <a href="javascript:void(0);" class="btn-link font-weight-bold">Message</a> <span class="text-primary d-inline-block mx-3">&#9679;</span>
+                <a href="javascript:void(0);" class="btn-link font-weight-bold">Connect</a>*@
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card mb-g">
+    <div class="row row-grid no-gutters">
+        <div class="col-12">
+            <div class="p-3">
+                <h2 class="mb-0 fs-xl">  สมาชิก</h2>
+            </div>
+        </div>
+
+        @{
+            var Members = ViewBag.Members as IEnumerable<DZ_VILLAGEFUND_WEB.ViewModels.Home.ListMembers>;
+            if (Members.Count() > 0)
+            {
+                foreach (var Get in Members.Take(6))
+                {
+                    <div class="col-4">
+                        <a href="javascript:void(0);" class="text-center p-3 d-flex flex-column hover-highlight">
+                            <span class="profile-image rounded-circle d-block m-auto" style="background-image: url('/img/demo/avatars/user-avatar-vfoc.png'); background-size: cover;"></span>
+                            <span class="d-block text-truncate text-muted fs-xs mt-1"> @Get.FullName</span>
+                        </a>
+                    </div>
+                }
+            }
+        }
+    </div>
+</div>

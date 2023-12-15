@@ -1,0 +1,200 @@
+﻿@model DZ_VILLAGEFUND_WEB.Models.ApplicationUser
+@{
+    ViewData["Title"] = "สร้างใหม่";
+
+    var GetPermission = ViewBag.Permission as DZ_VILLAGEFUND_WEB.ViewModels.Settings.PermissionViewModel;
+}
+
+<ol class="breadcrumb page-breadcrumb">
+    <li class="breadcrumb-item"><a href="/Home/Index">หน้าหลัก</a></li>
+    <li class="breadcrumb-item"><a href="/Settings/UserIndex">ระบบจัดการผู้ใช้งาน</a></li>
+    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+</ol>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel">
+            <div class="panel-hdr">
+                <h2><i class='subheader-icon fal fa-list-alt'></i>  @ViewData["Title"]</h2>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+
+                    <div class="row">
+                        <div class="col-lg-2"></div>
+                        <div class="col-lg-8">
+                            <form id="JsonForm" enctype="multipart/form-data" novalidate
+                                  asp-antiforgery="true"
+                                  data-bv-message="This value is not valid"
+                                  data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
+                                  data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
+                                  data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
+                                <div class="panel-content">
+                                    <div class="col-lg-12 col-md-12 col-sm-12">
+                                        <div class="form-group">
+                                            <label class="form-label">กำหนดสิทธิ์</label>
+                                            @Html.DropDownList("Roles", (IEnumerable<SelectListItem>)ViewBag.Roles, new { @class = "col-lg-12 col-md-12 col-sm-12" })
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">สาขา</label>
+                                            @Html.DropDownList("OrgId", (IEnumerable<SelectListItem>)ViewBag.OrgId, new { @class = "col-lg-12 col-md-12 col-sm-12" })
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">ชื่อ <span style="color:red">*</span></label>
+                                            <input type="text" asp-for="FirstName" class="form-control col-lg-12 col-md-12 col-sm-12"
+                                                   data-bv-notempty="true"
+                                                   data-bv-notempty-message="กรุณากรอกข้อมูล">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">นามสกุล <span style="color:red">*</span></label>
+                                            <input type="text" asp-for="LastName" class="form-control col-lg-12 col-md-12 col-sm-12"
+                                                   data-bv-notempty="true"
+                                                   data-bv-notempty-message="กรุณากรอกข้อมูล">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">เลขบัตรประจำตัวประชาชน <span style="color:red">*</span></label>
+                                            <input type="text" asp-for="CitizenId" maxlength="13" class="form-control col-lg-12 col-md-12 col-sm-12"
+                                                   data-bv-notempty="true"
+                                                   data-bv-notempty-message="กรุณากรอกข้อมูล">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">เบอร์โทร <span style="color:red">*</span></label>
+                                            <input type="text" asp-for="PhoneNumber" maxlength="10" class="form-control col-lg-12 col-md-12 col-sm-12"
+                                                   data-bv-notempty="true"
+                                                   data-bv-notempty-message="กรุณากรอกข้อมูล">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">อีเมล (e-mail) <span style="color:red">*</span></label>
+                                            <input type="email" asp-for="Email" class="form-control col-lg-12 col-md-12 col-sm-12"
+                                                   data-bv-notempty="true"
+                                                   data-bv-notempty-message="กรุณากรอกข้อมูล"
+                                                   data-bv-emailaddress="true"
+                                                   data-bv-emailaddress-message="อีเมล (e-mail) ไม่ถูกต้อง">
+                                        </div>
+                                        <hr />
+                                        <div class="form-group">
+                                            <label class="form-label">ชื่อบัญชีผู้ใช้งานระบบ <span style="color:red">*</span></label>
+                                            <input type="text" asp-for="UserName" class="form-control col-lg-12 col-md-12 col-sm-12"
+                                                   data-bv-notempty="true"
+                                                   data-bv-notempty-message="กรุณากรอกข้อมูล">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">รหัสผ่าน <span style="color:red">*</span></label>
+                                            <div class="input-group">
+                                                <input type="password" name="Password" id="password" class="form-control col-lg-12 col-md-12 col-sm-12"
+                                                       data-bv-identical="true"
+                                                       data-bv-identical-field="ConfirmPassword"
+                                                       data-bv-identical-message="รหัสผ่านและการยืนยันรหัสผ่านไม่ตรงกัน"
+                                                       data-bv-stringlength="true"
+                                                       data-bv-stringlength-min="6"
+                                                       data-bv-stringlength-max="30"
+                                                       data-bv-stringlength-message="รหัสผ่านอย่างน้อย 6 ถึง 12"
+                                                       pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@@#$%^&*-]).{6,}$"
+                                                       data-bv-message="รหัสผ่านควรมีความยาวอย่างน้อย 6 ตัวอักษร โดยมีตัวอักษรทั้งพิมพ์ใหญ่ พิมพ์เล็ก ตัวเลข และอักขระพิเศษผสมกัน">
+                                                <button class="btn btn-primary waves-effect waves-themed" type="button" id="hidePass"><i class="fal fa-eye-slash" id="eye"></i></button>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">ยืนยันรหัสผ่าน <span style="color:red">*</span></label>
+                                            <div class="input-group">
+                                                <input type="password" name="ConfirmPassword" id="ConfirmPassword" class="form-control col-lg-12 col-md-12 col-sm-12"
+                                                       data-bv-identical="true"
+                                                       data-bv-identical-field="Password"
+                                                       data-bv-identical-message="รหัสผ่านและการยืนยันรหัสผ่านไม่ตรงกัน"
+                                                       data-bv-stringlength="true"
+                                                       data-bv-stringlength-min="6"
+                                                       data-bv-stringlength-max="30"
+                                                       data-bv-stringlength-message="รหัสผ่านอย่างน้อย 6 ถึง 12"
+                                                       pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@@#$%^&*-]).{6,}$"
+                                                       data-bv-message="รหัสผ่านควรมีความยาวอย่างน้อย 6 ตัวอักษร โดยมีตัวอักษรทั้งพิมพ์ใหญ่ พิมพ์เล็ก ตัวเลข และอักขระพิเศษผสมกัน">
+                                                <button class="btn btn-primary waves-effect waves-themed" type="button" id="_hidePass"><i class="fal fa-eye-slash" id="_eye"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel-content border-faded border-left-0 border-right-0 border-bottom-0 d-flex flex-row align-items-center m-3 pt-3">
+                                    <button class="btn btn-primary ml-auto" style="visibility:@(GetPermission.Insert == false ? "hidden" : "")" type="button" id="Submit">บันทึก</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-lg-2"></div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <link rel="stylesheet" type="text/css" href="/css/notifications/toastr/toastr.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/formplugins/select2/select2.bundle.css">
+    <script src="~/js/Validation/bootstrapValidator.min.js"></script>
+    <script src="~/js/notifications/toastr/toastr.js"></script>
+    <script src="~/js/formplugins/select2/select2.bundle.js"></script>
+    <script>
+        $(function () {
+            // translate th to en in username
+            $("#FirstName").on("keyup keydown keypress", function () {
+                $.get("/Settings/TranslateData", { "Keyword": $(this).val() }, function (JsonResult) {
+                    $("#UserName").attr("value", JsonResult.data);
+                });
+            });
+
+            // submit form
+            $("#Roles").select2();
+            $("#OrgId").select2();
+            $('#JsonForm').bootstrapValidator();
+            $("#Submit").click(function () {
+                $('#JsonForm').data("bootstrapValidator").validate();
+                if ($('#JsonForm').data("bootstrapValidator").isValid() == true) {
+                    var Data = new FormData($("#JsonForm")[0]); JsonForm
+                    $.ajax(
+                        {
+                            type: "POST",
+                            url: "/Settings/FormAddUser",
+                            contentType: false,
+                            processData: false,
+                            data: Data,
+                            success: function (result) {
+                                if (result.valid == true) {
+                                    toastr.success(result.message);
+                                    setTimeout(function () {
+                                        window.location.href = "/Settings/UserIndex";
+                                    }, 700);
+                                }
+                                else {
+                                    toastr.error('Error!' + result.message);
+                                    setTimeout(function () {
+
+                                    }, 700);
+                                }
+                            }
+                        });
+                }
+            });
+
+            //show password
+            $("#hidePass").on("click", function () {
+                if ($("#password").attr("type") === "password") {
+                    $("#password").attr("type", "text");
+                    $("#eye").attr("class", "fal fa-eye");
+                } else {
+                    $("#password").attr("type", "password");
+                    $("#eye").attr("class", "fal fa-eye-slash");
+                }
+            });
+
+            $("#_hidePass").on("click", function () {
+                if ($("#ConfirmPassword").attr("type") === "password") {
+                    $("#ConfirmPassword").attr("type", "text");
+                    $("#_eye").attr("class", "fal fa-eye");
+                } else {
+                    $("#ConfirmPassword").attr("type", "password");
+                    $("#_eye").attr("class", "fal fa-eye-slash");
+                }
+            });
+
+        });
+
+    </script>
+
+}

@@ -1,0 +1,38 @@
+﻿@model IEnumerable<DZ_VILLAGEFUND_WEB.ViewModels.EAccount.ReportTransBudgetActivityByChardAndType>
+
+<table id="JsonTable" class="table table-bordered table-hover table-striped w-100">
+    <thead class="bg-primary-600">
+        <tr>
+            <th class="text-center">ที่</th>
+            <th>โครงการ</th>
+            <th class="text-center">กิจกรรม</th>
+            <th class="text-center">จำนวนเงิน (บาท)</th>
+            <th class="text-center">ผู้รับโอน</th>
+            <th class="text-center">ประเภท</th>
+            <th class="text-center">วันที่รับเงิน</th>
+            <th class="text-center">หมวด</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int Rows = 1;
+            foreach (var Get in Model)
+            {
+                <tr>
+                    <td class="text-center">@Rows</td>
+                    <td>@Get.Project</td>
+                    <td>@Get.Activities</td>
+                    <td>@Get.AmountBaht</td>
+                    <td>@Get.Transferee</td>
+                    <td>@Get.Type</td>
+                    <td>@Get.PaymentDate</td>
+                    <td>@Get.Categories</td>
+                </tr>
+
+                Rows++;
+            }
+        }
+
+    </tbody>
+</table>

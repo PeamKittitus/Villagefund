@@ -1,0 +1,51 @@
+﻿@model DZ_VILLAGEFUND_WEB.ViewModels.EAccount.ReportRequestSummaryByProvince
+<table id="JsonTable" class="table table-bordered table-hover table-striped w-100">
+    <thead>
+        <tr>
+            <th>ลำดับ</th>
+            <th>จังหวัด</th>
+            <th>เป้าหมาย (กองทุน)</th>
+            <th>กองทุน (ยื่น)</th>
+            <th>ร้อยละ</th>
+            <th>โครงการ (ยื่นแล้ว)</th>
+            <th>โครงการ (ยังไม่ยื่น)</th>
+            <th>งบประมาณ (ยื่น)</th>
+            <th>กองทุน (อนุมัติแล้ว)</th>
+            <th>ร้อยละ</th>
+            <th>โครงการ (อนุมัติแล้ว)</th>
+            <th>งบประมาณ (อนุมัติแล้ว)</th>
+            <th>กองทุน (คงเหลือจากเป้าหมาย)</th>
+            <th>ร้อยละ</th>
+            <th>กองทุน (โอนเงินแล้ว)</th>
+            <th>ร้อยละ</th>
+            <th>โครงการ (โอนเงินแล้ว) </th>
+            <th>งบประมาณ (โอนเงินแล้ว)</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>1.</td>
+            <td>@Model.ProvinceName</td>
+            <td>@Model.VillageNumberAll</td>
+            <td>@Model.PendingVillageNumber</td>
+            <td>@((Model.PendingVillageNumber * 100 / (Model.VillageNumberAll != 0 ? Model.VillageNumberAll : 1)).ToString("N"))</td>
+            <td>@Model.PendingProjectNumber</td>
+            <td>@Model.DraftProjectNumber</td>
+            <td>@Model.PendingAmountProject.ToString("N")</td>
+            <td>@Model.VillageNumber</td>
+            <td>@((Model.VillageNumber * 100 / (Model.VillageNumberAll != 0 ? Model.VillageNumberAll : 1)).ToString("N"))</td>
+            <td>@Model.ProjectNumber</td>
+            <td>@Model.AmountProject.ToString("N")</td>
+            <td>@(Model.VillageNumberAll - Model.VillageNumber)</td>
+            <td>@(((Model.VillageNumberAll - Model.VillageNumber) * 100 / (Model.VillageNumberAll != 0 ? Model.VillageNumberAll : 1)).ToString("N"))</td>
+            <td>@Model._VillageNumber</td>
+            <td>@((Model._VillageNumber * 100 / (Model.VillageNumber != 0 ? Model.VillageNumber : 1)).ToString("N"))</td>
+            <td>@Model._ProjectNumber</td>
+            <td>@Model._AmountProject.ToString("N")</td>
+
+
+        </tr>
+    </tbody>
+
+</table>

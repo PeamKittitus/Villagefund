@@ -1,0 +1,31 @@
+﻿@model IEnumerable<DZ_VILLAGEFUND_WEB.ViewModels.Villages.VillagesViewModel>
+
+<table id="JsonTable" class="table table-bordered table-hover table-striped w-100">
+    <thead class="bg-primary-600">
+        <tr>
+            <th class="text-center" style="width:50px">ลำดับ</th>
+            <th>รหัสผู้เสียภาษี/เลขนิติบุคคล</th>
+            <th>ชื่อนิติบุคคล</th>
+            <th class="text-center">วันที่เริม</th>
+            <th class="text-center">วันที่สิ้นสุด</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int Row = 1;
+        }
+        @foreach (var Village in Model)
+        {
+            <tr>
+                <td class="text-center"> @Row.</td>
+                <td>@Village.VillageBbdId</td>
+                <td><a href="/Villages/VillageDetail?VillageId=@Village.VillageId">@Village.VillageName (@Village.VillageCodeText)</a> </td>
+                <td class="text-center"> @Village.BbdDate</td>
+                <td class="text-center"> @Village.ExpirydDate</td>
+
+            </tr>
+            Row++;
+        }
+    </tbody>
+</table>

@@ -1,0 +1,221 @@
+﻿@model DZ_VILLAGEFUND_WEB.ViewModels.EProjects.ProjectDetail
+
+@{
+    ViewData["Title"] = "รายละเอียดโครงการ";
+    var Helper = ViewBag.Helper as DZ_VILLAGEFUND_WEB.Helpers.Utility;
+}
+
+<div class="col-lg-12">
+    <div class="panel">
+        <div class="panel-hdr"><h2><i class='subheader-icon fal fa-book'></i>  @Model.ProjectName </h2> </div>
+        <div class="panel-container show">
+            <div class="panel-content">
+
+                <div class="row" id="js-contacts">
+
+                    <div class="col-lg-12">
+                        <div id="c_1" class="card border shadow-0 mb-g shadow-sm-hover" data-filter-tags="oliver kopyov">
+                            <div class="card-body border-faded border-top-0 border-left-0 border-right-0 rounded-top">
+                                <div class="d-flex flex-row align-items-center">
+                                    <div class="info-card-text flex-1">
+                                        <a href="javascript:void(0);" class="fs-xl text-truncate text-truncate-lg text-info" data-toggle="dropdown" aria-expanded="false">
+                                            <strong class="font-weight-bold">ชื่อกองทุนหมูบ้าน</strong> : @Model.VillageName
+                                        </a>
+                                        <span class="text-truncate text-truncate-xl">  </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body p-0 collapse show">
+                                <div class="p-3">
+                                    <a href="javascript:void(0)" class="mt-1 d-block fs-sm fw-400 text-dark">
+                                        <strong class="font-weight-bold">งบประมาณ</strong> : @Model.Amount.ToString("N") บาท
+                                    </a>
+                                    <a href="javascript:void(0)" class="mt-1 d-block fs-sm fw-400 text-dark">
+                                        <strong class="font-weight-bold">ประจำปีงบประมาณ</strong> : @Model.BudgetYear
+                                    </a>
+                                    <a href="javascript:void(0)" class="mt-1 d-block fs-sm fw-400 text-dark">
+                                        <strong class="font-weight-bold">ที่อยู่</strong> : @Model.Address
+                                    </a>
+                                    <a href="javascript:void(0)" class="mt-1 d-block fs-sm fw-400 text-dark">
+                                        <strong class="font-weight-bold">เบอร์โทร</strong> : @Model.Phone
+                                    </a>
+                                    <a href="javascript:void(0)" class="mt-1 d-block fs-sm fw-400 text-dark">
+                                        <strong class="font-weight-bold"> อีเมล</strong> : @Model.Email
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-12">
+                        <div id="c_1" class="card border shadow-0 mb-g shadow-sm-hover" data-filter-tags="oliver kopyov">
+                            <div class="card-body border-faded border-top-0 border-left-0 border-right-0 rounded-top">
+                                <div class="d-flex flex-row align-items-center">
+                                    <div class="info-card-text flex-1">
+                                        <a href="javascript:void(0);" class="fs-xl text-truncate text-truncate-lg text-info font-weight-bold" data-toggle="dropdown" aria-expanded="false">
+                                            กิจกรรม
+                                        </a>
+                                        <span class="text-truncate text-truncate-xl"> </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body p-0 collapse show">
+                                <div class="p-3">
+
+                                    <table class="table table-bordered table-hover m-0">
+                                        <thead>
+                                            <tr class="font-weight-bold">
+                                                <td class="text-center" style="width:100px;">กิจกรรมที่</td>
+                                                <td>รายละเอียด</td>
+                                                <td class="text-center" style="width:150px;">เริ่ม</td>
+                                                <td class="text-center" style="width:150px;">สิ้นสุด</td>
+                                                <td class="text-center" style="width:150px;"> สถานะ </td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @{
+                                                var PeriodModels = ViewBag.Periods as IEnumerable<DZ_VILLAGEFUND_WEB.ViewModels.EProjects.PeriodViewModelDetail>;
+                                                int Row = 1;
+                                                if (PeriodModels.Count() > 0)
+                                                {
+                                                    foreach (var GetPeiod in PeriodModels)
+                                                    {
+                                                        <tr>
+                                                            <td class="text-center">@Row</td>
+                                                            <td><a href="/ElectronicProjects/ReportPeriodDetail?ProjectPeriodId=@GetPeiod.PeriodId&Record=@GetPeiod.Period&ProjectId=@Model.ProjecId" title="ดูรายละเอียด">@GetPeiod.PeriodName</a> </td>
+                                                            <td class="text-center">@GetPeiod.StartDate</td>
+                                                            <td class="text-center">@GetPeiod.EndDate</td>
+                                                            <td class="text-center">@(GetPeiod.Status == 0 ? "-" : GetPeiod.StatusName)</td>
+                                                        </tr>
+                                                        Row++;
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <tr>
+                                                        <td colspan="5" class="text-center"> --- ไม่มีข้อมูล ---</td>
+                                                    </tr>
+                                                }
+                                            }
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-12">
+                        <div id="c_1" class="card border shadow-0 mb-g shadow-sm-hover" data-filter-tags="oliver kopyov">
+                            <div class="card-body border-faded border-top-0 border-left-0 border-right-0 rounded-top">
+                                <div class="d-flex flex-row align-items-center">
+                                    <div class="info-card-text flex-1">
+                                        <a href="javascript:void(0);" class="fs-xl text-truncate text-truncate-lg text-info font-weight-bold" data-toggle="dropdown" aria-expanded="false">
+                                            ครุภัณฑ์
+                                        </a>
+                                        <span class="text-truncate text-truncate-xl"> </span>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="card-body p-0 collapse show">
+                                <div class="p-3">
+
+                                    <table class="table table-bordered table-hover m-0">
+                                        <thead>
+                                            <tr class="font-weight-bold">
+                                                <td class="text-center" style="width:100px;">ลำดับ</td>
+                                                <td> เลขที่ครุภัณฑ์</td>
+                                                <td> ชื่อครุภัณฑ์</td>
+                                                <td class="text-center"> อายุครุภัณฑ์ (ปี)</td>
+                                                <td class="text-center">จำนวนครุภัณฑ์</td>
+                                                <td class="text-center"> ราคาสุทธิ</td>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @{
+                                                var AssetModels = ViewBag.Assets as IEnumerable<DZ_VILLAGEFUND_WEB.Models.ProjectAsset>;
+                                                if (AssetModels.Count() > 0)
+                                                {
+                                                    int Rows = 1;
+                                                    decimal Total = 0;
+                                                    foreach (var GetAsset in AssetModels)
+                                                    {
+                                                        <tr>
+                                                            <td class="text-center">@Rows.</td>
+                                                            <td>@GetAsset.AssetCode</td>
+                                                            <td>@GetAsset.AssetName</td>
+                                                            <td class="text-center">@GetAsset.AssetAge</td>
+                                                            <td class="text-center">@GetAsset.AmountUnit</td>
+                                                            <td class="text-right">@GetAsset.Amount.ToString("N")</td>
+
+                                                        </tr>
+                                                        Total += GetAsset.Amount;
+                                                        Rows++;
+                                                    }
+
+                                                    <tr>
+                                                        <td colspan="5" class="text-right"> <strong>รวม:</strong></td>
+                                                        <td class="text-right"> <strong>@Total.ToString("N")</strong></td>
+                                                    </tr>
+                                                }
+                                                else
+                                                {
+                                                    <tr>
+                                                        <td colspan="6" class="text-center"> --- ไม่มีข้อมูล ---</td>
+                                                    </tr>
+                                                }
+                                            }
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-12">
+                        <div id="c_1" class="card border shadow-0 mb-g shadow-sm-hover" data-filter-tags="oliver kopyov">
+                            <div class="card-body border-faded border-top-0 border-left-0 border-right-0 rounded-top">
+                                <div class="d-flex flex-row align-items-center">
+                                    <div class="info-card-text flex-1">
+                                        <a href="javascript:void(0);" class="fs-xl text-truncate text-truncate-lg text-info font-weight-bold" data-toggle="dropdown" aria-expanded="false">
+                                            เบิกจ่ายกิจกรรม
+                                        </a>
+                                        <span class="text-truncate text-truncate-xl"> </span>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="card-body p-0 collapse show">
+                                <div class="p-3" id="ActTransactions">
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- view document  -->
+<div class="modal fade default-example-modal-right-lg" id="ViewDataModal" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title h4"><i class="fal fa-file-excel"></i> เอกสารแนบ</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true"><i class="fal fa-times"></i></span> </button>
+            </div>
+            <div class="modal-body">
+
+                <span id="JsonViewData"></span>
+
+            </div>
+            <div class="modal-footer"> </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,91 @@
+﻿@page
+@model LoginModel
+
+@{
+    Layout = "~/Views/Shared/_OutsideLayout.cshtml";
+    ViewData["Title"] = "เข้าสู่ระบบ";
+}
+<div class="page-inner bg-brand-gradient" style="background-color: #9ed8e1">
+    <div class="page-content-wrapper bg-transparent m-0">
+        <div class="height-10 w-100 shadow-lg px-4 bg-brand-gradient" style="background-color: #FFFFFF">
+            <div class="d-flex align-items-center container p-0">
+                <div class="page-logo width-mobile-auto m-0 align-items-center justify-content-center p-0 bg-transparent bg-img-none shadow-0 height-9">
+                    <a href="javascript:void(0)" class="page-logo-link press-scale-down d-flex align-items-center">
+                        <img src="/img/demo/villagefund_1.png" class="img-responsive" style="width:271px">
+                    </a>
+                </div>
+                <a href="/Identity/Account/Register" class="btn-link text-break ml-auto btn btn-info hidden-sm-down" style="background-color: #8dcde1;color:#000">ลงทะเบียน</a>
+                <a href="/Identity/Account/Register?IsVillageMember=True" class="btn-link ml-2 btn btn-info hidden-sm-down" style="background-color: #8dcde1;color:#000">ลงทะเบียนสมาชิกกองทุน</a>
+            </div>
+        </div>
+        <div class="flex-1" style="background: url(/img/svg/pattern-1.svg) no-repeat center bottom fixed; background-size: cover; ">
+            <div class="container py-4 py-lg-5 my-lg-5 px-4 px-sm-0">
+                <div class="row">
+                    <div class="col col-md-6 col-lg-7 hidden-sm-down">
+                        <img src="/img/demo/logo-login.png" class="img-responsive" width="400">
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-5 col-xl-4 ml-auto">
+                        <h1 class="text-dark text-center fw-300 mb-3 d-sm-block">เข้าสู่ระบบ </h1>
+                        <div class="card p-4 rounded-plus bg-faded">
+                            <form id="account" method="post">
+                                <div class="form-group">
+                                    <label class="form-label" for="UserName">ชื่อผู้ใช้ </label>
+                                    <div class="input-group">
+                                        <input type="text" asp-for="Input.UserName" class="form-control" placeholder="Username">
+                                        <button class="btn btn-primary waves-effect waves-themed" type="button" id="button-addon5"><i class="ni ni-user fs-xl"></i></button>
+                                    </div>
+                                    <i class="clear-input"><ion-icon name="close-circle"></ion-icon></i>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="Password">รหัสผ่าน</label>
+                                    <div class="input-group">
+                                        <input type="password" asp-for="Input.Password" class="form-control" placeholder="Password">
+                                        <button class="btn btn-primary waves-effect waves-themed" type="button" id="password"><i class="fal fa-eye-slash eye"></i></button>
+                                    </div>
+                                    <i class="clear-input"><ion-icon name="close-circle"></ion-icon></i>
+                                </div>
+                                <div class="form-group text-left">
+                                    <div class="row no-gutters">
+                                        <div class="col-lg-6 pr-lg-1 my-2">
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="rememberme">
+                                                <label class="custom-control-label" for="rememberme"> จำฉันไว้</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 pr-lg-1 my-2 text-right">
+                                            <div class="custom-control custom-checkbox">
+                                                <a href="/Identity/Account/ForgotPassword">ลืมรหัสผ่าน</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @if (!ViewData.ModelState.IsValid)
+                                {
+                                    <span style="color:red">@Html.ValidationSummary()</span>
+                                }
+
+                                <div class="row no-gutters">
+                                    <div class="col-lg-12 pr-lg-1 my-2">
+                                        <button type="submit" class="btn btn-success btn-block btn-lg"><i class="fal fa-user"></i> เข้าสู่ระบบ </button>
+                                    </div>
+                                    <div class="col-lg-12 pr-lg-1 my-2 text-center">
+                                        <a href="/Identity/Account/Register" class="hidden-sm-up"> <i class="fal fa-book"></i> ลงทะเบียน</a>
+                                        <a href="/Identity/Account/Register?IsVillageMember=True" class="hidden-sm-up ml-2"> <i class="fal fa-book"></i> ลงทะเบียนสมาชิกกองทุน</a>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="position-absolute pos-bottom pos-left pos-right p-3 text-center text-white" hight="100px">
+                    <img src="/img/DigitalFundLogo.png" style="width: 35%;" class="hidden-sm-down" />
+                    <img src="/img/DigitalFundLogo.png" style="width: 80%;" class="hidden-sm-up" />
+                    <br />
+                    2565 © National Village and Urban Community fund Office &nbsp; <a href='http://www.villagefund.or.th/' class='text-white opacity-40 fw-500' title='www.villagefund.or.th' target='_blank'>www.villagefund.or.th</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

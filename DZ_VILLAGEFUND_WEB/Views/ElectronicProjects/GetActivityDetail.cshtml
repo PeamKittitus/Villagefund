@@ -1,0 +1,86 @@
+﻿@model DZ_VILLAGEFUND_WEB.ViewModels.EProjects.MileStoneDetail
+
+
+
+<div id="c_1" class="card border shadow-0 mb-g shadow-sm-hover" data-filter-tags="oliver kopyov">
+    <div class="card-body border-faded border-top-0 border-left-0 border-right-0 rounded-top">
+        <div class="d-flex flex-row align-items-center">
+            <div class="info-card-text flex-1">
+                <a href="javascript:void(0);" class="fs-xl text-truncate text-truncate-lg text-info" data-toggle="dropdown" aria-expanded="false">
+                    <strong class="font-weight-bold">ชื่อกิจกรรม (@Model.AcName)</strong>
+                </a>
+                <span class="text-truncate text-truncate-xl"></span>
+            </div>
+        </div>
+    </div>
+    <div class="card-body p-0 collapse show">
+        <div class="p-3">
+            <a href="javascript:void(0)" class="mt-1 d-block fs-sm fw-400 text-dark">
+                <strong class="font-weight-bold"> ชื่อกองทุน </strong> : @Model.VillageName
+            </a>
+            <a href="javascript:void(0)" class="mt-1 d-block fs-sm fw-400 text-dark">
+                <strong class="font-weight-bold"> ที่อยู่ </strong> : @Model.Address
+            </a>
+            <a href="javascript:void(0)" class="mt-1 d-block fs-sm fw-400 text-dark">
+                <strong class="font-weight-bold"> หมายเลขโทรศัพท์</strong> : @Model.Phone
+            </a>
+            <a href="javascript:void(0)" class="mt-1 d-block fs-sm fw-400 text-dark">
+                <strong class="font-weight-bold">ชื่อกิจกรรม</strong> : @Model.AcName
+            </a>
+            <a href="javascript:void(0)" class="mt-1 d-block fs-sm fw-400 text-dark">
+                <strong class="font-weight-bold">เริ่ม</strong> : @Model.StartDate
+            </a>
+            <a href="javascript:void(0)" class="mt-1 d-block fs-sm fw-400 text-dark">
+                <strong class="font-weight-bold"> สิ้นสุด</strong> : @Model.EndDate
+            </a>
+            <a href="javascript:void(0)" class="mt-1 d-block fs-sm fw-400 text-dark">
+                <strong class="font-weight-bold"> สถานะ</strong> : @Model.StatusName
+            </a>
+        </div>
+    </div>
+    <div class="card-body p-0 collapse show">
+        <div class="p-3">
+
+            <table id="JsonTable" class="table table-bordered table-hover m-0">
+                <thead>
+                    <tr class="font-weight-bold">
+                        <td class="text-center" style="width:50px;">ลำดับ</td>
+                        <td>ชื่อไฟล์</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        var FilePeriods = ViewBag.GetFiles as IEnumerable<DZ_VILLAGEFUND_WEB.Models.TransactionFilePeriod>;
+                        int Row = 1;
+                        if (FilePeriods.Count() > 0)
+                        {
+                            foreach (var FilePeriod in FilePeriods)
+                            {
+                                <tr>
+                                    <td class="text-center">@Row.</td>
+                                    <td><a href="/uploads/e-project/@FilePeriod.GencodeFileName" download="@FilePeriod.FileName">  @FilePeriod.FileName</a></td>
+                                </tr>
+                                Row++;
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="4" class="text-center"> --- ไม่มีข้อมูล ---</td>
+                            </tr>
+                        }
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="card-body p-0 collapse show">
+        <div class="p-3">
+            <strong class="font-weight-bold"> หมายเหตุ</strong>
+            <textarea class="form-control" readonly>@(Model.Comment == null ? "-" : Model.Comment)</textarea>
+
+        </div>
+    </div>
+
+</div>

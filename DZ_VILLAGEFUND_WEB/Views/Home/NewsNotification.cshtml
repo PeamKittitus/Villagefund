@@ -1,0 +1,58 @@
+﻿
+@model IEnumerable<DZ_VILLAGEFUND_WEB.ViewModels.News.Notification>
+
+<a href="#" class="header-icon" data-toggle="dropdown" title="You got 11 notifications">
+    <i class="fal fa-bell"></i>
+    <span class="badge badge-icon">@ViewBag.Count</span>
+</a>
+<div class="dropdown-menu dropdown-menu-animated dropdown-xl">
+    <div class="dropdown-header bg-trans-gradient d-flex justify-content-center align-items-center rounded-top mb-2">
+        <h4 class="m-0 text-center color-white"> @ViewBag.Count ใหม่  <small class="mb-0 opacity-80">แจ้งเตือนจากระบบ</small></h4>
+    </div>
+    <ul class="nav nav-tabs nav-tabs-clean" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link px-4 fs-md js-waves-on fw-500" data-toggle="tab" href="#tab-messages" data-i18n="drpdwn.messages">  ข่าวสาร</a>
+        </li>
+    </ul>
+    <div class="tab-content tab-notification">
+        <div class="tab-pane active" id="tab-messages" role="tabpanel">
+            <div class="custom-scroll h-100" style="width: 100%; height: 500px; overflow-y: scroll; scrollbar-color: rebeccapurple green; scrollbar-width: thin;">
+                <ul class="notification">
+
+                    @{
+                        if (Model.Count() > 0)
+                        {
+                            foreach (var Get in Model)
+                            {
+                                <li>
+                                    <a href="/Home/News?Id=@Get.Id" class="d-flex align-items-center">
+                                        <span class="status mr-2">
+                                            <i class="fal fa-bell" style="font-size:3rem"></i>
+                                        </span>
+                                        <span class="d-flex flex-column flex-1 ml-1">
+                                            <span class="msg-a fs-sm">@Get.Title</span>
+                                            <span class="fs-nano text-muted mt-1">@Get.TimeAgo</span>
+                                        </span>
+                                    </a>
+                                </li>
+                            }
+                        }
+                        else
+                        {
+                            <li>
+                                <a href="javascript:void(0)" class="d-flex align-items-center">
+                                    <span class="d-flex flex-column flex-1 ml-1">
+                                        <span class="msg-a fs-sm">--- ไม่มีข้อมูล ---</span>
+                                    </span>
+                                </a>
+                            </li>
+                        }
+
+                    }
+
+
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

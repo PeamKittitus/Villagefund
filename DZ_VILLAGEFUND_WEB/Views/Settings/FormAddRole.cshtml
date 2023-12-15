@@ -1,0 +1,90 @@
+﻿@model DZ_VILLAGEFUND_WEB.ViewModels.Settings.ListRoleViewModel
+@{
+    ViewData["Title"] = "สร้างใหม่";
+}
+
+<ol class="breadcrumb page-breadcrumb">
+    <li class="breadcrumb-item"><a href="/Home/Index">หน้าหลัก</a></li>
+    <li class="breadcrumb-item"><a href="/Settings/RoleIndex">ระบบจัดการสิทธิ์</a></li>
+    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+</ol>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel">
+            <div class="panel-hdr">
+                <h2><i class='subheader-icon fal fa-lock-alt'></i>  @ViewData["Title"]</h2>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+
+                    <form id="JsonForm" enctype="multipart/form-data"
+                          asp-antiforgery="true"
+                          data-bv-message="This value is not valid"
+                          data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
+                          data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
+                          data-bv-feedbackicons-validating="glyphicon glyphicon-refresh"
+                          novalidate>
+                        <div class="panel-content">
+                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                <div class="form-group">
+                                    <label class="form-label" for="lostaccount">ชื่อสิทธิ์ <span style="color:red">*</span></label>
+                                    <input type="text" asp-for="Name" class="form-control col-lg-12 col-md-12 col-sm-12"
+                                           data-bv-notempty="true"
+                                           data-bv-notempty-message="กรุณากรอกข้อมูล"
+                                           pattern="^[a-zA-Z\s]+$"
+                                           data-bv-message="กรุณากรอกภาษาอังกฤษเท่านั้น">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-content border-faded border-left-0 border-right-0 border-bottom-0 d-flex flex-row align-items-center m-3 pt-3">
+                            <button class="btn btn-primary ml-auto" type="button" id="Submit">บันทึก</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <link rel="stylesheet" type="text/css" href="/css/notifications/toastr/toastr.css">
+    <script src="~/js/Validation/bootstrapValidator.min.js"></script>
+    <script src="~/js/notifications/toastr/toastr.js"></script>
+    <script type="text/javascript">
+        $(function () {
+
+            $('#JsonForm').bootstrapValidator();
+            $("#Submit").click(function () {
+                $('#JsonForm').data("bootstrapValidator").validate();
+                if ($('#JsonForm').data("bootstrapValidator").isValid() == true) {
+                    var Data = new FormData($("#JsonForm")[0]); JsonForm
+                    $.ajax(
+                        {
+                            type: "POST",
+                            url: "/Settings/FormAddRole",
+                            contentType: false,
+                            processData: false,
+                            data: Data,
+                            success: function (result) {
+                                if (result.valid == true) {
+                                    toastr.success(result.message);
+                                    setTimeout(function () {
+                                        window.location.href = "/Settings/RoleIndex";
+                                    }, 700);
+                                }
+                                else {
+                                    toastr.error('Error!' + result.message);
+                                    setTimeout(function () {
+                                        window.location.href = "";
+                                    }, 700);
+                                }
+                            }
+                        });
+                }
+            });
+        });
+
+    </script>
+}

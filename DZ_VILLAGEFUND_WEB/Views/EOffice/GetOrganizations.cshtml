@@ -1,0 +1,108 @@
+﻿@model IEnumerable<DZ_VILLAGEFUND_WEB.Models.EOfficeOrganizations>
+
+
+<div class="col-sm-12 col-lg-12 col-xs-12">
+    <div class="dd margin-bottom-10" style="max-width:100%;" id="nestable3">
+        @if (Model.Count() > 0)
+        {
+            <ol class="dd-list">
+                @{
+                    foreach (var MainMenu in Model.Where(w => w.ParentId == 0).OrderBy(r => r.Position))
+                    {
+                        <li class="dd-item dd3-item" data-id="@MainMenu.OrgMomId">
+                            <div class="dd-handle dd3-handle">Drag</div>
+                            <div class="dd3-content">
+
+                                <button class="btn btn-success btn-xs addUser" value="@MainMenu.OrgId" style="font-size:0.5rem;"><i class="fal fa-plus"></i> เพิ่มเจ้าหน้าที่</button>
+                                <button class="btn btn-info btn-xs viewUser" value="@MainMenu.OrgId" style="font-size:0.5rem;"><i class="fal fa-search"></i> ดูรายชื่อ</button>
+                                <button class="btn btn-warning btn-xs edit" value="@MainMenu.OrgId" style="font-size:0.5rem;"><i class="fal fa-pencil"></i> แก้ไข</button>
+                                <button class="btn btn-danger btn-xs  delete" value="@MainMenu.OrgId" style="font-size: 0.5rem;"> <i class="fal fa-eraser"></i> ลบ </button>
+
+                                @MainMenu.OrgName (@MainMenu.OrgShortName @MainMenu.OrgNumber)
+                            </div>
+                            <ol class="dd-list">
+                                @foreach (var SubMenu in Model.Where(d => d.ParentId == MainMenu.OrgMomId).OrderBy(r => r.Position))
+                                {
+                                    <li class="dd-item dd3-item" data-id="@SubMenu.OrgMomId">
+                                        <div class="dd-handle dd3-handle"> Drag</div>
+                                        <div class="dd3-content">
+
+                                            <button class="btn btn-success btn-xs addUser" value="@SubMenu.OrgId" style="font-size:0.5rem;"><i class="fal fa-plus"></i> เพิ่มเจ้าหน้าที่</button>
+                                            <button class="btn btn-info btn-xs viewUser" value="@SubMenu.OrgId" style="font-size:0.5rem;"><i class="fal fa-search"></i> ดูรายชื่อ</button>
+                                            <button class="btn btn-warning btn-xs edit" value="@SubMenu.OrgId" style="font-size:0.5rem;"><i class="fal fa-pencil"></i> แก้ไข </button>
+                                            <button class="btn btn-danger btn-xs  delete" value="@SubMenu.OrgId" style="font-size: 0.5rem;"><i class="fal fa-eraser"></i> ลบ</button>
+
+                                            @SubMenu.OrgName (@SubMenu.OrgShortName @SubMenu.OrgNumber)
+
+                                        </div>
+                                        <ol class="dd-list">
+                                            @foreach (var SubMenu2 in Model.Where(d => d.ParentId == SubMenu.OrgMomId).OrderBy(r => r.Position))
+                                            {
+                                                <li class="dd-item dd3-item" data-id="@SubMenu2.OrgMomId">
+                                                    <div class="dd-handle dd3-handle"> Drag</div>
+                                                    <div class="dd3-content">
+
+                                                        <button class="btn btn-success btn-xs addUser" value="@SubMenu2.OrgId" style="font-size:0.5rem;"><i class="fal fa-plus"></i> เพิ่มเจ้าหน้าที่</button>
+                                                        <button class="btn btn-info btn-xs viewUser" value="@SubMenu2.OrgId" style="font-size:0.5rem;"><i class="fal fa-search"></i> ดูรายชื่อ</button>
+                                                        <button class="btn btn-warning btn-xs edit" value="@SubMenu2.OrgId" style="font-size:0.5rem;"><i class="fal fa-pencil"></i> แก้ไข </button>
+                                                        <button class="btn btn-danger btn-xs  delete" value="@SubMenu2.OrgId" style="font-size: 0.5rem;"><i class="fal fa-eraser"></i> ลบ </button>
+
+                                                        @SubMenu2.OrgName (@SubMenu2.OrgShortName @SubMenu2.OrgNumber)
+
+                                                    </div>
+
+                                                    <ol class="dd-list">
+                                                        @foreach (var SubMenu3 in Model.Where(d => d.ParentId == SubMenu2.OrgMomId).OrderBy(r => r.Position))
+                                                        {
+                                                            <li class="dd-item dd3-item" data-id="@SubMenu3.OrgMomId">
+                                                                <div class="dd-handle dd3-handle"> Drag</div>
+                                                                <div class="dd3-content">
+
+                                                                    <button class="btn btn-success btn-xs addUser" value="@SubMenu3.OrgId" style="font-size:0.5rem;"><i class="fal fa-plus"></i> เพิ่มเจ้าหน้าที่</button>
+                                                                    <button class="btn btn-info btn-xs viewUser" value="@SubMenu3.OrgId" style="font-size:0.5rem;"><i class="fal fa-search"></i> ดูรายชื่อ</button>
+                                                                    <button class="btn btn-warning btn-xs edit" value="@SubMenu3.OrgId" style="font-size:0.5rem;"> <i class="fal fa-pencil"></i> แก้ไข </button>
+                                                                    <button class="btn btn-danger btn-xs  delete" value="@SubMenu3.OrgId" style="font-size: 0.5rem;"><i class="fal fa-eraser"></i> ลบ </button>
+
+                                                                    @SubMenu3.OrgName (@SubMenu3.OrgShortName @SubMenu3.OrgNumber)
+
+                                                                </div>
+                                                                <ol class="dd-list">
+                                                                    @foreach (var SubMenu4 in Model.Where(d => d.ParentId == SubMenu3.OrgMomId).OrderBy(r => r.Position))
+                                                                    {
+                                                                        <li class="dd-item dd3-item" data-id="@SubMenu4.OrgMomId">
+                                                                            <div class="dd-handle dd3-handle"> Drag</div>
+                                                                            <div class="dd3-content">
+
+                                                                                <button class="btn btn-success btn-xs addUser" value="@SubMenu4.OrgId" style="font-size:0.5rem;"><i class="fal fa-plus"></i> เพิ่มเจ้าหน้าที่</button>
+                                                                                <button class="btn btn-info btn-xs viewUser" value="@SubMenu4.OrgId" style="font-size:0.5rem;"><i class="fal fa-search"></i> ดูรายชื่อ</button>
+                                                                                <button class="btn btn-warning btn-xs edit" value="@SubMenu4.OrgId" style="font-size:0.5rem;"><i class="fal fa-pencil"></i> แก้ไข</button>
+                                                                                <button class="btn btn-danger btn-xs  delete" value="@SubMenu4.OrgId" style="font-size: 0.5rem;"><i class="fal fa-eraser"></i> ลบ</button>
+
+                                                                                @SubMenu4.OrgName (@SubMenu4.OrgShortName @SubMenu4.OrgNumber)
+
+                                                                            </div>
+                                                                        </li>
+                                                                    }
+                                                                </ol>
+                                                            </li>
+                                                        }
+                                                    </ol>
+                                                </li>
+                                            }
+                                        </ol>
+                                    </li>
+                                }
+                            </ol>
+                        </li>
+                    }
+                }
+            </ol>
+        }
+        else
+        {
+            <div class="alert alert-info fade in">
+                <strong>ไม่มีข้อมูล</strong>
+            </div>
+        }
+    </div>
+</div>

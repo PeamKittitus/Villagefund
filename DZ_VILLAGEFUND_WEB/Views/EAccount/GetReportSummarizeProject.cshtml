@@ -1,0 +1,67 @@
+﻿@model IEnumerable<DZ_VILLAGEFUND_WEB.Models.ProjectBudget>
+@{
+    var Village = ViewBag.Village as List<DZ_VILLAGEFUND_WEB.Models.Village>;
+    var Helper = ViewBag.Helper as DZ_VILLAGEFUND_WEB.Helpers.Utility;
+    var AccountBudget = ViewBag.AccountBudget as List<DZ_VILLAGEFUND_WEB.Models.AccountBudget>;
+    var Province = ViewBag.Province as List<DZ_VILLAGEFUND_WEB.Models.SystemProvince>;
+    var District = ViewBag.District as List<DZ_VILLAGEFUND_WEB.Models.SystemDistrict>;
+    var SubDistrict = ViewBag.SubDistrict as List<DZ_VILLAGEFUND_WEB.Models.SystemSubDistrict>;
+    var ProjectBudget = ViewBag.ProjectBudget as List<DZ_VILLAGEFUND_WEB.Models.ProjectBudget>;
+
+}
+<table id="JsonTable" class="table table-bordered table-hover table-striped w-100">
+    <thead class="bg-primary-600">
+        <tr>
+            <th>ที่</th>
+            <th>รหัสกองทุน</th>
+            <th>ชื่อกองทุนหมู่บ้าน/ชุมชน</th>
+            <th>หมู่ที่</th>
+            <th>ตำบล/แขวง</th>
+            <th>อำเภอ/เขต</th>
+            <th>จังหวัด</th>
+            <th>รหัสโครงการ</th>
+            <th>ชื่อโครงการ</th>
+            <th>งบประมาณ</th>
+            <th>ร่าง</th>
+            <th>รอตรวจสอบ</th>
+            <th>ส่งกลับแก้ไข</th>
+            <th>รออนุมัติ</th>
+            <th>ไม่อนุมัติ</th>
+            <th>อนุมัติ</th>
+
+
+
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int Rows = 1;
+            foreach (var Get in Model)
+            {
+                <tr>
+                    <td>@Rows</td>
+                    <td>@Village.Where(w => w.VillageId == Get.VillageId).Select(s => s.VillageCodeText).FirstOrDefault()</td>
+                    <td>@Village.Where(w => w.VillageId == Get.VillageId).Select(s => s.VillageName).FirstOrDefault()</td>
+                    <td>@Village.Where(w => w.VillageId == Get.VillageId).Select(s => s.VillageMoo).FirstOrDefault()</td>
+                    <td>@SubDistrict.Where(w => w.SubdistrictId == Village.Where(w => w.VillageId == Get.VillageId).Select(s => s.SubDistrictId).FirstOrDefault()).Select(s => s.SubdistrictName).FirstOrDefault()</td>
+                    <td>@District.Where(w => w.AmphurId == Village.Where(w => w.VillageId == Get.VillageId).Select(s => s.DistrictId).FirstOrDefault()).Select(s => s.AmphurName).FirstOrDefault()</td>
+                    <td>@Province.Where(w => w.ProvinceId == Village.Where(w => w.VillageId == Get.VillageId).Select(s => s.ProvinceId).FirstOrDefault()).Select(s => s.ProvinceName).FirstOrDefault()</td>
+                    <td>@Get.ProjectCode</td>
+                    <td>@Get.ProjectName</td>
+                    <td>@Get.Amount.ToString("N0")</td>
+                    <td>@ProjectBudget.Where(w => w.StatusId == 0).Count()</td>
+                    <td>@ProjectBudget.Where(w => w.StatusId == 1).Count()</td>
+                    <td>@ProjectBudget.Where(w => w.StatusId == 2).Count()</td>
+                    <td>@ProjectBudget.Where(w => w.StatusId == 3).Count()</td>
+                    <td>@ProjectBudget.Where(w => w.StatusId == 4).Count()</td>
+                    <td>@ProjectBudget.Where(w => w.StatusId == 5).Count()</td>
+
+
+                </tr>
+
+                Rows++;
+            }
+        }
+
+    </tbody>
+</table>

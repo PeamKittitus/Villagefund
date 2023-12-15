@@ -1,0 +1,77 @@
+﻿@model IEnumerable<DZ_VILLAGEFUND_WEB.Models.AccountActivity>
+@{
+    var GetPermission = ViewBag.Permission as DZ_VILLAGEFUND_WEB.ViewModels.Settings.PermissionViewModel;
+}
+
+<table id="JsonTable" class="table table-bordered table-hover table-striped w-100">
+    <thead class="bg-primary-600">
+        <tr>
+            <th class="text-center" width="50">ลำดับ</th>
+            <th>รายการค่าใช้จ่าย</th>
+            <th class="text-center" width="50">ปีงบประมาณ</th>
+            <th class="text-center" width="200"></th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @{
+            int Rows = 1;
+            foreach (var Level1 in Model.Where(w => w.AccountParentId == 0).OrderBy(w => w.AccountChartId))
+            {
+                <tr>
+                    <td class="text-center">@Rows.</td>
+                    <td> - @Level1.AccountName</td>
+                    <td class="text-center"> @Level1.BudgetYear</td>
+                    <td class="text-center">
+                        @{
+                            if (GetPermission.Insert == true)
+                            {
+                                <a href="javascript:void(0);" data-val="@Level1.AccountChartId" data-center="@Level1.IsChartCenter" class="btn btn-xs btn-success addParent" title="Create"><i class="fal fa-plus"></i> เพิ่ม</a>
+                            }
+
+                            if (GetPermission.Update == true)
+                            {
+                                <a href="javascript:void(0);" data-val="@Level1.AccountChartId" data-type="true" class="btn btn-xs btn-warning edit"><i class="fal fa-pencil"></i> แก้ไข</a>
+                            }
+
+                            if (GetPermission.Delete == true)
+                            {
+                                <a href="javascript:void(0);" data-val="@Level1.AccountChartId" class="btn btn-xs btn-danger delete"><i class="fal fa-eraser"></i> ลบ</a>
+                            }
+                        }
+                    </td>
+                </tr>
+
+                int Rows2 = 1;
+                foreach (var Level2 in Model.OrderBy(d => d.AccountChartId).Where(w => w.AccountParentId == Level1.AccountChartId))
+                {
+                    <tr>
+                        <td class="text-right">@Rows.@Rows2</td>
+                        <td style="padding-left:5rem;"> - @Level2.AccountName</td>
+                        <td class="text-center"> @Level2.BudgetYear</td>
+                        <td class="text-center">
+                            @{
+
+                                if (GetPermission.Update == true)
+                                {
+                                    <a href="javascript:void(0);" data-val="@Level2.AccountChartId" data-val-parent="@Level2.AccountParentId" data-type="false" class="btn btn-xs btn-warning edit"><i class="fal fa-pencil"></i> แก้ไข</a>
+                                }
+
+                                if (GetPermission.Delete == true)
+                                {
+                                    <a href="javascript:void(0);" data-val="@Level2.AccountChartId" class="btn btn-xs btn-danger delete"><i class="fal fa-eraser"></i> ลบ</a>
+                                }
+                            }
+                        </td>
+                    </tr>
+
+                    Rows2++;
+                }
+
+                Rows++;
+
+            }
+        }
+
+    </tbody>
+</table>

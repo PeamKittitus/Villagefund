@@ -1,0 +1,77 @@
+﻿@model IEnumerable<DZ_VILLAGEFUND_WEB.Models.SystemMenus>
+
+
+<div class="col-sm-12 col-lg-12 col-xs-12">
+    <div class="dd margin-bottom-10" style="max-width:100%;" id="nestable3">
+        @if (Model.Count() > 0)
+        {
+            <ol class="dd-list">
+                @{
+                    foreach (var MainMenu in Model.Where(w => w.ParentId == 0).OrderBy(r => r.Position))
+                    {
+                        <li class="dd-item dd3-item" data-id="@MainMenu.Id">
+                            <div class="dd-handle dd3-handle">Drag</div>
+                            <div class="dd3-content">
+
+                                <button class="btn btn-warning btn-xs edit" value="@MainMenu.Id" style="font-size:0.5rem;">
+                                    <i class="fal fa-pencil"></i> แก้ไข
+                                </button>
+                                <button class="btn btn-danger btn-xs  delete" value="@MainMenu.Id" style="font-size: 0.5rem;">
+                                    <i class="fal fa-eraser"></i> ลบ
+                                </button>
+
+                                @MainMenu.MenuName
+                            </div>
+                            <ol class="dd-list">
+                                @foreach (var SubMenu in Model.Where(d => d.ParentId == MainMenu.Id).OrderBy(r => r.Position))
+                                {
+                                    <li class="dd-item dd3-item" data-id="@SubMenu.Id">
+                                        <div class="dd-handle dd3-handle"> Drag</div>
+                                        <div class="dd3-content">
+
+                                            <button class="btn btn-warning btn-xs edit" value="@SubMenu.Id" style="font-size:0.5rem;">
+                                                <i class="fal fa-pencil"></i> แก้ไข
+                                            </button>
+                                            <button class="btn btn-danger btn-xs  delete" value="@SubMenu.Id" style="font-size: 0.5rem;">
+                                                <i class="fal fa-eraser"></i> ลบ
+                                            </button>
+
+                                            @SubMenu.MenuName
+
+                                        </div>
+                                        <ol class="dd-list">
+                                            @foreach (var SubMenu2 in Model.Where(d => d.ParentId == SubMenu.Id).OrderBy(r => r.Position))
+                                            {
+                                                <li class="dd-item dd3-item" data-id="@SubMenu2.Id">
+                                                    <div class="dd-handle dd3-handle"> Drag</div>
+                                                    <div class="dd3-content">
+
+                                                        <button class="btn btn-warning btn-xs edit" value="@SubMenu2.Id" style="font-size:0.5rem;">
+                                                            <i class="fal fa-pencil"></i> แก้ไข
+                                                        </button>
+                                                        <button class="btn btn-danger btn-xs  delete" value="@SubMenu2.Id" style="font-size: 0.5rem;">
+                                                            <i class="fal fa-eraser"></i> ลบ
+                                                        </button>
+
+                                                        @SubMenu2.MenuName
+
+                                                    </div>
+                                                </li>
+                                            }
+                                        </ol>
+                                    </li>
+                                }
+                            </ol>
+                        </li>
+                    }
+                }
+            </ol>
+        }
+        else
+        {
+            <div class="alert alert-info fade in">
+                <strong>ไม่มีข้อมูล</strong>
+            </div>
+        }
+    </div>
+</div>

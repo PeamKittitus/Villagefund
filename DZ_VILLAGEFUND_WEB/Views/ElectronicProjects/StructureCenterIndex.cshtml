@@ -1,0 +1,320 @@
+﻿@{
+    ViewData["Title"] = "แผนงานโครงการ";
+    var GetPermission = ViewBag.Permission as DZ_VILLAGEFUND_WEB.ViewModels.Settings.PermissionViewModel;
+}
+
+<ol class="breadcrumb page-breadcrumb">
+    <li class="breadcrumb-item"><a href="/Home/Index">หน้าหลัก</a></li>
+    <li class="breadcrumb-item"><a href="javascript:void(0)">ข้อมูลพื้นฐาน</a></li>
+    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+</ol>
+
+@if (GetPermission.Insert)
+{
+    <div class="d-flex justify-content-start flex-wrap demo">
+        <div class="btn-group">
+            <a href="javascript:void(0)" class="btn btn-light" id="AddForm">
+                <i class="fal fa-plus-circle mr-1 fs-xxl color-primary-600"></i><br />
+                <span class="fs-nano color-primary-600">สร้างใหม่</span>
+            </a>
+        </div>
+    </div>
+}
+
+<div class="row">
+    <div class="col-lg-4 mb-2">
+        <select id="CurrentBudgetYear">
+        </select>
+    </div>
+    <div class="col-lg-12">
+        <div class="panel">
+            <div class="panel-hdr">
+                <h2><i class='subheader-icon fal fa-money-bill'></i>  @ViewData["Title"]</h2>
+                <a href="javascript:void(0)" id="ImportExcel" class="text-right btn buttons-print btn-outline-success btn-sm"><i class="fal fa-upload"></i> นำเข้าข้อมูล</a>
+                <a href="javascript:void(0)" id="ExportExcel" class="text-right btn buttons-print btn-outline-primary btn-sm"><i class="fal fa-file-excel"></i> ส่งออกข้อมูล</a>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+
+                    <div id="JsonData"></div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- form create  -->
+<div class="modal fade default-example-modal-right-lg" id="FormCreateModal" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-right modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title h4"><i class="ni ni-menu"></i> สร้างใหม่</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true"><i class="fal fa-times"></i></span> </button>
+            </div>
+            <div class="modal-body">
+
+                <span id="JsonCreateForm"></span>
+
+            </div>
+            <div class="modal-footer"> </div>
+        </div>
+    </div>
+</div>
+
+<!-- form create sub  -->
+<div class="modal fade default-example-modal-right-lg" id="FormCreateSubModal" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-right modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title h4"><i class="ni ni-menu"></i> สร้างใหม่</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true"><i class="fal fa-times"></i></span> </button>
+            </div>
+            <div class="modal-body">
+
+                <span id="JsonCreateSubForm"></span>
+
+            </div>
+            <div class="modal-footer"> </div>
+        </div>
+    </div>
+</div>
+
+<!-- form edit -->
+<div class="modal fade default-example-modal-right-lg" id="FormEditModal" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-right modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title h4"><i class="ni ni-menu"></i> แก้ไข</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true"><i class="fal fa-times"></i></span> </button>
+            </div>
+            <div class="modal-body">
+
+                <span id="JsonEditForm"></span>
+
+            </div>
+            <div class="modal-footer"> </div>
+        </div>
+    </div>
+</div>
+
+<!-- form approve -->
+<div class="modal fade default-example-modal-right-lg" id="FormApproveModal" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title h4"><i class="ni ni-menu"></i> ตั้งค่าการเบิกจ่าย</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true"><i class="fal fa-times"></i></span> </button>
+            </div>
+            <div class="modal-body">
+
+                <span id="JsonApproveForm"></span>
+
+            </div>
+            <div class="modal-footer"> </div>
+        </div>
+    </div>
+</div>
+
+<!-- form Import -->
+<div class="modal fade default-example-modal-right-lg" id="FormImport" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-right modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title h4"><i class="ni ni-menu"></i> นำเข้าข้อมูล</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true"><i class="fal fa-times"></i></span> </button>
+            </div>
+            <div class="modal-body">
+
+                <span id="JsonImportForm"></span>
+
+            </div>
+            <div class="modal-footer"> </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <link rel="stylesheet" type="text/css" href="/css/notifications/toastr/toastr.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/datagrid/datatables/datatables.bundle.css">
+    <link rel="stylesheet" href="~/css/notifications/sweetalert2/sweetalert2.bundle.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/formplugins/select2/select2.bundle.css">
+    <link rel="stylesheet" type="text/css" href="/css/formplugins/summernote/summernote.css">
+    <script src="~/js/Validation/bootstrapValidator.min.js"></script>
+    <script src="~/js/datagrid/datatables/datatables.bundle.js"></script>
+    <script src="~/js/datagrid/datatables/datatables.export.js"></script>
+    <script src="~/js/notifications/toastr/toastr.js"></script>
+    <script src="~/js/notifications/sweetalert2/sweetalert2.bundle.js"></script>
+    <script src="~/js/formplugins/select2/select2.bundle.js"></script>
+    <script src="~/js/NumberFormat.js"></script>
+    <script src="/js/formplugins/summernote/summernote.js"></script>
+    <script>
+        $(function () {
+            $("#CurrentBudgetYear").select2();
+            $("#CurrentBudgetYear").change(function () {
+                $("#JsonData").html('<img  src="/img/loading.gif" width="200">');
+                $.get("/ElectronicProjects/GetStructuresCenter", { "BudgetYear": $(this).val() }, function (JsonResult) {
+                    $("#JsonData").html(JsonResult);
+                    $('#JsonTable').dataTable(
+                        {
+                            "pageLength": 100,
+                            responsive: true,
+                            lengthChange: false,
+                            ordering: false,
+                        });
+
+                    /* edit data */
+                    $("#JsonData").on("click", ".edit", function () {
+                        const Id = $(this).attr("data-val");
+                        const IsParent = $(this).attr("data-parent");
+
+                        window.location.href = "/ElectronicProjects/FormEditStructureCenter?AccountBudgetd=" + Id + "&IsParent=" + IsParent;
+                    });
+
+                    /* delete data */
+                    $("#JsonData").on("click", ".delete", function () {
+                        const AccountBudgetd = $(this).attr("data-val");
+                        Swal.fire(
+                            {
+                                title: "ยืนยันการทำรายการ",
+                                text: "คุณต้องการลบรายการนี้ หรือไม่?",
+                                type: "warning",
+                                showCancelButton: true,
+                                confirmButtonText: "ยืนยัน",
+                                cancelButtonText: "ยกเลิก",
+                                closeOnConfirm: false
+                            }).then(function (isConfirm) {
+                                if (isConfirm.value == true) {
+                                    $.get("/ElectronicProjects/DeleteStructureCenter", { "AccountBudgetd": AccountBudgetd }, function (rs) {
+                                        if (rs.valid == true) {
+                                            toastr.success(rs.message);
+                                            setTimeout(function () {
+                                                window.location.href = "";
+                                            }, 700);
+                                        }
+                                        else {
+                                            toastr.error('แจ้งเตือน! ' + rs.message);
+                                        }
+                                    });
+                                }
+                            });
+                    });
+
+                    // add sub
+                    $("#JsonData").on("click", ".addParent", function () {
+
+                        window.location.href = "/ElectronicProjects/FormAddSubStructureCenter?AccountBudgetd=" + $(this).attr("data-val");
+
+                    });
+
+                    // Update status
+                    $("#JsonData").on("change", ".UpdateStatus", function () {
+                        var AccountBudgetd = $(this).attr("data-val");
+                        Swal.fire(
+                            {
+                                title: "ยืนยันการทำรายการ",
+                                text: "คุณต้องการทำรายการนี้ หรือไม่?",
+                                type: "warning",
+                                showCancelButton: true,
+                                confirmButtonText: "ยืนยัน",
+                                cancelButtonText: "ยกเลิก",
+                                closeOnConfirm: false
+                            }).then(function (isConfirm) {
+                                if (isConfirm.value == true) {
+                                    $.get("/ElectronicProjects/UpdateStatusProjectCenter", { "AccountBudgetd": AccountBudgetd }, function (result) {
+                                        if (result.valid == true) {
+                                            toastr.success(result.message);
+                                            setTimeout(function () {
+                                                window.location.href = "";
+                                            }, 700);
+                                        }
+                                        else {
+                                            toastr.error('แจ้งเตือน! ' + result.message);
+                                            setTimeout(function () {
+                                                window.location.href = "";
+                                            }, 1000);
+                                        }
+                                    });
+                                } else {
+                                    //For Cancle Submit Swith back to Old value
+                                    if ($(".UpdateStatus").attr('data-value') === 'True') {
+                                        $(".UpdateStatus").prop('checked', true);
+                                    } else {
+                                        $(".UpdateStatus").prop('checked', false);
+                                    }
+                                }
+                            });
+
+
+                    });
+
+                });
+            });
+            $("#CurrentBudgetYear").val($("#CurrentBudgetYear").val()).change();
+
+            /* form add */
+            $("#AddForm").click(function () {
+                window.location.href = "/ElectronicProjects/FormAddStructureCenter";
+            });
+
+            //Export Excel
+            $("#ExportExcel").on("click", function () {
+                window.location.href = "/ElectronicProjects/ExportExcelStructureProject?BudgetYear=" + $("#CurrentBudgetYear").val();
+            });
+
+            //Import Excel
+            $("#ImportExcel").on("click", function () {
+                $.get("/ElectronicProjects/FormImportExcelStructureProject", function (FormResult) {
+                    $("#JsonImportForm").html(FormResult);
+                    $("#FormImport").modal("show");
+
+                    $("#Submit").click(function () {
+                        let validate = false;
+                        if ($('#FileUpload').get(0).files.length != 0) {
+                            validate = true;
+                        }
+                        else {
+                            $("#FormImport").modal("hide");
+                            Swal.fire(
+                                {
+                                    title: "ไม่มีไฟล์",
+                                    text: "กรุณาแนบไฟล์",
+                                    type: "error",
+                                    confirmButtonText: "เข้าใจแล้ว",
+                                    closeOnConfirm: false
+                                });
+                        }
+                        if (validate) {
+                            let Data = new FormData($("#JsonForm")[0]); JsonForm
+                            $.ajax(
+                                {
+                                    type: "POST",
+                                    url: "/ElectronicProjects/ImportExcelStructureProject",
+                                    contentType: false,
+                                    processData: false,
+                                    data: Data,
+                                    success: function (result) {
+                                        if (result.valid == true) {
+                                            toastr.success(result.message);
+                                            setTimeout(function () {
+                                                window.location.href = "/ElectronicProjects/StructureCenterIndex";
+                                            }, 700);
+                                        }
+                                        else {
+                                            toastr.error('Error! ' + result.message);
+                                            setTimeout(function () {
+
+                                            }, 700);
+                                        }
+                                    }
+                                });
+                        }
+                    });
+
+                });
+            });
+
+        });
+    </script>
+}

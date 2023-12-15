@@ -1,0 +1,32 @@
+﻿@model IEnumerable<DZ_VILLAGEFUND_WEB.Models.ProjectBudgetDocument>
+@{
+    var Helper = ViewBag.Helper as DZ_VILLAGEFUND_WEB.Helpers.Utility;
+}
+<table id="JsonTable" class="table table-bordered table-hover m-0">
+    <thead>
+        <tr class="font-weight-bold">
+            <td class="text-center" style="width:50px;">ลำดับ</td>
+            <td>ชื่อไฟล์</td>
+            <td class="text-center" style="width:150px;">วันที่อัปโหลด</td>
+            <td class="text-center" style="width:100px;">  </td>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int Row = 1;
+                foreach (var FilePeriod in Model)
+                {
+                    <tr>
+                        <td class="text-center">@Row .</td>
+                        <td><a href="/uploads/e-account/@FilePeriod.GencodeFileName" download="@FilePeriod.FileName"> @FilePeriod.FileName  </a></td>
+                        <td class="text-center">@Helper.getDateThai(FilePeriod.UpdateDate)</td>
+                        <td class="text-center">
+                            <a href="javascript:void(0);" data-val="@FilePeriod.TransactionDocId" class="btn btn-xs btn-danger  delete" title="Delete"><i class="fal fa-times"></i> ลบ </a>
+                        </td>
+                    </tr>
+                    Row++;
+                }
+        }
+
+    </tbody>
+</table>

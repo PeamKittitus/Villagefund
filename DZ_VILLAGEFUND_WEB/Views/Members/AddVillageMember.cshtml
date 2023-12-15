@@ -1,0 +1,228 @@
+﻿@{
+    ViewData["Title"] = "สมาชิกหมู่บ้าน";
+    var GetPermission = ViewBag.Permission as DZ_VILLAGEFUND_WEB.ViewModels.Settings.PermissionViewModel;
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel">
+            <div class="panel-container show">
+                <div class="panel-content text-center">
+                    <button type="button" class="btn btn-default  waves-effect waves-themed">(1) ยื่นคำขอขึ้นทะเบียน <i class="fal fa-arrow-right"></i></button>
+                    <button type="button" class="btn btn-success  waves-effect waves-themed">(2) @ViewData["Title"] <i class="fal fa-arrow-right"></i></button>
+                    <button type="button" class="btn btn-default  waves-effect waves-themed">(3) เอกสารแนบ </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="d-flex justify-content-start flex-wrap demo">
+    @if (GetPermission.Insert)
+    {
+        <div class="btn-group">
+            <a href="/Members/FormAddMemberVillage?VillageCode=@ViewBag.VillageCode" class="btn btn-light">
+                <i class="fal fa-plus-circle mr-1 fs-xxl color-primary-600"></i><br />
+                <span class="fs-nano color-primary-600">เพิ่มสมาชิก</span>
+            </a>
+        </div>
+    }
+    <div class="btn-group">
+        <a href="javascript:void(0)" id="Next" class="btn btn-light">
+            <i class="fal fa-arrow-right mr-1 fs-xxl color-primary-600"></i><br />
+            <span class="fs-nano color-primary-600"> ดำเนินการต่อ</span>
+        </a>
+    </div>
+</div>
+
+
+<input id="TransactionVillageId" value="@ViewBag.TransactionVillageId" hidden />
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel">
+            <div class="panel-hdr">
+                <h2><i class='subheader-icon fal fa-users'></i>  @ViewData["Title"]</h2>
+                <a href="javascript:void(0)" id="ImportExcel" class="text-right btn buttons-print btn-outline-success btn-sm"><i class="fal fa-upload"></i> นำเข้าข้อมูล</a>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+
+                    <div id="JsonData"></div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- form Import -->
+<div class="modal fade default-example-modal-right-lg" id="FormImport" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-right modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title h4"><i class="ni ni-menu"></i> นำเข้าข้อมูล</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true"><i class="fal fa-times"></i></span> </button>
+            </div>
+            <div class="modal-body">
+
+                <span id="JsonImportForm"></span>
+
+            </div>
+            <div class="modal-footer"> </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <link rel="stylesheet" type="text/css" href="/css/notifications/toastr/toastr.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/datagrid/datatables/datatables.bundle.css">
+    <link rel="stylesheet" href="~/css/notifications/sweetalert2/sweetalert2.bundle.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/formplugins/select2/select2.bundle.css">
+    <script src="~/js/datagrid/datatables/datatables.bundle.js"></script>
+    <script src="~/js/datagrid/datatables/datatables.export.js"></script>
+    <script src="~/js/notifications/toastr/toastr.js"></script>
+    <script src="~/js/notifications/sweetalert2/sweetalert2.bundle.js"></script>
+    <script>
+        $(function () {
+            $("#JsonData").html('<img  src="/img/loading.gif" width="200">');
+            $.get("/Members/GetMembers", { "TransactionVillageId": $("#TransactionVillageId").val() }, function (JsonResult) {
+                setTimeout(function () {
+                    $("#JsonData").html(JsonResult);
+                    $('#JsonTable').dataTable(
+                        {
+                            responsive: true,
+                            lengthChange: false,
+                            dom: "<'row mb-3'<'col-sm-12 col-md-6 d-flex align-items-center justify-content-start'f><'col-sm-12 col-md-6 d-flex align-items-center justify-content-end'lB>>" +
+                                "<'row'<'col-sm-12'tr>>" +
+                                "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+                            buttons: [
+                                {
+                                    extend: 'print',
+                                    text: 'สั่งพิมพ์',
+                                    titleAttr: 'Print Table',
+                                    className: 'btn-outline-primary btn-sm'
+                                }
+                            ]
+                        });
+
+                    //Edit
+                    $('#JsonData .edit').one("click", function () {
+                        const MemberId = $(this).attr("data-val");
+                        window.location.href = "/Members/FormEditMember?MemberId=" + MemberId;
+                    });
+
+                    // delete
+                    $('#JsonData .delete').unbind().click(function () {
+                        const MemberId = $(this).attr("data-val");
+                        Swal.fire(
+                            {
+                                title: "ยืนยันการทำรายการ",
+                                text: "คุณต้องการลบรายการนี้ หรือไม่?",
+                                type: "warning",
+                                showCancelButton: true,
+                                confirmButtonText: "ยืนยัน",
+                                cancelButtonText: "ยกเลิก",
+                                closeOnConfirm: false
+                            }).then(function (isConfirm) {
+                                if (isConfirm.value == true) {
+                                    $.get("/Members/Delete", { "MemberId": MemberId }, function (rs) {
+                                        if (rs.valid == true) {
+                                            toastr.success(rs.message);
+                                            setTimeout(function () {
+                                                window.location.href = "";
+                                            }, 1000);
+                                        }
+                                        else {
+                                            toastr.error('Error!' + rs.message);
+                                            setTimeout(function () {
+                                                window.location.href = "";
+                                            }, 1000);
+                                        }
+                                    });
+                                }
+                            });
+                    });
+
+
+                }, 200);
+            });
+
+            //Save Member
+            $('#Next').on("click", function () {
+                let table = $('#JsonTable').DataTable();
+                // Get the data from column 3
+                let data = table.column(3).data();
+                // Filter the data based on the value 'กรรมการ'
+                let staff = data.filter(function (value) {
+                    return value !== 'สมาชิกกองทุนหมู่บ้าน';
+                }).length;
+                if (table.data().count() > 0) {
+                    if (staff < 9) {
+                        toastr.error("ต้องเพิ่มคณะกรรมการกองทุนอย่างน้อย 9 ท่าน");
+                        return null;
+                    }
+                    window.location.href = "/Villages/UploadVillageDoc";
+                } else {
+                    toastr.error("กรุณากรอกข้อมูลสมาชิก");
+                }
+            });
+
+            //Import Excel
+            $("#ImportExcel").on("click", function () {
+                $.get("/Members/FormImportMember", { "TransactionVillageId": $("#TransactionVillageId").val() }, function (FormResult) {
+                    $("#JsonImportForm").html(FormResult);
+                    $("#FormImport").modal("show");
+
+                    $("#Submit").click(function () {
+                        let validate = false;
+                        if ($('#FileUpload').get(0).files.length != 0) {
+                            validate = true;
+                        }
+                        else {
+                            $("#FormImport").modal("hide");
+                            Swal.fire(
+                                {
+                                    title: "ไม่มีไฟล์",
+                                    text: "กรุณาแนบไฟล์",
+                                    type: "error",
+                                    confirmButtonText: "เข้าใจแล้ว",
+                                    closeOnConfirm: false
+                                });
+                        }
+                        if (validate) {
+                            let Data = new FormData($("#JsonForm")[0]); JsonForm
+                            $.ajax(
+                                {
+                                    type: "POST",
+                                    url: "/Members/ImportMember",
+                                    contentType: false,
+                                    processData: false,
+                                    data: Data,
+                                    success: function (result) {
+                                        if (result.valid == true) {
+                                            toastr.success(result.message);
+                                            setTimeout(function () {
+                                                window.location.href = "";
+                                            }, 700);
+                                        }
+                                        else {
+                                            toastr.error('Error! ' + result.message);
+                                            setTimeout(function () {
+
+                                            }, 700);
+                                        }
+                                    }
+                                });
+                        }
+                    });
+
+                });
+            });
+
+        });
+    </script>
+
+    }

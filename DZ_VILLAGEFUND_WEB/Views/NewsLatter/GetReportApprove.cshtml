@@ -1,0 +1,37 @@
+﻿@model IEnumerable<DZ_VILLAGEFUND_WEB.ViewModels.EAccount.ReportTypeNewsViewModel>
+
+<table id="JsonTable" class="table table-bordered table-hover table-striped w-100">
+    <thead class="bg-primary-600">
+        <tr>
+            <th class="text-center" style="width:50px">ลำดับ</th>
+            <th class="text-center">ปี</th>
+            <th class="text-center">เดือน</th>
+            <th class="text-center">รออนุมัติ</th>
+            <th class="text-center" style="width:50px">ร้อยละ</th>
+            <th class="text-center">อนุมัติ</th>
+            <th class="text-center" style="width:50px">ร้อยละ</th>
+            <th class="text-center">ข่าวสารทั้งหมด</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int Rows = 1;
+            foreach (var Get in Model)
+            {
+                <tr>
+                    <td class="text-center">@Rows.</td>
+                    <td class="text-center">@Get.TransactionYear</td>
+                    <td class="text-left">@Get.Month</td>
+                    <td class="text-center">@Get.AmountWait.ToString("N0")</td>
+                    <td class="text-center">@((Get.AmountWait * 100 / (Get.AmountNews > 0 ? Get.AmountNews : 1)).ToString("N"))</td>
+                    <td class="text-center">@Get.AmountApprove.ToString("N0")</td>
+                    <td class="text-center">@((Get.AmountApprove * 100 / (Get.AmountNews > 0 ? Get.AmountNews : 1)).ToString("N"))</td>
+                    <td class="text-center">@Get.AmountNews.ToString("N0")</td>
+                </tr>
+
+                Rows++;
+            }
+        }
+
+    </tbody>
+</table>

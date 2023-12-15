@@ -1,0 +1,557 @@
+﻿@model DZ_VILLAGEFUND_WEB.Models.TransactionVillage
+@{
+    ViewData["Title"] = "ยื่นคำขอขึ้นทะเบียน";
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel">
+            <div class="panel-container show">
+                <div class="panel-content text-center">
+                    <button type="button" class="btn btn-success  waves-effect waves-themed">(1) @ViewData["Title"] <i class="fal fa-arrow-right"></i></button>
+                    <button type="button" class="btn btn-default  waves-effect waves-themed">(2) สมาชิกหมู่บ้าน <i class="fal fa-arrow-right"></i></button>
+                    <button type="button" class="btn btn-default  waves-effect waves-themed">(3) เอกสารแนบ </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel">
+            <div class="panel-hdr">
+                <h2><i class='subheader-icon fal fa-list-alt'></i>  @ViewData["Title"]</h2>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+
+                    <div class="row">
+                        <div class="col-lg-2"></div>
+                        <div class="col-lg-8">
+                            <form id="JsonForm" enctype="multipart/form-data" novalidate
+                                  asp-antiforgery="true"
+                                  data-bv-message="This value is not valid"
+                                  data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
+                                  data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
+                                  data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
+                                <div class="panel-content">
+                                    <div class="col-lg-12 col-md-12 col-sm-12">
+
+                                        <div class="form-group">
+                                            <label class="form-label">รหัสกองทุน ( 8 หลัก) <span style="color:red">*</span></label>
+                                            <input type="text" asp-for="VillageCodeText" class="form-control col-lg-12 col-md-12 col-sm-12"
+                                                   data-bv-stringlength="true"
+                                                   data-bv-stringlength-min="8"
+                                                   maxlength="8"
+                                                   data-bv-stringlength-message="กรุณากรอกข้อมูลให้ครบ 8 หลัก"
+                                                   data-bv-notempty="true"
+                                                   data-bv-notempty-message="กรุณากรอกข้อมูล"
+                                                   pattern="^[0-9]*$"
+                                                   data-bv-message="กรุณากรอกเฉพาะตัวเลข">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">รหัสผู้เสียภาษี/เลขนิติบุคคล ( 13 หลัก) <span style="color:red">*</span></label>
+                                            <input type="text" asp-for="VillageBbdId" class="form-control col-lg-12 col-md-12 col-sm-12"
+                                                   data-bv-notempty="true"
+                                                   data-bv-notempty-message="กรุณากรอกข้อมูล"
+                                                   data-bv-stringlength="true"
+                                                   data-bv-stringlength-min="13"
+                                                   maxlength="13"
+                                                   data-bv-stringlength-message="กรุณากรอกข้อมูลให้ครบ 13 หลัก"
+                                                   pattern="^[0-9]*$"
+                                                   data-bv-message="กรุณากรอกเฉพาะตัวเลข">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">เลขทะเบียนใบนิติบุคคล <span style="color:red">*</span></label>
+                                            <input type="text" asp-for="VillageBbdCode" class="form-control col-lg-12 col-md-12 col-sm-12"
+                                                   data-bv-notempty="true"
+                                                   data-bv-notempty-message="กรุณากรอกข้อมูล">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">ชื่อนิติบุคคล <span style="color:red">*</span></label>
+                                            <input type="text" asp-for="VillageName" class="form-control col-lg-12 col-md-12 col-sm-12"
+                                                   data-bv-notempty="true"
+                                                   data-bv-notempty-message="กรุณากรอกข้อมูล">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">เบอร์โทรศัพท์ <span style="color:red">*</span></label>
+                                            <input type="text" asp-for="Phone" maxlength="10" class="form-control col-lg-12 col-md-12 col-sm-12"
+                                                   pattern="^[0-9]*$"
+                                                   data-bv-message="กรุณากรอกเฉพาะตัวเลข"
+                                                   data-bv-notempty="true"
+                                                   data-bv-notempty-message="กรุณากรอกข้อมูล">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">อีเมล (e-mail) <span style="color:red">*</span></label>
+                                            <input type="email" asp-for="Email" class="form-control col-lg-12 col-md-12 col-sm-12"
+                                                   data-bv-notempty="true"
+                                                   data-bv-notempty-message="กรุณากรอกข้อมูล"
+                                                   data-bv-emailaddress="true"
+                                                   data-bv-emailaddress-message="อีเมล (e-mail) ไม่ถูกต้อง">
+                                        </div>
+
+
+
+                                        <div class="form-group">
+                                            <label class="form-label">วันที่จัดตั้ง <span style="color:red">*</span></label>
+                                            <div>
+                                                <div class="row">
+                                                    <div class="col-lg-4">
+                                                        <input type="hidden" id="CurrentDay" value="@(Model != null ? Model.BbdDate.Day : DateTime.Now.Day)">
+                                                        <select name="Day" asp-items="(IEnumerable<SelectListItem>)@ViewBag.Day" id="Day" style="width:100%;"></select>
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <input id="CurrentMonth" type="hidden" value="@(Model != null ? Model.BbdDate.Month : DateTime.Now.Month)" />
+                                                        <select name="Month" asp-items="(IEnumerable<SelectListItem>)@ViewBag.Month" id="Month" style="width:100%;"></select>
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <input id="CurrentYear" type="hidden" value="@(Model != null ? Model.BbdDate.Year : DateTime.Now.Year)" />
+                                                        <select name="Year" asp-items="(IEnumerable<SelectListItem>)@ViewBag.Year" id="Year" style="width:100%;"></select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <article class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                                                    <label class="form-label"> ที่อยู่นิติบุคคล </label><span style="color:red">*</span>
+                                                    <input type="text" asp-for="VillageAddress" class="form-control col-lg-12 col-md-12 col-sm-6"
+                                                           data-bv-notempty="true"
+                                                           data-bv-notempty-message="กรุณากรอกข้อมูล">
+                                                </article>
+                                                <article class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                                                    <label class="form-label">หมู่ที่ </label>
+                                                    <input type="text" asp-for="VillageMoo" class="form-control col-lg-12 col-md-12 col-sm-6" />
+                                                </article>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <article class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                                                    <label class="form-label"> จังหวัด </label><span style="color:red">*</span>
+                                                    <input type="hidden" id="_ProvinceId" value="@Model.ProvinceId" />
+                                                    <select asp-for="ProvinceId" asp-items="(IEnumerable<SelectListItem>)@ViewBag.Province" style="width:100%;"></select>
+                                                </article>
+                                                <article class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                                                    <label class="form-label"> อำเภอ/เขต </label><span style="color:red">*</span>
+                                                    <input type="hidden" id="_DistrictId" value="@Model.DistrictId" />
+                                                    <select asp-for="DistrictId" style="width:100%;"></select>
+                                                </article>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <article class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                                                    <label class="form-label"> ตำบล/แขวง </label><span style="color:red">*</span>
+                                                    <input type="hidden" id="_SubDistrictId" value="@Model.SubDistrictId" />
+                                                    <select asp-for="SubDistrictId" style="width:100%;"></select>
+                                                </article>
+                                                <article class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                                                    <label class="form-label">ไปรษณีย์</label><span style="color:red">*</span>
+                                                    <input type="text" asp-for="PostCode" class="form-control col-lg-12 col-md-12 col-sm-4"
+                                                           data-bv-notempty="true"
+                                                           maxlength="5"
+                                                           data-bv-stringlength-min="5"
+                                                           data-bv-message="กรุณากรอกข้อมูลให้ถูกต้อง"
+                                                           data-bv-greaterthan-message="กรุณากรอกข้อมูลให้ถูกต้อง"
+                                                           data-bv-stringlength-message="กรุณากรอกข้อมูลให้ถูกต้อง"
+                                                           data-bv-notempty-message="กรุณากรอกข้อมูล" min="1">
+                                                </article>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <input asp-for="TransactionVillageId" hidden />
+                                <input type="hidden" id="BookbankFileId" name="BookbankFileId" value="@ViewBag.FileId" />
+                            </form>
+                        </div>
+                        <div class="col-lg-2"></div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel">
+            <div class="panel-hdr">
+                <h2><i class='subheader-icon fal fa-money-bill'></i>  บัญชีธนาคารตั้งต้น</h2>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+
+                    <div class="text-right mb-2">
+                        <a href="javascript:void(0)" class="btn btn-success ml-auto" type="button" id="addBookbank"> <i class="fal fa-plus"> </i> เพิ่มบัญชีธนาคาร</a>
+                    </div>
+                    <div id="JsonData"></div>
+
+                    <div class="panel-content border-faded border-left-0 border-right-0 border-bottom-0 d-flex flex-row align-items-center m-3 pt-3">
+                        <button class="btn btn-primary ml-auto" type="button" id="Submit">ดำเนินการต่อ</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- form create main acc -->
+<div class="modal fade default-example-modal-right-lg" id="FormCreateModal" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-right modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title h4"><i class="ni ni-menu"></i> สร้างใหม่</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true"><i class="fal fa-times"></i></span> </button>
+            </div>
+            <div class="modal-body">
+
+                <span id="JsonCreateForm"></span>
+
+            </div>
+            <div class="modal-footer"> </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade default-example-modal-right-lg" id="FormEditModal" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-right modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title h4"><i class="ni ni-menu"></i> แก้ไข</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true"><i class="fal fa-times"></i></span> </button>
+            </div>
+            <div class="modal-body">
+
+                <span id="JsonEditForm"></span>
+
+            </div>
+            <div class="modal-footer"> </div>
+        </div>
+    </div>
+</div>
+
+<!-- view document  -->
+<div class="modal fade default-example-modal-right-lg" id="ViewDataModal" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title h4"><i class="fal fa-file-excel"></i> เอกสารแนบ</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true"><i class="fal fa-times"></i></span> </button>
+            </div>
+            <div class="modal-body">
+
+                <span id="JsonViewData"></span>
+
+            </div>
+            <div class="modal-footer"> </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <link rel="stylesheet" type="text/css" href="/css/notifications/toastr/toastr.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/formplugins/select2/select2.bundle.css">
+    <link rel="stylesheet" type="text/css" href="/lib/datepicker/datepicker.css">
+    <link rel="stylesheet" href="~/css/notifications/sweetalert2/sweetalert2.bundle.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/datagrid/datatables/datatables.bundle.css">
+    <script src="~/js/Validation/bootstrapValidator.min.js"></script>
+    <script src="~/js/notifications/toastr/toastr.js"></script>
+    <script src="~/js/notifications/sweetalert2/sweetalert2.bundle.js"></script>
+    <script src="~/js/formplugins/select2/select2.bundle.js"></script>
+    <script src="~/lib/datepicker/bootstrap-datepicker.js"></script>
+    <script src="~/lib/datepicker/bootstrap-datepicker.th.js"></script>
+    <script src="~/lib/datepicker/bootstrap-datepicker-thai.js"></script>
+    <script src="~/js/datagrid/datatables/datatables.bundle.js"></script>
+    <script src="~/js/datagrid/datatables/datatables.export.js"></script>
+    <script>
+        $(function () {
+
+            $('#JsonForm').bootstrapValidator();
+
+            $("#BankCode").select2();
+            $("#ProvinceId").select2();
+            $("#ProvinceId").change(function () {
+                $.get("/Villages/GetDistrict", { "ProvinceId": $("#ProvinceId").val() }, function (rs) {
+                    $("#DistrictId").empty();
+                    $.each(rs, function (i, val) {
+                        if ($("#_DistrictId").val() == val.value) {
+                            $("#DistrictId").append($("<option selected></option>").attr("value", val.value).text(val.text));
+                        } else {
+                            $("#DistrictId").append($("<option ></option>").attr("value", val.value).text(val.text));
+                        }
+
+                    });
+                    $("#DistrictId").select2();
+                    $("#DistrictId").change(function () {
+                        $.get("/Villages/GetSubDistrict", { "AmphurId": $("#DistrictId").val() }, function (rs) {
+                            $("#SubDistrictId").empty();
+                            $.each(rs, function (i, val) {
+                                if ($("#_SubDistrictId").val() == val.value) {
+                                    $("#SubDistrictId").append($("<option selected></option>").attr("value", val.value).text(val.text));
+                                } else {
+                                    $("#SubDistrictId").append($("<option></option>").attr("value", val.value).text(val.text));
+                                }
+                            });
+                            $("#SubDistrictId").select2();
+
+                            $("#SubDistrictId").change(function () {
+                                $.get("/Villages/GetPostcode", { "SubDistrictId": $("#SubDistrictId").val() }, function (rs) {
+                                    $("#PostCode").val(rs.message);
+                                });
+                            });
+                            $("#SubDistrictId").val($("#SubDistrictId").val()).change();
+                        });
+                    });
+                    $("#DistrictId").val($("#DistrictId").val()).change();
+                });
+            });
+            $("#ProvinceId").val($("#ProvinceId").val()).change();
+
+
+
+            //Bdb Date
+            var $change = $("#Month , #Year");
+            $change.change(function () {
+                // alert($("#Month").val()+"/////"+$("#Year").val());
+                $.get("/TimeAttendance/GetDay", { "Day": $("#Day").val(), "Month": $("#Month").val(), "Year": $("#Year").val() }, function (rs) {
+                    $("#Day").empty();
+                    $.each(rs, function (i, val) {
+                        $("#Day").append($("<option></option>").attr("value", val.value).attr("selected", val.selected).text(val.text));
+                    });
+                    $("#Day").select2();
+                    $("#Day").val($("#CurrentDay").val()).change();
+                    $("#Day").change(function () {
+                        $("#CurrentDay").val($("#Day").val())
+                    });
+                });
+                $("#Day").val($("#Day").val()).change();
+            });
+            $("#Month").val($("#CurrentMonth").val()).change();
+            $("#Year").val($("#CurrentYear").val()).change();
+            //Beuiful date
+            var $Date = $("#Day, #Month , #Year");
+            $Date.select2();
+        });
+
+        //Edit Village
+        $('#JsonForm').bootstrapValidator();
+        $("#Submit").on("click", function () {
+
+            $('#JsonForm').data("bootstrapValidator").validate();
+            if ($('#JsonForm').data("bootstrapValidator").isValid() == true) {
+                var Data = new FormData($("#JsonForm")[0]); JsonForm
+                $.ajax(
+                    {
+                        type: "POST",
+                        url: "/Villages/EditRegisterVillage",
+                        contentType: false,
+                        processData: false,
+                        data: Data,
+                        success: function (result) {
+                            if (result.valid == true) {
+                                Swal.fire(
+                                    {
+                                        title: "บันทึกข้อมูลเสร็จสิ้น",
+                                        text: "คุณต้องการทำรายการต่อ หรือไม่?",
+                                        type: "success",
+                                        showCancelButton: true,
+                                        confirmButtonText: "ยืนยัน",
+                                        cancelButtonText: "ยกเลิก",
+                                        closeOnConfirm: false
+                                    }).then(function (isConfirm) {
+                                        if (isConfirm.value == true) {
+                                            setTimeout(function () {
+                                                window.location.href = "/Members/AddVillageMember?VillageCode=" + result.villagecode;
+                                            }, 700);
+                                        }
+                                    });
+
+                            }
+                            else {
+                                toastr.error('Error!' + result.message);
+                                setTimeout(function () {
+                                    window.location.href = "";
+                                }, 700);
+                            }
+                        }
+                    });
+            }
+
+        });
+
+        //Bookbank function
+        $("#JsonData").html('<img  src="/img/loading.gif" width="200">');
+        $.get("/EAccount/GetBookBanks", function (JsonResult) {
+            $("#JsonData").html(JsonResult);
+            $('#JsonTable').dataTable(
+                {
+                    "pageLength": 50,
+                    responsive: true,
+                    lengthChange: false
+                });
+
+            // view document
+            $("#JsonData").on("click", '.viewDocument', function () {
+                $.get("/EAccount/ViewBookbankDocuments", { "BookbankId": $(this).attr("data-id") }, function (JsonResult) {
+                    $("#JsonViewData").html(JsonResult);
+                    $("#ViewDataModal").modal('show');
+                });
+            });
+
+            /* edit data */
+            $("#JsonData").on("click", ".edit", function () {
+                const Id = $(this).attr("data-val");
+                $.get("/EAccount/FormEditBookBank", { "Id": Id }, function (FormResult) {
+                    $("#JsonEditForm").html(FormResult);
+                    $("#FormEditModal").modal("show");
+
+                    $("#FormEditModal #BankCode").select2({
+                        dropdownParent: $("#FormEditModal")
+                    });
+
+                    $('#JsonEditForm #JsonForm').bootstrapValidator();
+                    $("#JsonEditForm #Submit").click(function () {
+                        $('#JsonEditForm #JsonForm').data("bootstrapValidator").validate();
+                        if ($('#JsonEditForm #JsonForm').data("bootstrapValidator").isValid() == true) {
+                            var Data = new FormData($("#JsonEditForm #JsonForm")[0]);
+
+                            let combinedText = '';
+                            let count = 0;
+                            $('.withdraw-office-name').each(function () {
+                                if (count == 5) {
+                                    return false;
+                                }
+                                combinedText += $(this).val() + ', ';
+                                count++;
+                            });
+                            // Remove the trailing comma and space
+                            combinedText = combinedText.slice(0, -2);
+
+                            Data.set("WithdrawOfficeName", combinedText);
+
+                            $.ajax(
+                                {
+                                    type: "POST",
+                                    url: "/EAccount/FormEditBookBank",
+                                    contentType: false,
+                                    processData: false,
+                                    data: Data,
+                                    success: function (result) {
+                                        if (result.valid == true) {
+                                            toastr.success(result.message);
+                                            setTimeout(function () {
+                                                $.get("/EAccount/GetBookBanks", function (JsonResult) {
+                                                    $("#JsonData").html(JsonResult);
+                                                });
+                                                $("#FormEditModal").modal("hide");
+                                            }, 700);
+                                        }
+                                        else {
+                                            toastr.error('Error! ' + result.message);
+                                        }
+                                    }
+                                });
+                        }
+                    });
+                });
+            });
+
+            /* delete data */
+            $("#JsonData").on("click", ".delete", function () {
+                const Id = $(this).attr("data-val");
+                Swal.fire(
+                    {
+                        title: "ยืนยันการทำรายการ",
+                        text: "คุณต้องการลบรายการนี้ หรือไม่?",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonText: "ยืนยัน",
+                        cancelButtonText: "ยกเลิก",
+                        closeOnConfirm: false
+                    }).then(function (isConfirm) {
+                        if (isConfirm.value == true) {
+                            $.get("/EAccount/DeleteBookBank", { "Id": Id }, function (rs) {
+                                if (rs.valid == true) {
+                                    toastr.success(rs.message);
+                                    setTimeout(function () {
+                                        $.get("/EAccount/GetBookBanks", function (JsonResult) {
+                                            $("#JsonData").html(JsonResult);
+                                        });
+                                    }, 700);
+                                }
+                                else {
+                                    toastr.error('แจ้งเตือน! ' + rs.message);
+                                }
+                            });
+                        } else {
+
+                        }
+                    });
+            });
+        });
+
+        /* form add */
+        $("#addBookbank").click(function () {
+            $.get("/EAccount/FormAddBookBank", function (FormResult) {
+                $("#JsonCreateForm").html(FormResult);
+                $("#FormCreateModal").modal("show");
+
+                $("#BankCode").select2({
+                    dropdownParent: $("#FormCreateModal")
+                });
+
+                $('#JsonCreateForm #JsonForm').bootstrapValidator();
+                $("#JsonCreateForm #Submit").click(function () {
+                    $('#JsonCreateForm #JsonForm').data("bootstrapValidator").validate();
+                    if ($('#JsonCreateForm #JsonForm').data("bootstrapValidator").isValid() == true) {
+                        var Data = new FormData($("#JsonCreateForm #JsonForm")[0]);
+
+                        let combinedText = '';
+                        let count = 0;
+                        $('.withdraw-office-name').each(function () {
+                            if (count == 5) {
+                                return false;
+                            }
+                            combinedText += $(this).val() + ', ';
+                            count++;
+                        });
+                        // Remove the trailing comma and space
+                        combinedText = combinedText.slice(0, -2);
+
+                        Data.set("WithdrawOfficeName", combinedText);
+
+                        $.ajax(
+                            {
+                                type: "POST",
+                                url: "/EAccount/FormAddBookBank",
+                                contentType: false,
+                                processData: false,
+                                data: Data,
+                                success: function (result) {
+                                    if (result.valid == true) {
+                                        toastr.success(result.message);
+                                        setTimeout(function () {
+                                            $.get("/EAccount/GetBookBanks", function (JsonResult) {
+                                                $("#JsonData").html(JsonResult);
+                                            });
+                                            $("#FormCreateModal").modal("hide");
+                                        }, 700);
+                                    }
+                                    else {
+                                        toastr.error('Error! ' + result.message);
+                                    }
+                                }
+                            });
+                    }
+                });
+            });
+
+        });
+
+    </script>
+
+}

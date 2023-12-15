@@ -1,0 +1,38 @@
+﻿@model DZ_VILLAGEFUND_WEB.ViewModels.EAccount.TransacionAccountBudgetViewModel
+
+
+
+<div id="c_1" class="card border shadow-0 mb-g shadow-sm-hover" data-filter-tags="oliver kopyov">
+    <div class="card-body border-faded border-top-0 border-left-0 border-right-0 rounded-top">
+        <div class="d-flex flex-row align-items-center">
+            <div class="info-card-text flex-1">
+                <a href="javascript:void(0);" class="fs-xl text-truncate text-truncate-lg text-info" data-toggle="dropdown" aria-expanded="false">
+                    <strong class="font-weight-bold">@Model.Title (@Model.SenderOrgId --> @Model.ReceiverOrgId)</strong>
+                </a>
+                <span class="text-truncate text-truncate-xl"></span>
+            </div>
+        </div>
+    </div>
+    <div class="card-body p-0 collapse show">
+        <div class="p-3">
+            <a href="javascript:void(0)" class="mt-1 d-block fs-sm fw-400 text-dark">
+                <strong class="font-weight-bold"> ชื่อหน่วยงานต้นทาง </strong> : @Model.SenderOrgId
+            </a>
+            <a href="javascript:void(0)" class="mt-1 d-block fs-sm fw-400 text-dark">
+                <strong class="font-weight-bold"> บัญชีต้นทาง </strong> : @Model.SenderBookBankId
+            </a>
+            <a href="javascript:void(0)" class="mt-1 d-block fs-sm fw-400 text-dark">
+                <strong class="font-weight-bold"> ชื่อหน่วยงานปลายทาง </strong> : @Model.ReceiverOrgId
+            </a>
+            <a href="javascript:void(0)" class="mt-1 d-block fs-sm fw-400 text-dark">
+                <strong class="font-weight-bold"> บัญชีปลายทาง </strong> : @Model.ReceiverBookBankId
+            </a>
+            <a href="javascript:void(0)" class="mt-1 d-block fs-sm fw-400 text-dark">
+                <strong class="font-weight-bold"> จำนวนเงิน </strong> : @Model.Amount
+            </a>
+            <a href="javascript:void(0)" class="mt-1 d-block fs-sm fw-400 text-dark">
+                <strong class="font-weight-bold"> วันที่ </strong> : @Model.ReceiverDate
+            </a>
+        </div>
+    </div>
+</div>

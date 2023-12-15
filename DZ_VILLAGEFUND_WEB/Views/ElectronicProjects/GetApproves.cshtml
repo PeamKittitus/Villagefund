@@ -1,0 +1,125 @@
+﻿@model IEnumerable<DZ_VILLAGEFUND_WEB.ViewModels.EProjects.ProjectListViewModel>
+@{
+    decimal Total = 0;
+}
+
+<table id="JsonTable" class="table table-bordered table-hover table-striped w-100">
+    <thead class="bg-primary-600">
+        <tr>
+            <th class="text-center"> รหัส</th>
+            <th> ชื่อโครงการ</th>
+            <th> รหัสกองทุน</th>
+            <th> ชื่อกองทุน</th>
+            <th> ชื่อผู้ยื่น</th>
+            <th class="text-center"> ค่าความเสี่ยง(ด้านกิจกรรม)</th>
+            <th class="text-center"> ค่าความเสี่ยง(ด้านระยะเวลา)</th>
+            <th class="text-center"> ความคืบหน้า</th>
+            <th class="text-center"> สถานะ</th>
+            <th class="text-center"> งบประมาณ</th>
+            <th class="text-center">  <input type="checkbox" id="all"> เลือกทั้งหมด</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @{
+            int Rows = 1;
+            foreach (var Get in Model)
+            {
+                <tr>
+                    <td class="text-center">@Get.ProjectCode</td>
+                    <td>
+                        <a href="/ElectronicProjects/ViewDetails?ProjectId=@Get.ProjectId">@Get.ProjectName </a> <br />
+                        <span style="color:green">เริ่ม-สิ้นสุด : @Get.ProjectTime</span>
+                    </td>
+                    <td>@Get.VillageCodeText</td>
+                    <td>@(Get.VillageName == null ? "-" : Get.VillageName)</td>
+                    <td>@Get.FullName</td>
+                    <td class="text-center">
+                        @{
+                            if (Get.RiskActiivity == "ต่ำ")
+                            {
+                                <span style="color:green;font-weight:bold">@Get.RiskActiivity</span>
+                            }
+                            else if (Get.RiskActiivity == "ปานกลาง")
+                            {
+                                <span style="color: orange; font-weight: bold">@Get.RiskActiivity</span>
+                            }
+                            else
+                            {
+                                <span style="color: red; font-weight: bold">@Get.RiskActiivity</span>
+                            }
+                        }
+                    </td>
+                    <td class="text-center">
+                        @{
+                            if (Get.RiskTime == "ต่ำ")
+                            {
+                                <span style="color:green;font-weight:bold">@Get.RiskTime</span>
+                            }
+                            else if (Get.RiskTime == "ปานกลาง")
+                            {
+                                <span style="color: orange; font-weight: bold">@Get.RiskTime</span>
+                            }
+                            else
+                            {
+                                <span style="color: red; font-weight: bold">@Get.RiskTime</span>
+                            }
+                        }
+                    </td>
+                    <td><small class="mb-1 d-block">Completion with: @Get.Progress.ToString("N") %</small><div class="progress progress-sm"><div class="progress-bar" role="progressbar" style="width: @Get.Progress% " aria-valuenow="@Get.Progress" aria-valuemin="0" aria-valuemax="100"></div></div></td>
+                    <td class="text-center">
+
+                        @{
+                            if (Get.StatusId == 13 || Get.StatusId == 14)
+                            {
+                                <span style="color:red"> @Get.StatusName</span>
+                            }
+                            else if (Get.StatusId == 15 || Get.StatusId == 16)
+                            {
+                                <span style="color:orange"> @Get.StatusName</span>
+                            }
+                            else
+                            {
+                                <span style="color:green"> @Get.StatusName</span>
+                            }
+                        }
+
+                    </td>
+                    <td class="text-right">@Get.Amount.ToString("N")</td>
+                    <td class="text-center">
+                        @if (Get.StatusId == 13 || Get.StatusId == 15)
+                        {
+                            <input type="checkbox" class="ProjectId" value="@Get.ProjectId" name="ProjectId">
+                        }
+                    </td>
+                </tr>
+
+                Rows++;
+                Total += Get.Amount;
+            }
+        }
+        <tr>
+            <td class="text-right"></td>
+            <td class="text-right"></td>
+            <td class="text-right"></td>
+            <td class="text-right"></td>
+            <td class="text-right"></td>
+            <td class="text-right"></td>
+            <td class="text-right"></td>
+            <td class="text-right"></td>
+            <td class="text-right">รวม:</td>
+            <td class="text-right font-weight-bold">@Total.ToString("N")</td>
+            <td class="text-center"><button class="btn btn-primary ml-auto" type="button" id="Approves">@(ViewBag.RoleName == "HeadQuarterAdmin" ? "อนุมัติ" : "ผ่านเรื่อง")</button></td>
+
+        </tr>
+    </tbody>
+    <tfoot>
+
+        <tr>
+            <td colspan="11" style="color:red">
+                * ความเสี่ยงด้านระยะเวลาดำเนินการโครงการ(จำนวนวันรวมในโครงการที่ไม่ควรเกิน) <br />
+                * ความเสี่ยงด้านกิจกรรม(จำนวนกิจกรรมในโครงการที่ควรมี)
+            </td>
+        </tr>
+    </tfoot>
+</table>

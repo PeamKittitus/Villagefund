@@ -1,0 +1,276 @@
+﻿@model DZ_VILLAGEFUND_WEB.Models.TransactionAccountActivity
+@{
+    ViewData["Title"] = "สร้างรายการจ่าย";
+
+}
+
+<ol class="breadcrumb page-breadcrumb">
+    <li class="breadcrumb-item"><a href="/Home/Index">หน้าหลัก</a></li>
+    <li class="breadcrumb-item"><a href="/EAccount/Index">เบิกจ่ายกิจกรรม</a></li>
+    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+</ol>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel">
+            <div class="panel-hdr">
+                <h2><i class='subheader-icon fal fa-list-alt'></i>  @ViewData["Title"]</h2>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+
+                    <div class="row">
+                        <div class="col-lg-2"></div>
+                        <div class="col-lg-8">
+                            <form id="JsonForm" enctype="multipart/form-data" novalidate
+                                  asp-antiforgery="true"
+                                  data-bv-message="This value is not valid"
+                                  data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
+                                  data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
+                                  data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
+                                <input type="hidden" asp-for="VillageId" value="@ViewBag.VillageId" />
+                                <div class="panel-content">
+                                    <div class="col-lg-12 col-md-12 col-sm-12">
+                                        <div class="form-group">
+                                            <label class="form-label"> โครงการ</label>
+                                            @Html.DropDownList("ProjectId", (IEnumerable<SelectListItem>)ViewBag.AccountBudget, new { @class = "col-lg-12 col-md-12 col-sm-12" })
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label"> กิจกรรม</label>
+                                            <select asp-for="ActivityId" name="ActivityId">
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label"> รายการจ่าย</label>
+                                            @Html.DropDownList("AccChartId", (IEnumerable<SelectListItem>)ViewBag.SelectAccount, new { @class = "col-lg-12 col-md-12 col-sm-12" })
+
+                                        </div>
+
+                                        <label style="color:red;margin-top:2rem;font-size:1rem"> จ่ายให้</label>
+                                        <hr />
+                                        <div class="form-group">
+                                            <label class="form-label"> ชื่อ-สกุล/หน่วยงาน/องค์กร</label>
+                                            <input type="text" asp-for="Receiver" class="col-lg-12 col-md-12 col-sm-12 form-control"
+                                                   data-bv-notempty="true"
+                                                   data-bv-notempty-message="กรุณากรอกข้อมูล" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label"> จ่ายจากบัญชี</label>
+                                            @Html.DropDownList("BookBankId", (IEnumerable<SelectListItem>)ViewBag.BookBank, new { @class = "col-lg-12 col-md-12 col-sm-12" })
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label"> ประเภทการรับ/จ่ายเงิน </label>
+                                            <input type="radio" asp-for="TransactionType" value="0" checked class="ml-3"> เงินสด
+                                            <input type="radio" asp-for="TransactionType" value="1" class="ml-3"> โอนเข้าบัญชี
+                                            <input type="radio" asp-for="TransactionType" value="2" class="ml-3"> เช็ค
+                                        </div>
+                                        <div class="form-group">
+                                            <section id="widget-grid" style="margin-bottom:12px;">
+                                                <div class="row">
+                                                    <div class="col-lg-8">
+                                                        <label class="form-label"> จำนวนเงิน <span style="color:red">*</span></label>
+                                                        <input type="text" asp-for="Amount" class="form-control"
+                                                               data-bv-notempty="true"
+                                                               data-bv-notempty-message="กรุณากรอกข้อมูล" />
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <label class="form-label"> ภาษี ณ ที่จ่าย 1%  <span style="color:red">*</span></label>
+                                                        <input type="text" asp-for="Tax" class="form-control"
+                                                               data-bv-notempty="true"
+                                                               data-bv-notempty-message="กรุณากรอกข้อมูล" />
+                                                    </div>
+                                                </div>
+                                            </section>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label"> วันที่จ่ายเงิน<span style="color:red"> *</span> </label>
+                                            <section id="widget-grid" style="margin-bottom:12px;">
+                                                <div class="row">
+                                                    <div class="col-lg-4">
+                                                        <input type="hidden" id="_StartDay" value="@(Model != null ? Model.ReceiverDate.Day : DateTime.Now.Day)">
+                                                        <select name="StartDay" id="StartDay" style="width:100%;"></select>
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <select name="StartMonth" id="StartMonth" style="width:100%;">
+                                                            @{
+                                                                string[] MonthName = { "", "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม" };
+                                                                int m1 = 0;
+                                                                foreach (var _MonthName in MonthName)
+                                                                {
+                                                                    if (Model != null)
+                                                                    {
+                                                                        if (m1 == Model.ReceiverDate.Month)
+                                                                        {
+                                                                            <option value="@m1" selected>@MonthName[m1]</option>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <option value="@m1">@MonthName[m1]</option>
+                                                                        }
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        if (m1 == DateTime.Now.Month)
+                                                                        {
+                                                                            <option value="@m1" selected>@MonthName[m1]</option>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <option value="@m1">@MonthName[m1]</option>
+                                                                        }
+                                                                    }
+                                                                    m1++;
+                                                                }
+                                                            }
+
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <select name="StartYear" id="StartYear" style="width:100%;">
+                                                            @{
+                                                                for (int y = DateTime.Now.Year; y >= (DateTime.Now.Year - 7); y--)
+                                                                {
+                                                                    if (Model != null)
+                                                                    {
+                                                                        if (y == Model.ReceiverDate.Year)
+                                                                        {
+                                                                            <option value="@y" selected>@(y + 543)</option>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <option value="@y">@(y + 543)</option>
+                                                                        }
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <option value="@y">@(y + 543)</option>
+                                                                    }
+
+                                                                }
+                                                            }
+
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </section>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label"> รายละเอียดการจ่ายเงิน <span style="color:red">*</span></label>
+                                            <textarea asp-for="Detail" class="col-lg-12 col-md-12 col-sm-12 form-control"
+                                                      data-bv-notempty="true"
+                                                      rows="5"
+                                                      data-bv-notempty-message="กรุณากรอกข้อมูล"></textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label"> เอกสารแนบ <span style="color:red"> * </span><label style="color:red"> (ขนาดไฟล์ของเอกสารแนบรวมไม่เกิน 50MB/1ครั้ง) </label></label>
+                                            <input type="file" name="FileUpload" id="FileUpload" class="col-lg-12 col-md-12 col-sm-12 form-control" multiple
+                                                   data-bv-notempty="true"
+                                                   data-bv-notempty-message="กรุณากรอกข้อมูล"
+                                                   accept=".pdf,.docx,.xlsx,.jpg,.jpeg,.png"
+                                                   pattern="^.*\.(docx|DOCX|pdf|PDF|xlsx|XLSX|png|PNG|jpg|JPG|jpeg|JPEG)$"
+                                                   data-bv-message="รองรับนามสกุลไฟล์ (xlsx,docx,pdf,jpg,jpeg,png) เท่านั้น" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel-content border-faded border-left-0 border-right-0 border-bottom-0 d-flex flex-row align-items-center m-3 pt-3">
+                                    <button class="btn btn-primary ml-auto" type="button" id="Submit">บันทึก</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-lg-2"></div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <link rel="stylesheet" type="text/css" href="/css/notifications/toastr/toastr.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/formplugins/select2/select2.bundle.css">
+    <script src="~/js/Validation/bootstrapValidator.min.js"></script>
+    <script src="~/js/notifications/toastr/toastr.js"></script>
+    <script src="~/js/formplugins/select2/select2.bundle.js"></script>
+    <script src="~/js/NumberFormat.js"></script>
+    <script>
+        $(function () {
+
+            $("#ProjectId").select2();
+            $("#AccChartId").select2();
+            $("#BookBankId").select2();
+            var $Date = $("#StartDay, #StartMonth, #StartYear");
+            $Date.select2();
+
+            $("#ProjectId").change(function () {
+                $.get("/EAccount/SelectMyActivity", { "ProjectId": $(this).val(), "VillageId": $("#VillageId").val() }, function (Result) {
+                    $("#ActivityId").empty();
+                    $.each(Result, function (i, val) {
+                        $("#ActivityId").append($("<option ></option>").attr("value", val.value).text(val.text));
+                    });
+                    $("#ActivityId").select2();
+                });
+            });
+            $("#ProjectId").val($("#ProjectId").val()).change();
+
+            $("#StartMonth").change(function () {
+                GetDatInMonth("#StartDay", $("#_StartDay").val(), $("#StartMonth").val(), $("#StartYear").val());
+            });
+            $("#StartMonth").val($("#StartMonth").val()).change();
+
+            $('#Amount').autoNumeric('init', { aSign: '' });
+            $('#Tax').autoNumeric('init', { aSign: '' });
+
+            $('#JsonForm').bootstrapValidator();
+
+            $("#Submit").click(function () {
+                $('#JsonForm').data("bootstrapValidator").validate();
+                if ($('#JsonForm').data("bootstrapValidator").isValid() == true) {
+                    $('#Amount').autoNumeric('init', { aSep: '.', aDec: ',', mDec: '0' });
+                    $('#Tax').autoNumeric('init', { aSep: '.', aDec: ',', mDec: '0' });
+                    var Data = new FormData($("#JsonForm")[0]); JsonForm
+                    $.ajax(
+                        {
+                            type: "POST",
+                            url: "/EAccount/FormAddActTransaction",
+                            contentType: false,
+                            processData: false,
+                            data: Data,
+                            success: function (result) {
+                                if (result.valid == true) {
+                                    toastr.success(result.message);
+                                    setTimeout(function () {
+                                        window.location.href = "/EAccount/ActIndex";
+                                    }, 700);
+                                }
+                                else {
+                                    toastr.error('แจ้งเตือน! ' + result.message);
+                                }
+                            },
+                            error: function (error) {
+                                if (error.status == "413") {
+                                    toastr.error('แจ้งเตือน! ' + "ขนาดไฟล์ต้องไม่เกิน 50MB/1ครั้ง");
+                                } else {
+                                    toastr.error('แจ้งเตือน! ' + error.status);
+                                }
+                            }
+                        });
+                }
+            });
+
+            function GetDatInMonth(Result, ForEdit, Month, Year,) {
+                $.get("/TimeAttendance/GetDay", { "Day": ForEdit, "Month": Month, "Year": Year }, function (rs) {
+                    $(Result).empty();
+                    $.each(rs, function (i, val) {
+                        if (val.value == ForEdit) {
+                            $(Result).append($("<option selected></option>").attr("value", val.value).text(val.text));
+                        }
+                        else {
+                            $(Result).append($("<option></option>").attr("value", val.value).text(val.text));
+                        }
+                    });
+                });
+            }
+        });
+
+    </script>
+
+}

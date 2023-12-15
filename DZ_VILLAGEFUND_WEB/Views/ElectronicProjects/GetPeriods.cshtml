@@ -1,0 +1,62 @@
+﻿@model IEnumerable<DZ_VILLAGEFUND_WEB.ViewModels.EProjects.PeriodViewModel>
+
+<table id="JsonTable" class="table table-bordered table-hover table-striped w-100">
+    <thead class="bg-primary-600">
+        <tr>
+            <th class="text-center" style="width:50px">ลำดับ</th>
+            <th>กิจกรรม/โครงการ</th>
+            <th>เริ่ม-สิ้นสุด</th>
+            <th class="text-center">สถานะ</th>
+            <th style="width:100px;"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int Rows = 1;
+            foreach (var Get in Model)
+            {
+                <tr>
+                    <td class="text-center">@Rows.</td>
+                    <td> @Get.ProjectPeriodDetail</td>
+                    <td> @Get.StartToEnd</td>
+                    <td class="text-center">
+
+                        @{
+                            if (Get.Status == 0)
+                            {
+                                <span> - </span>
+                            }
+                            else if (Get.Status == 1)
+                            {
+                                <span style="color:orange"> รอตรวจสอบ</span>
+                            }
+                            else if (Get.Status == 2)
+                            {
+                                <span style="color:red"> ส่งกลับแก้ไข</span>
+                            }
+                            else if (Get.Status == 3)
+                            {
+                                <span style="color:orange"> รออนุมัติ</span>
+                            }
+                            else if (Get.Status == 4)
+                            {
+                                <span style="color:red"> ไม่อนุมัติ</span>
+                            }
+                            else
+                            {
+                                <span style="color:green"> อนุมัติ</span>
+                            }
+                        }
+
+                    </td>
+                    <td class="text-center">
+                        <a href="javascript:void(0);" data-val="@Get.ProjectPeriodId" class="btn btn-xs btn-danger  delete" title="Delete"><i class="fal fa-times"></i> ลบ </a>
+                    </td>
+                </tr>
+
+                Rows++;
+            }
+        }
+
+    </tbody>
+</table>

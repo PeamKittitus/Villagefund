@@ -1,0 +1,799 @@
+﻿@model DZ_VILLAGEFUND_WEB.ViewModels.EProjects.ProjectDetail
+
+@{
+    ViewData["Title"] = "กิจกรรม/โครงการ";
+    string Role = ViewBag.UserRole;
+    var Helper = ViewBag.Helper as DZ_VILLAGEFUND_WEB.Helpers.Utility;
+}
+
+<ol class="breadcrumb page-breadcrumb">
+    <li class="breadcrumb-item"><a href="/Home/Index">หน้าหลัก</a></li>
+    <li class="breadcrumb-item"><a href="/ElectronicProjects/@(Role == "BranchAdmin" || Role == "HeadQuarterAdmin" || Role == "ProvinceAdmin" ? "Approve" : "Index")"> @(Role == "BranchAdmin" || Role == "HeadQuarterAdmin" || Role == "ProvinceAdmin" ? "รายการอนุมัติ" : "การจัดการโครงการ")</a></li>
+    <li class="breadcrumb-item">@ViewData["Title"] </li>
+</ol>
+
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel">
+            <div class="panel-hdr"><h2><i class='subheader-icon fal fa-book'></i>  @Model.ProjectName (@Model.ProJectCode)</h2> </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+
+                    <div class="row" id="js-contacts">
+
+                        <div class="col-lg-12">
+                            <div id="c_1" class="card border shadow-0 mb-g shadow-sm-hover" data-filter-tags="oliver kopyov">
+                                <div class="card-body border-faded border-top-0 border-left-0 border-right-0 rounded-top">
+                                    <div class="d-flex flex-row align-items-center">
+                                        <div class="info-card-text flex-1">
+                                            <a href="javascript:void(0);" class="fs-xl text-truncate text-truncate-lg text-info" data-toggle="dropdown" aria-expanded="false">
+                                                <strong class="font-weight-bold">ชื่อกองทุนหมูบ้าน</strong> : @Model.VillageName
+                                            </a>
+                                            <span class="text-truncate text-truncate-xl">  </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body p-0 collapse show">
+                                    <div class="p-3">
+                                        <a href="javascript:void(0)" class="mt-1 d-block fs-sm fw-400 text-dark">
+                                            <strong class="font-weight-bold">งบประมาณ</strong> : @Model.Amount.ToString("N") บาท
+                                        </a>
+                                        <a href="javascript:void(0)" class="mt-1 d-block fs-sm fw-400 text-dark">
+                                            <strong class="font-weight-bold">ประจำปีงบประมาณ</strong> : @Model.BudgetYear
+                                        </a>
+                                        <a href="javascript:void(0)" class="mt-1 d-block fs-sm fw-400 text-dark">
+                                            <strong class="font-weight-bold">ที่อยู่</strong> : @Model.Address
+                                        </a>
+                                        <a href="javascript:void(0)" class="mt-1 d-block fs-sm fw-400 text-dark">
+                                            <strong class="font-weight-bold">เบอร์โทร</strong> : @Model.Phone
+                                        </a>
+                                        <a href="javascript:void(0)" class="mt-1 d-block fs-sm fw-400 text-dark">
+                                            <strong class="font-weight-bold"> อีเมล</strong> : @Model.Email
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12">
+                            <div id="c_1" class="card border shadow-0 mb-g shadow-sm-hover" data-filter-tags="oliver kopyov">
+                                <div class="card-body border-faded border-top-0 border-left-0 border-right-0 rounded-top">
+                                    <div class="d-flex flex-row align-items-center">
+                                        <div class="info-card-text flex-1">
+                                            <a href="javascript:void(0);" class="fs-xl text-truncate text-truncate-lg text-info font-weight-bold" data-toggle="dropdown" aria-expanded="false">
+                                                กิจกรรม/โครงการ
+                                            </a>
+                                            <span class="text-truncate text-truncate-xl"> </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body p-0 collapse show">
+                                    <div class="p-3" style="overflow-x:auto">
+
+                                        <table class="table table-bordered table-hover m-0">
+                                            <thead>
+                                                <tr class="font-weight-bold">
+                                                    <td class="text-center" style="width:100px;">กิจกรรมที่</td>
+                                                    <td>กิจกรรม/โครงการ</td>
+                                                    <td class="text-center" style="width:150px;">เริ่ม</td>
+                                                    <td class="text-center" style="width:150px;">สิ้นสุด</td>
+                                                    <td class="text-center" style="width:150px;"> สถานะ </td>
+                                                    @if (Role == "SuperUser")
+                                                    {
+                                                        <td class="text-center" style="width:150px;"></td>
+                                                    }
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @{
+                                                    var PeriodModels = ViewBag.Periods as IEnumerable<DZ_VILLAGEFUND_WEB.ViewModels.EProjects.PeriodViewModelDetail>;
+                                                    int Row = 1;
+                                                    if (PeriodModels.Count() > 0)
+                                                    {
+                                                        foreach (var GetPeiod in PeriodModels)
+                                                        {
+                                                            <tr>
+                                                                <td class="text-center">@Row</td>
+                                                                <td>
+                                                                    @{
+                                                                        //16 คือ ไม่อนุมัติโครงการ
+                                                                        if (Model.StatusId == 16)
+                                                                        {
+                                                                            <text>@GetPeiod.PeriodName</text>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <a href="/ElectronicProjects/PeriodDetail?ProjectPeriodId=@GetPeiod.PeriodId&Record=@GetPeiod.Period&ProjectId=@Model.ProjecId" title="ดูรายละเอียด">@GetPeiod.PeriodName</a>
+                                                                        }
+                                                                    }
+
+                                                                </td>
+                                                                <td class="text-center">@GetPeiod.StartDate</td>
+                                                                <td class="text-center">@GetPeiod.EndDate</td>
+                                                                <td class="text-center">@(GetPeiod.Status == 0 ? "-" : GetPeiod.StatusName)</td>
+                                                                @if (Role == "SuperUser")
+                                                                {
+                                                                    <td class="text-center">
+                                                                        @{
+                                                                            if (Model.StatusId == 17)
+                                                                            {
+                                                                                if (GetPeiod.Status == 0 || GetPeiod.Status == 2)
+                                                                                {
+                                                                                    <a href="javascript:void(0)" class="btn btn-xs btn-warning UpdateStatus" data-id="@GetPeiod.ProjectActivityId">
+                                                                                        <i class="fal fa-paper-plane"></i> ส่งกิจกรรม
+                                                                                    </a>
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <span>-</span>
+                                                                                }
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <span>-</span>
+                                                                            }
+                                                                        }
+
+                                                                    </td>
+                                                                }
+                                                            </tr>
+                                                            Row++;
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <tr>
+                                                            @if (Role == "SuperUser")
+                                                            {
+                                                                <td colspan="6" class="text-center"> --- ไม่มีข้อมูล ---</td>
+                                                            }
+                                                            else
+                                                            {
+                                                                <td colspan="5" class="text-center"> --- ไม่มีข้อมูล ---</td>
+                                                            }
+                                                        </tr>
+                                                    }
+                                                }
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12">
+                            <div id="c_1" class="card border shadow-0 mb-g shadow-sm-hover" data-filter-tags="oliver kopyov">
+                                <div class="card-body border-faded border-top-0 border-left-0 border-right-0 rounded-top">
+                                    <div class="d-flex flex-row align-items-center">
+                                        <div class="info-card-text flex-1">
+                                            <a href="javascript:void(0);" class="fs-xl text-truncate text-truncate-lg text-info font-weight-bold" data-toggle="dropdown" aria-expanded="false">
+                                                ครุภัณฑ์
+                                            </a>
+                                            <span class="text-truncate text-truncate-xl"> </span>
+                                        </div>
+                                        @if (Role == "SuperUser")
+                                        {
+                                            <div class="info-card-text flex-1 text-right">
+                                                @{
+                                                    //16 คือ ไม่อนุมัติโครงการ
+                                                    if (Model.StatusId == 16)
+                                                    {
+                                                        <text></text>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a href="javascript:addAsset(@Model.ProjecId);" class="btn btn-xs btn-success">
+                                                            <i class="fal fa-plus-circle"></i>
+                                                            เพิ่ม
+                                                        </a>
+                                                    }
+                                                }
+                                                <span class="text-truncate text-truncate-xl"> </span>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="card-body p-0 collapse show">
+                                    <div class="p-3" style="overflow-x:auto">
+
+                                        <table class="table table-bordered table-hover m-0">
+                                            <thead>
+                                                <tr class="font-weight-bold">
+                                                    <td class="text-center" style="width:100px;">ลำดับ</td>
+                                                    <td> เลขที่ครุภัณฑ์</td>
+                                                    <td> ชื่อครุภัณฑ์</td>
+                                                    <td class="text-center"> อายุครุภัณฑ์ (ปี)</td>
+                                                    <td class="text-center">จำนวนครุภัณฑ์</td>
+                                                    <td class="text-center"> ราคาสุทธิ</td>
+                                                    @if (Role == "SuperUser")
+                                                    {
+                                                        <td style="width:160px"></td>
+                                                    }
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @{
+                                                    var AssetModels = ViewBag.Assets as IEnumerable<DZ_VILLAGEFUND_WEB.Models.ProjectAsset>;
+                                                    if (AssetModels.Count() > 0)
+                                                    {
+                                                        int Rows = 1;
+                                                        decimal Total = 0;
+                                                        foreach (var GetAsset in AssetModels)
+                                                        {
+                                                            <tr>
+                                                                <td class="text-center">@Rows.</td>
+                                                                <td>@GetAsset.AssetCode</td>
+                                                                <td>@GetAsset.AssetName</td>
+                                                                <td class="text-center">@GetAsset.AssetAge</td>
+                                                                <td class="text-center">@GetAsset.AmountUnit</td>
+                                                                <td class="text-right">@GetAsset.Amount.ToString("N")</td>
+                                                                @if (Role == "SuperUser")
+                                                                {
+                                                                    <td class="text-right">
+                                                                        <a href="javascript:editAsset(@Model.ProjecId,@GetAsset.ProjectAssetId);" class="btn btn-xs btn-warning"> <i class="fal fa-edit"></i> แก้ไข</a>
+                                                                        <a href="javascript:deleteAsset(@GetAsset.ProjectAssetId);" class="btn btn-xs btn-danger"> <i class="fal fa-times"></i> ลบ</a>
+                                                                    </td>
+                                                                }
+                                                            </tr>
+                                                            Total += GetAsset.Amount;
+                                                            Rows++;
+                                                        }
+
+                                                        <tr>
+                                                            <td colspan="5" class="text-right"> <strong>รวม:</strong></td>
+                                                            <td class="text-right"> <strong>@Total.ToString("N")</strong></td>
+                                                        </tr>
+                                                    }
+                                                    else
+                                                    {
+                                                        <tr>
+                                                            @if (Role == "SuperUser")
+                                                            {
+                                                                <td colspan="7" class="text-center"> --- ไม่มีข้อมูล ---</td>
+                                                            }
+                                                            else
+                                                            {
+                                                                <td colspan="6" class="text-center"> --- ไม่มีข้อมูล ---</td>
+                                                            }
+                                                        </tr>
+                                                    }
+                                                }
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12">
+                            <div id="c_1" class="card border shadow-0 mb-g shadow-sm-hover" data-filter-tags="oliver kopyov">
+                                <div class="card-body border-faded border-top-0 border-left-0 border-right-0 rounded-top">
+                                    <div class="d-flex flex-row align-items-center">
+                                        <div class="info-card-text flex-1">
+                                            <a href="javascript:void(0);" class="fs-xl text-truncate text-truncate-lg text-info font-weight-bold" data-toggle="dropdown" aria-expanded="false">
+                                                เอกสารที่เกี่ยวข้อง
+                                            </a>
+                                            <span class="text-truncate text-truncate-xl"> </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body p-0 collapse show">
+                                    <div class="p-3" style="overflow-x:auto">
+
+                                        <table class="table table-bordered table-hover m-0">
+                                            <thead>
+                                                <tr class="font-weight-bold">
+                                                    <td class="text-center" style="width:100px;">ลำดับ</td>
+                                                    <td> ชื่อเอกสาร</td>
+                                                    <td class="text-center">สถานะอนุมัติเอกสาร</td>
+                                                    <td class="text-center" style="width:150px;">วันที่อัปโหลด</td>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @{
+                                                    var DucModels = ViewBag.Documents as IEnumerable<DZ_VILLAGEFUND_WEB.Models.ProjectBudgetDocument>;
+                                                    if (DucModels.Count() > 0)
+                                                    {
+                                                        int Rows = 1;
+                                                        foreach (var GetDoc in DucModels)
+                                                        {
+                                                            <tr>
+                                                                <td class="text-center">@Rows.</td>
+                                                                <td><a href="/uploads/e-project/@GetDoc.GencodeFileName" download="@GetDoc.FileName">  @GetDoc.FileName</a></td>
+                                                                @if (Role == "SuperUser")
+                                                                {
+                                                                    <td class="text-center">
+                                                                        @if (GetDoc.Approvemark)
+                                                                        {
+                                                                            <i class="fal fa-check-circle" style="color:green;font-size:1rem"></i>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <i class="fal fa-times-circle" style="color:red;font-size:1rem" title="คลิกเพื่่ออนุมัติเอกสาร"></i>
+                                                                        }
+                                                                    </td>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <td class="text-center">
+
+                                                                        @if (GetDoc.Approvemark == true)
+                                                                        {
+                                                                            <i class="fal fa-check-circle" style="color:green;font-size:1rem"></i>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <a href="javascript:void(0)" data-val="@GetDoc.TransactionDocId" class="approvemark">
+                                                                                <i class="fal fa-times-circle" style="color:red;font-size:1rem" title="คลิกเพื่่ออนุมัติเอกสาร"></i>
+                                                                            </a>
+                                                                        }
+
+                                                                    </td>
+                                                                }
+                                                                <td class="text-center">@Helper.getDateThai(GetDoc.UpdateDate)</td>
+
+                                                            </tr>
+
+                                                            Rows++;
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <tr>
+                                                            <td colspan="4" class="text-center"> --- ไม่มีข้อมูล ---</td>
+                                                        </tr>
+                                                    }
+                                                }
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12">
+                            <div id="c_1" class="card border shadow-0 mb-g shadow-sm-hover" data-filter-tags="oliver kopyov">
+                                <div class="card-body border-faded border-top-0 border-left-0 border-right-0 rounded-top">
+                                    <div class="d-flex flex-row align-items-center">
+                                        <div class="info-card-text flex-1">
+                                            <a href="javascript:void(0);" class="fs-xl text-truncate text-truncate-lg text-info font-weight-bold" data-toggle="dropdown" aria-expanded="false">
+                                                สำหรับเจ้าหน้าที่
+                                            </a>
+                                            <span class="text-truncate text-truncate-xl"> </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body p-0 collapse show">
+                                    <div class="p-3">
+
+                                        <form id="JsonForm" enctype="multipart/form-data"
+                                              asp-antiforgery="true"
+                                              data-bv-message="This value is not valid"
+                                              data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
+                                              data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
+                                              data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
+                                            <div class="panel-content">
+                                                <div class="col-lg-12 col-md-12 col-sm-12">
+                                                    <div class="form-group">
+                                                        @{
+                                                            if (Role != "SuperUser")
+                                                            {
+                                                                <input type="checkbox" id="IsSendMail" />
+                                                                <label>แจ้งเตือนไปยังอีเมลล์</label>
+                                                                <br />
+                                                            }
+                                                        }
+                                                        <label class="form-label"><strong> หมายเหตุ</strong></label>
+                                                        <textarea name="Comment" id="Comment" class="form-control" rows="5" data-bv-notempty-message="กรุณากรอกข้อมูล"> @Model.Comment</textarea>
+                                                    </div>
+
+                                                    @{
+                                                        if (Model.StatusId != 14)//เช็คสถานะส่งกลับแก้่ไข ต้องไม่โชว์ปุ่มผ่านเรื่อง/อนุมัติ
+                                                        {
+                                                            if (Role == "BranchAdmin" || Role == "ProvinceAdmin")
+                                                            {
+                                                                <div class="panel-content border-left-0 border-right-0 border-bottom-0 ">
+                                                                    <button class="btn btn-warning ml-auto" data-status="14" type="button" data-action="reply" id="reply"> <i class="fal fa-reply"></i> ส่งกลับเพื่อแก้ไข</button>
+                                                                    <button class="btn btn-success ml-auto" data-status="@(Role == "ProvinceAdmin" ? "13" : "15")" data-action="pass" type="button" id="submit"> <i class="fal fa-check"></i> ผ่านเรื่อง</button>
+                                                                </div>
+                                                            }
+                                                            else if (Role == "HeadQuarterAdmin" || Role == "officer")
+                                                            {
+                                                                if (Model.StatusId == 15)
+                                                                {
+                                                                    <div class="panel-content border-left-0 border-right-0 border-bottom-0 ">
+                                                                        <button class="btn btn-danger ml-auto" data-status="16" data-action="notapprove" type="button" id="Noapprove"><i class="fal fa-times"></i> ไม่อนุมัติ</button>
+                                                                        <button class="btn btn-success ml-auto" data-status="17" data-action="approve" type="button" id="approve"><i class="fal fa-check"></i> อนุมัติ</button>
+                                                                    </div>
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+
+                                                </div>
+                                            </div>
+                                        </form>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- form create Asset  -->
+<div class="modal fade default-example-modal-right-lg" id="FormCreateAsset" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-right modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title h4"><i class="ni ni-menu"></i> สร้างใหม่</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true"><i class="fal fa-times"></i></span> </button>
+            </div>
+            <div class="modal-body">
+
+                <span id="JsonCreateAssetForm"></span>
+
+            </div>
+            <div class="modal-footer"> </div>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" id="ProjectId" value="@Model.ProjecId" />
+
+@section Scripts{
+    <link rel="stylesheet" href="~/css/notifications/toastr/toastr.css">
+    <link rel="stylesheet" href="~/css/notifications/sweetalert2/sweetalert2.bundle.css">
+    <link rel="stylesheet" href="~/css/formplugins/select2/select2.bundle.css">
+    <script src="~/js/notifications/toastr/toastr.js"></script>
+    <script src="~/js/notifications/sweetalert2/sweetalert2.bundle.js"></script>
+    <script src="~/js/formplugins/select2/select2.bundle.js"></script>
+    <script src="~/js/NumberFormat.js"></script>
+    <script src="~/js/Validation/bootstrapValidator.min.js"></script>
+    <script>
+
+        /*
+         * reply to user
+         * forword to main brance
+         */
+
+        $(function () {
+
+            // reply
+            $("#reply").click(function () {
+                const StatusId = $(this).attr("data-status");
+                const ProjectId = $("#ProjectId").val();
+                const Comment = $("#Comment").val();
+                Swal.fire(
+                    {
+                        title: "ยืนยันการทำรายการ",
+                        text: "คุณต้องการทำรายการนี้ หรือไม่?",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonText: "ยืนยัน",
+                        cancelButtonText: "ยกเลิก",
+                        closeOnConfirm: false
+                    }).then(function (isConfirm) {
+                        if (isConfirm.value == true) {
+                            if (Comment == "" || Comment == null) {
+                                toastr.error("กรุณาระบุหมายเหตุ");
+                            } else {
+                                $.get("/ElectronicProjects/UpdateProjectStatus", { "StatusId": StatusId, "ProjectId": ProjectId, "Comment": Comment, "IsSendMail": $("#IsSendMail").is(":checked") }, function (rs) {
+                                    if (rs.valid == true) {
+                                        toastr.success(rs.message);
+                                        setTimeout(function () {
+                                            window.location.href = "/ElectronicProjects/Approve";
+                                        }, 700);
+                                    }
+                                    else {
+                                        toastr.error('แจ้งเตือน! ' + rs.message);
+                                    }
+                                });
+                            }
+
+                        }
+                    });
+            });
+
+            // forword
+            $("#submit").click(function () {
+                const StatusId = $(this).attr("data-status");
+                const ProjectId = $("#ProjectId").val();
+                const Comment = $("#Comment").val();
+                Swal.fire(
+                    {
+                        title: "ยืนยันการทำรายการ",
+                        text: "คุณต้องการทำรายการนี้ หรือไม่?",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonText: "ยืนยัน",
+                        cancelButtonText: "ยกเลิก",
+                        closeOnConfirm: false
+                    }).then(function (isConfirm) {
+                        if (isConfirm.value == true) {
+                            $.get("/ElectronicProjects/UpdateForwordProjectStatus", { "StatusId": StatusId, "ProjectId": ProjectId, "Comment": Comment, "IsSendMail": $("#IsSendMail").is(":checked") }, function (rs) {
+                                if (rs.valid == true) {
+                                    toastr.success(rs.message);
+                                    setTimeout(function () {
+                                        window.location.href = "/ElectronicProjects/Approve";
+                                    }, 700);
+                                }
+                                else {
+                                    toastr.error('แจ้งเตือน! ' + rs.message);
+                                }
+                            });
+                        }
+                    });
+            });
+
+            // approve
+            $("#approve").click(function () {
+                const StatusId = $(this).attr("data-status");
+                const ProjectId = $("#ProjectId").val();
+                const Action = $(this).attr("data-action");
+                const Comment = $("#Comment").val();
+                Swal.fire(
+                    {
+                        title: "ยืนยันการทำรายการ",
+                        text: "คุณต้องการทำรายการนี้ หรือไม่?",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonText: "ยืนยัน",
+                        cancelButtonText: "ยกเลิก",
+                        closeOnConfirm: false
+                    }).then(function (isConfirm) {
+                        if (isConfirm.value == true) {
+                            $.get("/ElectronicProjects/UpdateForwordProjectStatus", { "StatusId": StatusId, "ProjectId": ProjectId, "EventName": Action, "Comment": Comment, "IsSendMail": $("#IsSendMail").is(":checked") }, function (rs) {
+                                if (rs.valid == true) {
+                                    toastr.success(rs.message);
+                                    setTimeout(function () {
+                                        window.location.href = "/ElectronicProjects/Approve";
+                                    }, 700);
+                                }
+                                else {
+                                    toastr.error('แจ้งเตือน! ' + rs.message);
+                                }
+                            });
+                        }
+                    });
+            });
+
+            // update status activity Send Activity
+            $(".UpdateStatus").click(function () {
+                var StatusId = $(this).attr("data-id");
+                Swal.fire(
+                    {
+                        title: "ยืนยันการทำรายการ",
+                        text: "คุณต้องการทำรายการนี้ หรือไม่?",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonText: "ยืนยัน",
+                        cancelButtonText: "ยกเลิก",
+                        closeOnConfirm: false
+                    }).then(function (isConfirm) {
+                        if (isConfirm.value == true) {
+                            $.get("/ElectronicProjects/UpdateActivityStatus", { "ProjectActivityId": StatusId }, function (rs) {
+                                if (rs.valid == true) {
+                                    toastr.success(rs.message);
+                                    setTimeout(function () {
+                                        window.location.href = "";
+                                    }, 700);
+                                }
+                                else {
+                                    toastr.error('แจ้งเตือน! ' + rs.message);
+                                }
+                            });
+                        }
+                    });
+            });
+
+            //approve file
+            $(".approvemark").on("click", function () {
+                const TransactionDocId = $(this).attr("data-val");
+                Swal.fire(
+                    {
+                        title: "ยืนยันการทำรายการ",
+                        text: "คุณต้องการทำรายการนี้ หรือไม่?",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonText: "ยืนยัน",
+                        cancelButtonText: "ยกเลิก",
+                        closeOnConfirm: false
+                    }).then(function (isConfirm) {
+                        if (isConfirm.value == true) {
+                            $.get("/ElectronicProjects/UpdateProjectFileStatus", { "TransactionDocId": TransactionDocId }, function (re) {
+                                if (re.valid == true) {
+                                    toastr.success(re.message);
+                                    setTimeout(function () {
+                                        window.location.href = "";
+                                    }, 700);
+                                }
+                                else {
+                                    toastr.error('Error!' + re.message);
+                                    setTimeout(function () {
+                                        window.location.href = "";
+                                    }, 700);
+                                }
+                            });
+                        }
+                    });
+            });
+
+            // cancel
+            $("#Noapprove").click(function () {
+
+                const StatusId = $(this).attr("data-status");
+                const ProjectId = $("#ProjectId").val();
+                const Action = $(this).attr("data-action");
+                const Comment = $("#Comment").val();
+                Swal.fire(
+                    {
+                        title: "ยืนยันการทำรายการ",
+                        text: "คุณต้องการทำรายการนี้ หรือไม่?",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonText: "ยืนยัน",
+                        cancelButtonText: "ยกเลิก",
+                        closeOnConfirm: false
+                    }).then(function (isConfirm) {
+                        if (isConfirm.value == true) {
+                            $.get("/ElectronicProjects/UpdateForwordProjectStatus", { "StatusId": StatusId, "ProjectId": ProjectId, "EventName": Action, "Comment": Comment, "IsSendMail": $("#IsSendMail").is(":checked") }, function (rs) {
+                                if (rs.valid == true) {
+                                    toastr.success(rs.message);
+                                    setTimeout(function () {
+                                        window.location.href = "/ElectronicProjects/Approve";
+                                    }, 700);
+                                }
+                                else {
+                                    toastr.error('แจ้งเตือน! ' + rs.message);
+                                }
+                            });
+                        }
+                    });
+            });
+
+
+        });
+
+        // Asset Part
+        function addAsset(ProjectId) {
+            $.get("/ElectronicProjects/FormAddAsset", { "ProjectId": ProjectId }, function (FormResult) {
+                $("#JsonCreateAssetForm").html(FormResult);
+                $("#FormCreateAsset").modal("show");
+
+                /* init */
+                $('#Amount').autoNumeric('init', { aSign: '' });
+
+                $('#JsonCreateAssetForm #JsonForm').bootstrapValidator();
+                $("#JsonCreateAssetForm #Submit").click(function () {
+                    $('#JsonCreateAssetForm #JsonForm').data("bootstrapValidator").validate();
+                    if ($('#JsonCreateAssetForm #JsonForm').data("bootstrapValidator").isValid() == true) {
+                        $('#Amount').autoNumeric('init', { aSep: '.', aDec: ',', mDec: '0' });
+                        var Data = new FormData($("#JsonCreateAssetForm #JsonForm")[0]);
+                        $.ajax(
+                            {
+                                type: "POST",
+                                url: "/ElectronicProjects/FormAddAsset",
+                                contentType: false,
+                                processData: false,
+                                data: Data,
+                                success: function (result) {
+                                    if (result.valid == true) {
+                                        $("#FormCreateAsset").modal('hide');
+                                        Swal.fire(
+                                            {
+                                                title: result.message,
+                                                text: "คุณต้องการทำรายการต่อ หรือไม่?",
+                                                type: "success",
+                                                showCancelButton: true,
+                                                confirmButtonText: "ต้องการ",
+                                                cancelButtonText: "ไม่ต้องการ",
+                                                closeOnConfirm: false
+                                            }).then(function (isConfirm) {
+                                                if (isConfirm.value == true) {
+                                                    window.location.href = "";
+                                                } else {
+                                                    window.location.href = "/ElectronicProjects/Index";
+                                                }
+                                            });
+                                    }
+                                    else {
+                                        toastr.error('Error! ' + result.message);
+                                    }
+                                }
+                            });
+                    }
+                });
+            });
+        }
+
+        function editAsset(ProjectId, ProjectAssetId) {
+            $.get("/ElectronicProjects/FormAddAsset", { "ProjectId": ProjectId, "ProjectAssetId": ProjectAssetId }, function (FormResult) {
+                $("#JsonCreateAssetForm").html(FormResult);
+                $("#FormCreateAsset").modal("show");
+
+                /* init */
+                $('#Amount').autoNumeric('init', { aSign: '' });
+
+                $('#JsonCreateAssetForm #JsonForm').bootstrapValidator();
+                $("#JsonCreateAssetForm #Submit").click(function () {
+                    $('#JsonCreateAssetForm #JsonForm').data("bootstrapValidator").validate();
+                    if ($('#JsonCreateAssetForm #JsonForm').data("bootstrapValidator").isValid() == true) {
+                        $('#Amount').autoNumeric('init', { aSep: '.', aDec: ',', mDec: '0' });
+                        var Data = new FormData($("#JsonCreateAssetForm #JsonForm")[0]);
+                        $.ajax(
+                            {
+                                type: "POST",
+                                url: "/ElectronicProjects/FormAddAsset",
+                                contentType: false,
+                                processData: false,
+                                data: Data,
+                                success: function (result) {
+                                    if (result.valid == true) {
+                                        $("#FormCreateAsset").modal('hide');
+                                        Swal.fire(
+                                            {
+                                                title: result.message,
+                                                text: "คุณต้องการทำรายการต่อ หรือไม่?",
+                                                type: "success",
+                                                showCancelButton: true,
+                                                confirmButtonText: "ต้องการ",
+                                                cancelButtonText: "ไม่ต้องการ",
+                                                closeOnConfirm: false
+                                            }).then(function (isConfirm) {
+                                                if (isConfirm.value == true) {
+                                                    window.location.href = "";
+                                                } else {
+                                                    window.location.href = "/ElectronicProjects/Index";
+                                                }
+                                            });
+                                    }
+                                    else {
+                                        toastr.error('Error! ' + result.message);
+                                    }
+                                }
+                            });
+                    }
+                });
+            });
+        }
+
+        function deleteAsset(ProjectAssetId) {
+            Swal.fire(
+                {
+                    title: "ยืนยันการทำรายการ",
+                    text: "คุณต้องการลบรายการนี้ หรือไม่?",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "ยืนยัน",
+                    cancelButtonText: "ยกเลิก",
+                    closeOnConfirm: false
+                }).then(function (isConfirm) {
+                    if (isConfirm.value == true) {
+                        $.get("/ElectronicProjects/DeleteAsset", { "ProjectAssetId": ProjectAssetId }, function (rs) {
+                            if (rs.valid == true) {
+                                toastr.success(rs.message);
+                                setTimeout(function () {
+                                    window.location.href = "";
+                                }, 700);
+                            }
+                            else {
+                                toastr.error('แจ้งเตือน! ' + rs.message);
+                            }
+                        });
+                    }
+                });
+        }
+
+    </script>
+}

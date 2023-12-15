@@ -1,0 +1,46 @@
+﻿@model IEnumerable<DZ_VILLAGEFUND_WEB.ViewModels.EAccount.ReportApproveAndPendingActTransactionProvince>
+<table id="JsonTable" class="table table-bordered table-hover table-striped w-100">
+    <thead>
+        <tr>
+            <th>ลำดับ</th>
+            <th>รหัสกองทุนหมู่บ้าน</th>
+            <th>ชื่อกองทุนหมู่บ้าน/ชุมชน</th>
+            <th>จำนวนโครงการที่ยื่นขอ</th>
+            <th>จำนวนโครงการที่อนุมัติ</th>
+            <th>ร้อยละ</th>
+            <th>งบประมาณโครงการ</th>
+
+
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int Row = 1;
+            foreach (var item in Model.OrderBy(o => o.ProvinceId))
+            {
+                <tr>
+                    <td class="text-center">@Row</td>
+                    <td class="text-center">@item.VillageCode</td>
+                    <td class="text-left">@item.VillageName</td>
+                    <td class="text-right">@item.VillageNumberAll</td>
+                    <td class="text-right">@item.VillageNumber</td>
+                    <td class="text-right">@((item.VillageNumber * 100 / item.VillageNumberAll).ToString("N"))</td>
+                    <td class="text-right">@item.AmountProject.ToString("N")</td>
+
+                </tr>
+                Row++;
+
+            }
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="3" class="text-right">รวมทั้งหมด</td>
+            <td class="text-right">@Model.Sum(s => s.VillageNumberAll)</td>
+            <td class="text-right">@Model.Sum(s => s.VillageNumber)</td>
+            <td class="text-right">@(((Model.Sum(s => s.VillageNumber) * 100 / (Model.Sum(s => s.VillageNumberAll) == 0 ? 1 : Model.Sum(s => s.VillageNumberAll)))).ToString("N"))</td>
+            <td class="text-right">@Model.Sum(s => s.AmountProject).ToString("N")</td>
+
+        </tr>
+    </tfoot>
+</table>

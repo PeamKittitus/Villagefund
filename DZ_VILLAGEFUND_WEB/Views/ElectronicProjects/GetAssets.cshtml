@@ -1,0 +1,47 @@
+﻿@model IEnumerable<DZ_VILLAGEFUND_WEB.Models.ProjectAsset>
+@{ 
+    decimal Total = 0;
+}
+<table id="JsonTable" class="table table-bordered table-hover table-striped w-100">
+    <thead class="bg-primary-600">
+        <tr>
+            <th class="text-center" style="width:50px">ลำดับ</th>
+            <th>เลขที่ครุภัณฑ์</th>
+            <th>ชื่อครุภัณฑ์</th>
+            <th class="text-center">อายุครุภัณฑ์ (ปี)</th>
+            <th class="text-center">จำนวนครุภัณฑ์</th>
+            <th class="text-center">ราคาสุทธิ</th>
+            <th style="width:150px;"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int Rows = 1;
+            foreach (var Get in Model)
+            {
+                <tr>
+                    <td class="text-center">@Rows.</td>
+                    <td>@Get.AssetCode</td>
+                    <td>@Get.AssetName</td>
+                    <td class="text-center">@Get.AssetAge</td>
+                    <td class="text-center">@Get.AmountUnit.ToString("N0")</td>
+                    <td class="text-right">@Get.Amount.ToString("N")</td>
+                    <td class="text-center">
+                        <a href="javascript:void(0);" data-val="@Get.ProjectAssetId" class="btn btn-xs btn-danger  delete" title="Delete"><i class="fal fa-times"></i> ลบ </a>
+                    </td>
+                </tr>
+
+                Rows++;
+                Total += Get.Amount;
+            }
+        }
+
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="5" class="text-right">รวม</td>
+            <td class="text-right">@Total.ToString("N")</td>
+            <td></td>
+        </tr>
+    </tfoot>
+</table>

@@ -1,0 +1,170 @@
+﻿@{
+    ViewData["Title"] = "ทะเบียนหนังสือรับ";
+}
+<ol class="breadcrumb page-breadcrumb">
+    <li class="breadcrumb-item"><a href="/Home/Index">หน้าหลัก</a></li>
+    <li class="breadcrumb-item"><a href="javascript:void(0)">E-Office</a></li>
+    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+</ol>
+
+<!-- Archives Filter -->
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel">
+            <div class="panel-hdr">
+                <h2><i class='subheader-icon fal fa-list-alt'></i>  @ViewData["Title"]</h2>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+                    <div class="col-lg-12">
+
+                        <div class="panel-content">
+                            <div class="form-group">
+                                <div class="row">
+                                    <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                        <label class="form-label"> สังกัด </label>
+                                        @Html.DropDownList("Organization", (IEnumerable<SelectListItem>)ViewBag.OrgFilters, new { @style = "width:100%" })
+                                    </article>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <article class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
+                                        <label class="form-label">ประเภทหนังสือ </label>
+                                        @Html.DropDownList("ArchivesType", (IEnumerable<SelectListItem>)ViewBag.ArchivesType, new { @style = "width:100%" })
+                                    </article>
+                                    <article class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
+                                        <label class="form-label"> เดือน </label>
+                                        <select id="Month">
+                                            @{
+                                                int MonthCount = 1;
+                                                int CurrentMonth = DateTime.Now.Month;
+                                                string[] MonthName = { "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฏาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม" };
+                                                foreach (var Month in MonthName)
+                                                {
+                                                    if (CurrentMonth == MonthCount)
+                                                    {
+                                                        <option value="@MonthCount.ToString().PadLeft(2, '0')" selected>@Month</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@MonthCount.ToString().PadLeft(2, '0')">@Month</option>
+                                                    }
+
+                                                    MonthCount++;
+                                                }
+                                            }
+                                        </select>
+                                    </article>
+                                    <article class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
+                                        <label class="form-label"> ปี </label>
+                                        <select id="Year">
+                                            @{
+                                                int CurrentYear = DateTime.Now.Year;
+                                                for (int i = CurrentYear; i >= CurrentYear - 5; i--)
+                                                {
+                                                    if (CurrentYear + 543 == i)
+                                                    {
+                                                        <option value="@(i+543)" selected>@(i+543)</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@(i+543)">@(i+543)</option>
+                                                    }
+                                                }
+                                            }
+
+                                        </select>
+                                    </article>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Archives List -->
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel">
+            <div class="panel-hdr">
+                <h2><i class='subheader-icon fal fa-list-alt'></i>  @ViewData["Title"]</h2>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+
+                    <div id="JsonData"></div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Create -->
+<div class="modal fade default-example-modal-center-lg" id="ViewDataArchives" role="dialog" aria-hidden="false">
+    <div class="modal-dialog modal-dialog-center modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title h4"><i class="fal fa-list-alt"></i> รายละเอียดหนังสือ</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true"><i class="fal fa-times"></i></span> </button>
+            </div>
+            <div class="modal-body">
+
+                <span id="JsonViewDataArchives"></span>
+
+            </div>
+            <div class="modal-footer"> </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- forwork -->
+<div class="modal fade default-example-modal-center-lg" id="ViewForworkArchives" role="dialog" aria-hidden="false">
+    <div class="modal-dialog modal-dialog-center modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title h4"><i class="fal fa-list-alt"></i> สั่งการ/ดำเนินการ</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true"><i class="fal fa-times"></i></span> </button>
+            </div>
+            <div class="modal-body">
+
+                <span id="JsonForworkArchives"></span>
+
+            </div>
+            <div class="modal-footer"> </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <style>
+        .input-group-btn {
+            display: none;
+        }
+
+        .multiselect-container {
+            width: 100% !important;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" href="/css/notifications/toastr/toastr.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/formplugins/select2/select2.bundle.css">
+    <link rel="stylesheet" type="text/css" href="/lib/datepicker/datepicker.css">
+    <link rel="stylesheet" href="~/css/notifications/sweetalert2/sweetalert2.bundle.css">
+    <link rel="stylesheet" href="/css/bootstrap-multiselect.css" type="text/css" />
+    <link rel="stylesheet" media="screen, print" href="~/css/datagrid/datatables/datatables.bundle.css">
+    <script src="~/js/Validation/bootstrapValidator.min.js"></script>
+    <script src="~/js/notifications/toastr/toastr.js"></script>
+    <script src="~/js/notifications/sweetalert2/sweetalert2.bundle.js"></script>
+    <script src="~/js/formplugins/select2/select2.bundle.js"></script>
+    <script src="~/js/datagrid/datatables/datatables.bundle.js"></script>
+    <script src="~/js/datagrid/datatables/datatables.export.js"></script>
+    <script type="text/javascript" src="/js/bootstrap-multiselect.js"></script>
+    <script src="~/customJs/eoffice/ReceiveIndext.js"></script>
+
+}

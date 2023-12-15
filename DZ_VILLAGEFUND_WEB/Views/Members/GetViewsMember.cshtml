@@ -1,0 +1,38 @@
+﻿@model IEnumerable<DZ_VILLAGEFUND_WEB.Models.MemberVillage>
+@{
+    var Helper = ViewBag.Helper as DZ_VILLAGEFUND_WEB.Helpers.Utility;
+    var Position = ViewBag.PositionName as List<DZ_VILLAGEFUND_WEB.Models.SystemMemberPosition>;
+}
+
+<table id="JsonTable" class="table table-bordered table-hover table-striped w-100">
+    <thead class="bg-primary-600">
+        <tr>
+            <th class="text-center" style="width:50px">ลำดับ</th>
+            <th class="text-center">รหัสสมาชิก</th>
+            <th>ชื่อ นามสกุล</th>
+            <th>ตำแหน่ง</th>
+            <th>วัน เดือน ปี ที่หมดอายุ</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @{
+            int Rows = 1;
+            foreach (var Get in Model)
+            {
+                <tr>
+                    <td class="text-center">@Rows.</td>
+                    <td class="text-center"> @Get.MemberCode </td>
+                    <td> @Get.MemberFirstName @Get.MemberLastName </td>
+                    <td> @Position.Where(w => w.PositionId == Get.MemberPositionId).Select(s => s.PositionNameTH).FirstOrDefault() </td>
+                    <td> @Helper.getDateThai(Get.MemberEndDate) </td>
+                    <td class="text-center"> <a href="javascript:void(0)" class="btn btn-success btn-xs renew" data-val="@Get.MemberId" >ต่ออายุ</a> </td>
+                </tr>
+
+                Rows++;
+            }
+        }
+
+    </tbody>
+</table>

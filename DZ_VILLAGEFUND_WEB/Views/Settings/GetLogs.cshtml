@@ -1,0 +1,32 @@
+﻿@model IEnumerable<DZ_VILLAGEFUND_WEB.ViewModels.Setting.UsedLogsViewModel>
+
+<table id="JsonTable" class="table table-bordered table-hover table-striped w-100">
+    <thead class="bg-primary-600">
+        <tr>
+            <th class="text-center" style="width:50px">ลำดับ</th>
+            <th>ชื่อผู้</th>
+            <th>ชื่อระบบ</th>
+            <th>เหตุการณ์</th>
+            <th>วันที่/เวลา</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @{
+            int Rows = 1;
+            foreach (var Get in Model)
+            {
+                <tr>
+                    <td class="text-center">@Rows.</td>
+                    <td>@Get.FullName</td>
+                    <td>@Get.SystemName</td>
+                    <td>@Get.Action</td>
+                    <td>@Get.ActionDate</td>
+                </tr>
+
+                Rows++;
+            }
+        }
+
+    </tbody>
+</table>

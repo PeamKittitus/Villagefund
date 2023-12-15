@@ -1,0 +1,50 @@
+﻿@model IEnumerable<DZ_VILLAGEFUND_WEB.ViewModels.EOffice.ReceivesViewModel>
+
+<table id="JsonTable" class="table table-bordered table-hover table-striped w-100">
+    <thead class="bg-primary-600">
+        <tr>
+            <th class="text-center" style="width:100px">เลขทะเบียนรับ</th>
+            <th class="text-center">ที่</th>
+            <th class="text-center"> ลงวันที่</th>
+            <th class="text-center">จาก</th>
+            <th class="text-center">ถึง</th>
+            <th>เรื่อง</th>
+            <th class="text-center">สถานะ</th>
+            <th class="text-center" style="width:120px;"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            foreach (var Get in Model.OrderByDescending(f => f.ArchiveId))
+            {
+                <tr>
+                    <td class="text-center" style="width:50px">@(Get.ReceiveNumber == 0 ? "-" : Get.ReceiveNumber)</td>
+                    <td class="text-center">@(Get.ArchiveNumber == "" ? "-" : Get.ArchiveNumber)</td>
+                    <td class="text-center">@Get.CreateDate</td>
+                    <td class="text-center">@Get.FromOrg</td>
+                    <td class="text-center">@Get.ToOrg</td>
+                    <td><a href="javascript:void(0)" class="ViewDetail" data-id="@Get.ArchiveId"> @Get.Title</a></td>
+                    <td class="text-center">
+                        @{
+                            if (Get.StatusCode == "01" || Get.StatusCode == "02" || Get.StatusCode == "04")
+                            {
+                                <span style="color:red">@Get.Status</span>
+                            }
+                            else if (Get.StatusCode == "02" || Get.StatusCode == "03")
+                            {
+                                <span style="color:orange">@Get.Status</span>
+                            }
+                            else
+                            {
+                                <span style="color:green">@Get.Status</span>
+                            }
+                        }
+                    </td>
+                    <td class="text-center">
+                        <a href="javascript:void(0)" class="btn btn-warning btn-xs forword" data-id="@Get.ArchiveId"> สั่งการ/ดำเนินการ</a>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

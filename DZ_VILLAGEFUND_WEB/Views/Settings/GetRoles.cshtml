@@ -1,0 +1,53 @@
+﻿@model IEnumerable<DZ_VILLAGEFUND_WEB.ViewModels.Settings.ListRoleViewModel>
+
+<table id="JsonTable" class="table table-bordered table-hover table-striped w-100">
+    <thead class="bg-primary-600">
+        <tr>
+            <th class="text-center" style="width:50px">ลำดับ</th>
+            <th>ชื่อสิทธิ์</th>
+            <th class="text-center" style="width:60px;">เขียน</th>
+            <th class="text-center" style="width:60px;">แก้ไข</th>
+            <th class="text-center" style="width:60px;">ลบ</th>
+            <th class="text-center" style="width:160px"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int Rows = 1;
+            foreach (var Get in Model.OrderBy(o => o.Name))
+            {
+                <tr>
+                    <td class="text-center">@Rows.</td>
+                    <td>@Get.Name</td>
+                    <td class="text-center">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input setPermission" id="insert-@Rows" data-is="insert" data-role="@Get.Id" @(Get.Permisstion.Count() > 0 && Get.Permisstion.Any(a => a.IsInsert == true) ? "checked" : "")>
+                            <label class="custom-control-label" for="insert-@Rows"></label>
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        <div class="smart-form">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input setPermission" id="update-@Rows" data-is="update" data-role="@Get.Id" @(Get.Permisstion.Count() > 0 && Get.Permisstion.Any(a => a.IsUpdate == true) ? "checked" : "")>
+                                <label class="custom-control-label" for="update-@Rows"></label>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input setPermission" id="delete-@Rows" data-is="delete" data-role="@Get.Id" @(Get.Permisstion.Count() > 0 && Get.Permisstion.Any(a => a.IsDelete == true) ? "checked" : "")>
+                            <label class="custom-control-label" for="delete-@Rows"></label>
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        <a href="javascript:void(0);" data-val="@Get.Id" class="btn btn-sm btn-xs btn-warning edit" title="Edit"><i class="fal fa-edit"></i> แก้ไข </a>
+                        <a href="javascript:void(0);" data-val="@Get.Id" class="btn btn-sm btn-xs btn-danger  delete" title="Delete"><i class="fal fa-times"></i> ลบ </a>
+                    </td>
+                </tr>
+
+                Rows++;
+            }
+        }
+
+    </tbody>
+</table>

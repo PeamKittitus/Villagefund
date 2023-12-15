@@ -1,0 +1,95 @@
+﻿@{
+    // title page ,  set permission
+    ViewData["Title"] = "รายงานเข้าใช้ระบบ";
+
+    var GetPermission = ViewBag.Permission as DZ_VILLAGEFUND_WEB.ViewModels.Settings.PermissionViewModel;
+}
+
+<ol class="breadcrumb page-breadcrumb">
+    <li class="breadcrumb-item"><a href="/Home/Index">หน้าหลัก</a></li>
+    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+</ol>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel">
+            <div class="panel-hdr"> <h2><i class='subheader-icon fal fa-window'></i> Filter</h2></div>
+            <div class="panel-container show">
+                <div class="panel-content">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <select id="Month">
+                                @{
+                                    int MonthCount = 1;
+                                    int CurrentMonth = DateTime.Now.Month;
+                                    string[] MonthName = { "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฏาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม" };
+                                    foreach (var Month in MonthName)
+                                    {
+                                        if (CurrentMonth == MonthCount)
+                                        {
+                                            <option value="@MonthCount.ToString().PadLeft(2,'0')" selected>@Month</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@MonthCount.ToString().PadLeft(2,'0')">@Month</option>
+                                        }
+
+                                        MonthCount++;
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="col-lg-4">
+                            <select id="Year">
+                                @{
+                                    int CurrentYear = DateTime.Now.Year;
+                                    for (int i = CurrentYear; i >= CurrentYear - 1; i--)
+                                    {
+                                        if (CurrentYear == i)
+                                        {
+                                            <option value="@i" selected>@(i+543)</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@i">@(i+543)</option>
+                                        }
+                                    }
+                                }
+
+                            </select>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="panel">
+            <div class="panel-hdr">
+                <h2><i class='subheader-icon fal fa-users'></i>  @ViewData["Title"]</h2>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+
+                    <div id="JsonData"></div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <link rel="stylesheet" type="text/css" href="/css/notifications/toastr/toastr.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/datagrid/datatables/datatables.bundle.css">
+    <link rel="stylesheet" href="~/css/notifications/sweetalert2/sweetalert2.bundle.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/formplugins/select2/select2.bundle.css">
+    <script src="~/js/datagrid/datatables/datatables.bundle.js"></script>
+    <script src="~/js/datagrid/datatables/datatables.export.js"></script>
+    <script src="~/js/notifications/toastr/toastr.js"></script>
+    <script src="~/js/notifications/sweetalert2/sweetalert2.bundle.js"></script>
+    <script src="~/js/formplugins/select2/select2.bundle.js"></script>
+    <script src="~/customJs/setting/UsedIndex.js"></script>
+}

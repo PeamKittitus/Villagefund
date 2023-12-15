@@ -1,0 +1,21 @@
+﻿
+<form id="JsonForm" enctype="multipart/form-data"
+      asp-antiforgery="true"
+      data-bv-message="This value is not valid"
+      data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
+      data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
+      data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
+    <div class="panel-content">
+
+            <div class="form-group">
+                <label class="form-label"><strong> ชื่อหน่วยงาน</strong> <span style="color:red">*</span></label>
+                <input type="text" id="OrgName" name="OrgName" class="form-control col-lg-12 col-md-12 col-sm-12"
+                       data-bv-notempty="true"
+                       data-bv-notempty-message="กรุณากรอกข้อมูล">
+            </div>
+            <div class="panel-content border-faded border-left-0 border-right-0 border-bottom-0 d-flex flex-row align-items-center m-3 pt-3">
+                <button class="btn btn-primary ml-auto" type="button" id="Submit">บันทึก</button>
+            </div>
+        </div>
+    </div>
+</form>

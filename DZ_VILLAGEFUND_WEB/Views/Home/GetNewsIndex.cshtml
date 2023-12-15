@@ -1,0 +1,30 @@
+﻿@model IEnumerable<DZ_VILLAGEFUND_WEB.ViewModels.News.ListNewsViewModel>
+
+@{
+    int i = 0;
+    foreach (var Get in Model)
+    {
+        if (i < 5)
+        {
+            <div class="card mb-g">
+                <div class="card-body pb-0 px-4">
+                    <div class="d-flex flex-row pb-3 pt-2  border-top-0 border-left-0 border-right-0">
+                        <h5 class="mb-0 flex-1 text-dark fw-500">
+                            คุณ @Get.FullName
+                            <small class="m-0 l-h-n">
+                                @Get.TransactionBy
+                            </small>
+                        </h5>
+                        <span class="text-muted fs-xs opacity-70">
+                            @Get.UpdateDate
+                        </span>
+                    </div>
+                    <div class="pb-3 pt-2 border-top-0 border-left-0 border-right-0 text-muted">
+                        <a href="/Home/News?Id=@Get.TransactionNewsId" target="_blank" class="view" style="overflow: hidden;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;"><h3>@Get.TransactionTitle</h3></a>
+                    </div>
+                </div>
+            </div>
+            i++;
+        }
+    }
+}

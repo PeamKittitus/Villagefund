@@ -1,0 +1,62 @@
+﻿@model IEnumerable<DZ_VILLAGEFUND_WEB.ViewModels.Settings.GetRoleMenuViewModel>
+
+<form id="Permissionform">
+    <table id="JsonTable" class="table table-bordered table-hover table-striped w-100">
+        <thead class="bg-primary-600">
+            <tr>
+                <th class="text-center" style="width:50px">ลำดับ</th>
+                <th>ชื่อสิทธิ์</th>
+                <th class="text-center" style="width:160px">  <input type="checkbox" id="all" style="width:20px;"> เลือกทั้งหมด</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int Rows = 1;
+                foreach (var Menu in Model.Where(a => a.ParentId == 0))
+                {
+                    <tr>
+                        <td class="text-center">@Rows.</td>
+                        <td> -  @Menu.MenuName </td>
+                        <td class="text-center">
+                            <input type="checkbox" name="MenuItemId" class="MenuItemId" value="@Menu.MenuId" @if (Menu.SystemRolemenus.Count > 0 && Menu.SystemRolemenus.Any(b => b.RoleId == ViewBag.RoleId)) { <text> checked </text>}>
+                        </td>
+                    </tr>
+                    int SubRows = 1;
+                    foreach (var SubMenu in Model.Where(a => a.ParentId == Menu.MenuId))
+                    {
+                        <tr>
+                            <td class="text-center pl-5">@Rows.@SubRows</td>
+                            <td style="padding-left:80px;">-  @SubMenu.MenuName</td>
+                            <td class="text-center">
+                                <input type="checkbox" name="MenuItemId" class="MenuItemId" value="@SubMenu.MenuId" @if (SubMenu.SystemRolemenus.Count > 0 && SubMenu.SystemRolemenus.Any(b => b.RoleId == ViewBag.RoleId)) { <text> checked</text>}>
+                            </td>
+                        </tr>
+                        int SubRows2 = 1;
+                        foreach (var SubMenu2 in Model.Where(a => a.ParentId == SubMenu.MenuId))
+                        {
+                            <tr>
+                                <td class="text-center pl-6">@Rows.@SubRows.@SubRows2</td>
+                                <td style="padding-left:150px;"><i class="fa @SubMenu2.Icon"></i> @SubMenu2.MenuName</td>
+                                <td class="text-center">
+                                    <input type="checkbox" name="MenuItemId" class="MenuItemId" value="@SubMenu2.MenuId" @if (SubMenu2.SystemRolemenus.Count > 0 && SubMenu2.SystemRolemenus.Any(b => b.RoleId == ViewBag.RoleId)) { <text> checked</text>}>
+                                </td>
+                            </tr>
+                            SubRows2++;
+                        }
+                        SubRows++;
+                    }
+                    Rows++;
+
+                }
+            }
+
+
+        </tbody>
+    </table>
+
+    <input type="hidden" id="RoleId" value="@ViewBag.RoleId" />
+
+    <div class="panel-content border-faded border-left-0 border-right-0 border-bottom-0 d-flex flex-row align-items-center m-3 pt-3">
+        <button class="btn btn-primary ml-auto" type="button" id="Submit">บันทึก</button>
+    </div>
+</form>

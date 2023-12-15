@@ -1,0 +1,35 @@
+﻿@model IEnumerable<DZ_VILLAGEFUND_WEB.Models.Village>
+<table id="JsonTable" class="table table-bordered table-hover table-striped w-100">
+    <thead class="bg-primary-600">
+        <tr>
+            <th class="text-center" style="width: 5%">ลำดับ</th>
+            <th>ชื่อนิติบุคคล</th>
+            <th class="text-center" style="width: 10%">สถานะ</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int Row = 1;
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td class="text-center"> @Row.</td>
+                    <td> @item.VillageName      </td>
+                    <td class="text-center">
+                        @{
+                            if (item.IsActive == true)
+                            {
+                                <i class="fal fa-check-circle " style="color:green;font-size:1rem"></i> <span style="color:green">เปิดการใช้งาน</span>
+                            }
+                            else
+                            {
+                                <i class="fal fa-times" style="color:red;font-size:1rem"></i> <span style="color:red">ยกเลิกการใช้งาน</span>
+                            }
+                        }
+                    </td>
+                </tr>
+                Row++;
+            }
+        }
+    </tbody>
+</table>

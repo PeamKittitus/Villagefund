@@ -1,0 +1,60 @@
+﻿@model IEnumerable<DZ_VILLAGEFUND_WEB.ViewModels.EOffice.EOfficeArchives>
+
+<table id="JsonTable" class="table table-bordered table-hover table-striped w-100">
+    <thead bg-primary-600 >
+        <tr>
+            <th class="text-center">ที่</th>
+            <th class="text-center">ลงวันที่</th>
+            <th class="text-center">จาก</th>
+            <th class="text-center">ถึง</th>
+            <th style="width:400px;">เรื่อง</th>
+            <th class="text-align-center">สถานะ</th>
+            @*<th class="text-align-center">หมายเหตุ</th>*@
+            @{
+                int Year = Model.Select(a => a.BudgetYear).FirstOrDefault();
+                int CurrentYearCloseTH = (DateTime.Now.Year + 543);
+                if (Year == CurrentYearCloseTH)
+                {
+                    <th class="text-align-center"></th>
+                }
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            foreach (var Archives in Model.OrderByDescending(r => r.CreateDate))
+            {
+                <tr>
+                    <td class="text-center">@Archives.ArchiveNumber</td>
+                    <td class="text-center">@Archives.CreateDate</td>
+                    <td class="text-center">@Archives.FromOrg</td>
+                    <td class="text-center">@Archives.ToOrg</td>
+                    <td>
+                        <a href="Javascript:void(0)" rel="tooltip" data-placement="top" data-original-title="รายละเอียดหนังสือ" data-toggle="modal" class="ViewArchives" data-target="#ButtonView" data-id="@Archives.ArchiveId">
+                            @Archives.Title
+                        </a>
+                    </td>
+                    @*<td></td>*@
+                    <td class="text-align-center"> @Archives.StatusCode </td>
+                    @*<td></td>*@
+                    @{
+                        int CurrentYearCloseTD = (DateTime.Now.Year + 543);
+                        if (Archives.BudgetYear == CurrentYearCloseTD)
+                        {
+                            <td class="text-center">
+                                @if (Archives.Record == 0)
+                                {
+                                    <button class="btn btn-warning btn-xs edit" rel="tooltip" data-placement="top" data-original-title="Edit" value="@Archives.ArchiveId" style="font-size:10px;" data-toggle="modal" id="edit" data-target="#ButtonEdit" ArchiveId="@Archives.ArchiveId" OrgCode="@Archives.ArchiveOrgCode">แก้ไข <i class="fal fa-pencil"></i> </button>
+                                    <button class="btn btn-danger btn-xs  deleteArchive" rel="tooltip" data-placement="top" data-original-title="Delete" data-val="@Archives.ArchiveId" style="font-size:10px;">ลบ <i class="fal fa-eraser"></i> </button>
+                                }
+                            </td>
+                        }
+                    }
+
+                </tr>
+
+            }
+        }
+
+    </tbody>
+</table>

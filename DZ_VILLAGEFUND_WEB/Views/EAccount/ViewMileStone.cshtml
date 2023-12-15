@@ -1,0 +1,94 @@
+﻿@model IEnumerable<DZ_VILLAGEFUND_WEB.ViewModels.EAccount.TransacionAccountBudgetViewModel>
+@{
+    ViewData["Title"] = "รายละเอียด Mile Stone";
+}
+
+<ol class="breadcrumb page-breadcrumb">
+    <li class="breadcrumb-item"><a href="/Home/Index">หน้าหลัก</a></li>
+    <li class="breadcrumb-item active"><a href="/EAccount/MileStoneIndex">Mile Stone</a></li>
+    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+</ol>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel">
+            <div class="panel-hdr">
+                <h2><i class='subheader-icon fal fa-book'></i>  @ViewData["Title"]</h2>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+
+                    <div class="row">
+                        <div class="col-lg-12 text-center">
+
+                            <nav class="nav nav-pills">
+                                @{
+                                    foreach (var Get in Model)
+                                    {
+                                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                                            <div class="panel panel-teal pricing-big">
+                                                <div class="panel-heading">
+                                                    <h3 class="panel-title" style="padding-top:40px;">
+                                                        <i class="fal fa-map-marker-alt" style="font-size:5rem"></i><br>
+                                                        <br />
+                                                        @Get.Title
+                                                        <br />
+                                                        @Get.SenderOrgId --> @Get.ReceiverOrgId
+                                                    </h3>
+                                                </div>
+                                                <div class="panel-body no-padding text-align-center">
+                                                    <div class="the-price">
+                                                        <h1> </h1>
+                                                    </div>
+                                                </div>
+                                                <div class="panel-footer text-align-center">
+                                                    <a href="javascript:void(0);" class="btn btn-primary btn-block viewDetail" role="button" data-val="@Get.TransactionAccBudgeId">
+                                                        <span>
+                                                            <i class="fal fa-search"></i>    เรียกดู
+                                                        </span>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+
+                            </nav>
+
+                        </div>
+                        <div class="col-lg-12 mt-4">
+                            <div id="viewDetail"></div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<input type="hidden" id="LastActivityId" value="@Model.Select(s=>s.TransactionAccBudgeId).FirstOrDefault()">
+
+
+@section Scripts{
+    <script>
+
+        $(function () {
+
+            LoadData($("#LastActivityId").val());
+            $(".viewDetail").click(function () {
+                LoadData($(this).attr("data-val"));
+            });
+
+        });
+
+        function LoadData(Id) {
+
+            $("#viewDetail").html('<img src="/img/loading.gif" width="200">');
+            $.get("/EAccount/GetActivityDetail", { "Id": Id }, function (Result) {
+                $("#viewDetail").html(Result);
+            });
+
+        }
+    </script>
+}

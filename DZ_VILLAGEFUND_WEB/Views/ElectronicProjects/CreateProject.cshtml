@@ -1,0 +1,454 @@
+﻿@model DZ_VILLAGEFUND_WEB.Models.ProjectBudget
+
+@{
+    ViewData["Title"] = "ข้อมูลเกี่ยวกับโครงการ";
+}
+
+<ol class="breadcrumb page-breadcrumb">
+    <li class="breadcrumb-item"><a href="/Home/Index">หน้าหลัก</a></li>
+    <li class="breadcrumb-item"><a href="/ElectronicProjects/Index">การจัดการโครงการ</a></li>
+    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+</ol>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel">
+            <div class="panel-container show">
+                <div class="panel-content text-center">
+                    <button type="button" class="btn btn-success  waves-effect waves-themed">(1) @ViewData["Title"] <i class="fal fa-arrow-right"></i></button>
+                    <button type="button" class="btn btn-default  waves-effect waves-themed">(2) กิจกรรมในโครงการ <i class="fal fa-arrow-right"></i></button>
+                    <button type="button" class="btn btn-default  waves-effect waves-themed">(3) ครุภัณฑ์ <i class="fal fa-arrow-right"></i></button>
+                    <button type="button" class="btn btn-default  waves-effect waves-themed">(4) เอกสารแนบ </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="d-flex justify-content-start flex-wrap demo">
+    <div class="btn-group">
+        <a href="@(Model == null ? "javascript:void(0)" : "/ElectronicProjects/CreatePeriod?ProjectId="+(Model == null ? 0 : Model.ProjectId))" class="btn btn-light">
+            <i class="fal fa-arrow-right mr-1 fs-xxl color-primary-600"></i><br />
+            <span class="fs-nano color-primary-600"> ดำเนินการต่อ</span>
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel">
+            <div class="panel-hdr"><h2><i class='subheader-icon fal fa-list-alt'></i>  @ViewData["Title"]</h2> </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+
+                    <div class="row">
+                        <div class="col-lg-2"></div>
+                        <div class="col-lg-8">
+                            <form id="JsonForm" enctype="multipart/form-data" novalidate
+                                  asp-antiforgery="true"
+                                  data-bv-message="This value is not valid"
+                                  data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
+                                  data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
+                                  data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
+                                <div class="panel-content">
+                                    <div class="col-lg-12 col-md-12 col-sm-12">
+                                        <hr />
+                                        <label style="color:red;"> ข้อมูลเกี่ยวกับโครงการ</label>
+                                        <hr />
+                                        <div class="form-group">
+                                            <label class="form-label"> ชื่อโครงการ<span style="color:red"> *</span></label>
+                                            @Html.DropDownList("AccountBudgetd", (IEnumerable<SelectListItem>)ViewBag.AccountBudget, new { @style = "width:100%" })
+                                        </div>
+                                        <div class="form-group" id="QualificationContent"></div>
+                                        <div class="form-group">
+                                            <label class="form-label"> จำนวนเงิน <span style="color:red"> *</span></label>
+                                            <input type="text" id="AmountString" class="col-lg-12 col-md-12 col-sm-12 form-control"
+                                                   data-bv-notempty="true"
+                                                   data-bv-notempty-message="กรุณากรอกข้อมูล" disabled />
+                                        </div>
+
+
+                                        <hr />
+                                        <label class="form-label" style="color:red;font-weight:bold"> <strong>การจ่ายเงินงบประมาณ</strong></label>
+                                        <hr />
+                                        <table class="table mb-3">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-center" style="width:80px;">งวดที่</th>
+                                                    <th class="text-center">จ่ายอัตราร้อยละ (%)</th>
+                                                    <th class="text-right">จำนวนเงิน (บาท)</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="ProjectPeriodDetails"></tbody>
+                                        </table>
+
+
+                                        <hr />
+                                        <label style="color:red;font-weight:bold"> <strong> เอกสารแนบ</strong></label>
+                                        <hr />
+                                        <table class="table mb-3">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width:50px;">ลำดับ</th>
+                                                    <th>ชื่อเอกสาร</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="ProjectPeriodFile"></tbody>
+                                        </table>
+
+
+                                        <hr />
+                                        <label style="color:red;font-weight:bold"> <strong> กำหนดวันที่เริ่มต้น-สิ้นสุดโครงการ</strong></label>
+                                        <hr />
+                                        <div class="form-group">
+                                            <label class="form-label"> วันที่เริ่มโครงการ<span style="color:red"> *</span> </label>
+                                            <section id="widget-grid" style="margin-bottom:12px;">
+                                                <div class="row">
+                                                    <div class="col-lg-4">
+                                                        <input type="hidden" id="_StartDay" value="@(Model != null ? Model.StartProjectDate.Day : DateTime.Now.Day)">
+                                                        <select name="StartDay" id="StartDay" style="width:100%;"></select>
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <select name="StartMonth" id="StartMonth" style="width:100%;">
+                                                            @{
+                                                                string[] MonthName = { "", "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม" };
+                                                                int m1 = 0;
+                                                                foreach (var _MonthName in MonthName)
+                                                                {
+                                                                    if (Model != null)
+                                                                    {
+                                                                        if (m1 == Model.StartProjectDate.Month)
+                                                                        {
+                                                                            <option value="@m1" selected>@MonthName[m1]</option>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <option value="@m1">@MonthName[m1]</option>
+                                                                        }
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <option value="@m1">@MonthName[m1]</option>
+                                                                    }
+                                                                    m1++;
+                                                                }
+                                                            }
+
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <select name="StartYear" id="StartYear" style="width:100%;">
+                                                            @{
+                                                                for (int y = DateTime.Now.Year + 1; y >= (DateTime.Now.Year - 7); y--)
+                                                                {
+                                                                    if (Model != null)
+                                                                    {
+                                                                        if (y == Model.StartProjectDate.Year)
+                                                                        {
+                                                                            <option value="@y" selected>@(y + 543)</option>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <option value="@y">@(y + 543)</option>
+                                                                        }
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <option value="@y">@(y + 543)</option>
+                                                                    }
+
+                                                                }
+                                                            }
+
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </section>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">วันที่สิ้นสุดโครงการ <span style="color:red">*</span></label>
+                                            <section id="widget-grid" style="margin-bottom:12px;">
+                                                <div class="row">
+                                                    <div class="col-lg-4">
+                                                        <input type="hidden" id="_EndDay" value="@(Model != null ? Model.EndProjectDate.Day : DateTime.Now.Day)">
+                                                        <select name="EndDay" id="EndDay" style="width:100%;"></select>
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <select name="EndMonth" id="EndMonth" style="width:100%;">
+                                                            @{
+                                                                string[] EndMonthName = { "", "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม" };
+                                                                int mm1 = 0;
+                                                                foreach (var _MonthName in EndMonthName)
+                                                                {
+                                                                    if (Model != null)
+                                                                    {
+                                                                        if (mm1 == Model.EndProjectDate.Month)
+                                                                        {
+                                                                            <option value="@mm1" selected>@MonthName[mm1]</option>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <option value="@mm1">@MonthName[mm1]</option>
+                                                                        }
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <option value="@mm1">@MonthName[mm1]</option>
+                                                                    }
+                                                                    mm1++;
+                                                                }
+                                                            }
+
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <select name="EndYear" id="EndYear" style="width:100%;">
+                                                            @{
+                                                                for (int y = DateTime.Now.Year + 1; y >= (DateTime.Now.Year - 1); y--)
+                                                                {
+                                                                    if (Model != null)
+                                                                    {
+                                                                        if (y == Model.EndProjectDate.Year)
+                                                                        {
+                                                                            <option value="@y" selected>@(y + 543)</option>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <option value="@y">@(y + 543)</option>
+                                                                        }
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <option value="@y">@(y + 543)</option>
+                                                                    }
+
+                                                                }
+                                                            }
+
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </section>
+                                        </div>
+                                    </div>
+                                </div>
+                                <input type="hidden" asp-for="AccountBudgetd" />
+                                <input type="hidden" asp-for="ProjectId" />
+                                <div class="panel-content border-faded border-left-0 border-right-0 border-bottom-0 d-flex flex-row align-items-center m-3 pt-3">
+                                    <button class="btn btn-success ml-auto" type="button" id="Submit"> <i class="fal fa-save"></i> บันทึก</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-lg-2"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <link rel="stylesheet" href="~/css/notifications/sweetalert2/sweetalert2.bundle.css">
+    <link rel="stylesheet" type="text/css" href="/css/notifications/toastr/toastr.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/formplugins/select2/select2.bundle.css">
+    <link rel="stylesheet" type="text/css" href="/lib/datepicker/datepicker.css">
+    <script src="~/js/notifications/sweetalert2/sweetalert2.bundle.js"></script>
+    <script src="~/js/Validation/bootstrapValidator.min.js"></script>
+    <script src="~/js/notifications/toastr/toastr.js"></script>
+    <script src="~/js/formplugins/select2/select2.bundle.js"></script>
+    <script src="~/js/NumberFormat.js"></script>
+    <script src="~/lib/datepicker/bootstrap-datepicker.js"></script>
+    <script src="~/lib/datepicker/bootstrap-datepicker.th.js"></script>
+    <script src="~/lib/datepicker/bootstrap-datepicker-thai.js"></script>
+    <script>
+        $(function () {
+
+            //Beuiful date
+            var $Date = $("#StartDay, #StartMonth, #StartYear,#EndDay , #EndMonth , #EndYear");
+            $Date.select2();
+
+            //Start Date
+            var $change = $("#StartMonth");
+            $change.change(function () {
+                GetDatInMonth("#StartDay", $("#_StartDay").val(), $("#StartMonth").val(), $("#StartYear").val());
+            });
+
+            //end Date
+            var $change = $("#EndMonth");
+            $change.change(function () {
+                GetDatInMonth("#EndDay", $("#_EndDay").val(), $("#EndMonth").val(), $("#EndYear").val());
+            });
+
+            //First Change When Edit
+            $.get("/ElectronicProjects/GetQualificationContent", { "AccBudgetId": $("#AccountBudgetd").val() }, function (ResultDetail) {
+                $("#QualificationContent").html(ResultDetail);
+            });
+            $.get("/ElectronicProjects/GetPeriodDetail", { "AccBudgetId": $("#AccountBudgetd").val() }, function (ResultDetail) {
+                var SetHtml = ''
+                if (ResultDetail.getPeriods != "") {
+                    $.each(ResultDetail.getPeriods, function (key, value) {
+                        SetHtml += '<tr><td class="text-center">' + value.periodName + '</td>';
+                        SetHtml += '<td class="text-center">' + value.periodPercent + '</td>';
+                        SetHtml += '<td class="text-right">' + value.periodAmount.toLocaleString("th") + '.00</td></tr>';
+                    });
+
+                }
+                else {
+                    SetHtml += '<tr><td class="text-center" colspan="3" style="color:red">--- ไม่มีข้อมูล ---</td></tr>';
+                }
+
+                $("#ProjectPeriodDetails").html(SetHtml);
+            });
+            $.get("/ElectronicProjects/GetAmountString", { "AccBudgetId": $("#AccountBudgetd").val() }, function (ResultDetail) {
+                $("#AmountString").val(ResultDetail.amount);
+            });
+            // project file
+            $.get("/ElectronicProjects/GetPeriodFiles", { "AccBudgetId": $("#AccountBudgetd").val() }, function (ResultDetail) {
+                var SetHtml = ''
+                if (ResultDetail.getProjectFiles != "") {
+                    $.each(ResultDetail.getProjectFiles, function (key, value) {
+                        SetHtml += '<tr><td class="text-center">' + (key + 1) + '.</td>';
+                        SetHtml += '<td><a href="/uploads/e-account/' + value.gencodeFileName + '" download="">' + value.fileName + '</a></td>';
+                        SetHtml += "<td></td></tr>"
+                    });
+                }
+                else {
+                    SetHtml += '<tr><td class="text-center" colspan="3" style="color:red">--- ไม่มีข้อมูล ---</td></tr>';
+                }
+
+                $("#ProjectPeriodFile").html(SetHtml);
+            });
+            $("#StartMonth").val($("#StartMonth").val()).change();
+            $("#EndMonth").val($("#EndMonth").val()).change();
+
+            $("#AccountBudgetd").select2();
+            $("#AccountBudgetd").change(function () {
+                $.get("/ElectronicProjects/GetQualificationContent", { "AccBudgetId": $("#AccountBudgetd").val() }, function (ResultDetail) {
+                    $("#QualificationContent").html(ResultDetail);
+                });
+
+                $.get("/ElectronicProjects/GetAmountString", { "AccBudgetId": $("#AccountBudgetd").val() }, function (ResultDetail) {
+                    $("#AmountString").val(ResultDetail.amount);
+                });
+                // get period
+                $.get("/ElectronicProjects/GetPeriodDetail", { "AccBudgetId": $("#AccountBudgetd").val() }, function (ResultDetail) {
+                    var SetHtml = ''
+                    if (ResultDetail.getPeriods != "") {
+                        $.each(ResultDetail.getPeriods, function (key, value) {
+                            SetHtml += '<tr><td class="text-center">' + value.periodName + '</td>';
+                            SetHtml += '<td class="text-center">' + value.periodPercent + '</td>';
+                            SetHtml += '<td class="text-right">' + value.periodAmount.toLocaleString("th") + '.00</td></tr>';
+                        });
+
+                    }
+                    else {
+                        SetHtml += '<tr><td class="text-center" colspan="3" style="color:red">--- ไม่มีข้อมูล ---</td></tr>';
+                    }
+
+                    $("#ProjectPeriodDetails").html(SetHtml);
+                });
+
+
+                // project file
+                $.get("/ElectronicProjects/GetPeriodFiles", { "AccBudgetId": $("#AccountBudgetd").val() }, function (ResultDetail) {
+                    var SetHtml = ''
+                    if (ResultDetail.gets != "") {
+                        $.each(ResultDetail.gets, function (key, value) {
+                            SetHtml += '<tr><td class="text-center">' + (key + 1) + '.</td>';
+                            SetHtml += '<td><a href="/uploads/e-account/' + value.gencodeFileName + '" download="">' + value.fileName + '</a></td>';
+                            SetHtml += '<td></td></tr>';
+                        });
+                    }
+                    else {
+                        SetHtml += '<tr><td class="text-center" colspan="2" style="color:red">--- ไม่มีข้อมูล ---</td></tr>';
+                    }
+
+                    $("#ProjectPeriodFile").html(SetHtml);
+                });
+
+                // project start date
+                $.get("/ElectronicProjects/GetAccStart", { "AccBudgetId": $("#AccountBudgetd").val() }, function (re) {
+                    $("#_StartDay").val(re.day);
+                    $("#StartMonth").val(re.month).change();
+                    $("#StartYear").val(re.year).change();
+                });
+
+                // project end date
+                $.get("/ElectronicProjects/GetAccEndDate", { "AccBudgetId": $("#AccountBudgetd").val() }, function (re) {
+                    $("#_EndDay").val(re.day).change();
+                    $("#EndYear").val(re.year).change();
+                    $("#EndMonth").val(re.month).change();
+                });
+
+            });
+
+            if (window.location.search == "") {
+                $("#AccountBudgetd").val($('#AccountBudgetd').val()).change();
+            }
+
+            // submit form
+            $('#Amount').autoNumeric('init', { aSign: '' });
+            $('#JsonForm').bootstrapValidator();
+            $("#Submit").click(function () {
+                $('#JsonForm').data("bootstrapValidator").validate();
+                if ($('#JsonForm').data("bootstrapValidator").isValid() == true) {
+                    $('#Amount').autoNumeric('init', { aSep: '.', aDec: ',', mDec: '0' });
+                    var Data = new FormData($("#JsonForm")[0]); JsonForm
+                    $.ajax(
+                        {
+                            type: "POST",
+                            url: "/ElectronicProjects/CreateProject",
+                            contentType: false,
+                            processData: false,
+                            data: Data,
+                            success: function (result) {
+                                if (result.valid == true) {
+                                    $("#FormCreateModal").modal('hide');
+                                    Swal.fire(
+                                        {
+                                            title: result.message,
+                                            text: "คุณต้องการทำรายการต่อ หรือไม่?",
+                                            type: "success",
+                                            showCancelButton: true,
+                                            confirmButtonText: "ต้องการ",
+                                            cancelButtonText: "ไม่ต้องการ",
+                                            closeOnConfirm: false
+                                        }).then(function (isConfirm) {
+                                            if (isConfirm.value == true) {
+                                                window.location.href = "/ElectronicProjects/CreateProject?ProjectId=" + result.id;
+                                            } else {
+                                                window.location.href = "/ElectronicProjects/CreatePeriod?ProjectId=" + result.id;
+                                            }
+                                        });
+                                }
+                                else {
+                                    toastr.error('แจ้งเตือน! ' + result.message);
+                                }
+                            },
+                            error: function (error) {
+                                toastr.error('แจ้งเตือน! ' + "ขนาดไฟล์ต้องไม่เกิน 50MB/1ครั้ง");
+                            }
+                        });
+                }
+            });
+        });
+
+
+        function GetDatInMonth(Result, ForEdit, Month, Year,) {
+            $.get("/TimeAttendance/GetDay", { "Day": ForEdit, "Month": Month, "Year": Year }, function (rs) {
+                $(Result).empty();
+                $.each(rs, function (i, val) {
+                    if (val.value == ForEdit) {
+                        $(Result).append($("<option selected></option>").attr("value", val.value).text(val.text));
+                    }
+                    else {
+                        $(Result).append($("<option></option>").attr("value", val.value).text(val.text));
+                    }
+                });
+            });
+        }
+
+    </script>
+
+}

@@ -1,0 +1,40 @@
+﻿@model IEnumerable<DZ_VILLAGEFUND_WEB.Models.ProjectBudget>
+@{
+    var Helper = ViewBag.Helper as DZ_VILLAGEFUND_WEB.Helpers.Utility;
+    var AcctBudget = ViewBag.Acctbudget as List<DZ_VILLAGEFUND_WEB.Models.AccountBudget>;
+}
+<table id="JsonTable" class="table table-bordered table-hover table-striped w-100">
+    <thead>
+        <tr>
+            <th class="text-center">ลำดับ</th>
+            <th>รหัสโครงการ</th>
+            <th>โครงการ</th>
+            <th class="text-center">ปีงบประมาณ</th>
+            <th class="text-center">งบประมาณ</th>
+            <th>วันที่ยื่น</th>
+            <th>วันที่แก้ไข</th>
+            <th>ความคิดเห็นเจ้าหน้าที่</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int Row = 1;
+            foreach (var item in Model.OrderByDescending(o => o.TransactionYear))
+            {
+                <tr>
+                    <td class="text-center">@Row</td>
+                    <td>@AcctBudget.Where(w => w.AccountBudgetd == item.AccountBudgetd).Select(s => s.AccCode).FirstOrDefault()</td>
+                    <td>@item.ProjectName</td>
+                    <td class="text-center">@item.TransactionYear</td>
+                    <td class="text-right">@item.Amount.ToString("N")</td>
+                    <td>@Helper.getDateThai(item.SignProjectDate)</td>
+                    <td>@Helper.getDateThai(item.UpdateDate)</td>
+                    <td>@item.ProjectComment</td>
+                </tr>
+                Row++;
+
+            }
+        }
+    </tbody>
+</table>

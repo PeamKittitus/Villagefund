@@ -1,0 +1,40 @@
+﻿@model IEnumerable<DZ_VILLAGEFUND_WEB.ViewModels.Members.Member>
+@{
+    var GetPermission = ViewBag.Permission as DZ_VILLAGEFUND_WEB.ViewModels.Settings.PermissionViewModel;
+}
+<table id="JsonTable" class="table table-bordered table-hover table-striped w-100">
+    <thead class="bg-primary-600">
+        <tr>
+            <th class="text-center" style="width:50px">ลำดับ</th>
+            <th>รหัสสมาชิก</th>
+            <th>ชื่อ-สกุล</th>
+            <th>ตำแหน่ง</th>
+            <th class="text-center" style="width:100px">สถานะ</th>
+            <th class="text-center" style="width:100px">หมายเหตุ</th>
+            <th class="text-center" style="width:100px">ระดับเครือข่าย</th>
+            <th class="text-center">ข้อมูลส่วนตัว</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int Row = 1;
+            foreach (var Village in Model)
+            {
+                <tr>
+                    <td class="text-center"> @Row. </td>
+                    <td> @Village.MemberCode      </td>
+                    <td> @Village.FullName     </td>
+                    <td> @Village.MemberPosition </td>
+                    <td class="text-center"> @Village.MemberStatus </td>
+                    <td class="text-left"> @Village.Remark </td>
+                    <td class="text-left"> @Village.Connection </td>
+                    <td class="text-center" >
+                        <button id="@Village.MemberId" data-val="@Village.MemberId" class="btn btn-sm btn-success edit" title="Edit" style="visibility:@(GetPermission.Update == false ? "hidden" : "")"><i class="fal fa-edit"></i> แก้ไข</button>
+                        <button id="@Village.MemberId" data-val="@Village.MemberId" class="btn btn-sm btn-danger delete" title="Delete" style="visibility:@(GetPermission.Delete == false ? "hidden" : "")"><i class="fal fa-delete"></i> ลบ</button>
+                    </td>
+                </tr>
+                Row++;
+            }
+        }
+    </tbody>
+</table>

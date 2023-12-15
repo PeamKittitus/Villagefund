@@ -1,0 +1,39 @@
+﻿@model IEnumerable<DZ_VILLAGEFUND_WEB.Models.TransactionFileBookbank>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th class="text-center" width="50">ลำดับ</th>
+            <th>ชื่อเอกสาร</th>
+            <th class="text-center"></th>
+            <th class="text-center" width="150"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            if (Model.Count() > 0)
+            {
+                int Rows = 1;
+                foreach (var Get in Model)
+                {
+                    <tr>
+                        <td class="text-center">@Rows.</td>
+                        <td>@Get.FileName</td>
+                        <td class="text-center"><a href="/uploads/e-account/@Get.GencodeFileName" download="@Get.FileName" class="btn btn-danger btn-xs"><i class="fal fa-download"></i> ดาวน์โหลด</a></td>
+                    </tr>
+
+                    Rows++;
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="3" class="text-center">--- ไม่มีข้อมูล ---</td>
+                </tr>
+            }
+        }
+
+    </tbody>
+
+</table>

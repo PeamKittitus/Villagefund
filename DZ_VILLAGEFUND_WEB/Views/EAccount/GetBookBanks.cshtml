@@ -1,0 +1,47 @@
+﻿@model IEnumerable<DZ_VILLAGEFUND_WEB.ViewModels.EAccount.BookBankListViewModel>
+@{
+    var GetPermission = ViewBag.Permission as DZ_VILLAGEFUND_WEB.ViewModels.Settings.PermissionViewModel;
+}
+<table id="JsonTable" class="table table-bordered table-hover table-striped w-100">
+    <thead class="bg-primary-600">
+        <tr>
+            <th class="text-center" style="width:50px">ลำดับ</th>
+            <th>ชื่อบัญชี</th>
+            <th>ธนาคาร</th>
+            <th class="text-center" style="width:100px;">เอกสารแนบ</th>
+            <th class="text-center" style="width:150px;">จัดการข้อมูล</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int Rows = 1;
+            foreach (var Get in Model)
+            {
+                <tr>
+                    <td class="text-center">@Rows.</td>
+                    <td>@Get.AccountName</td>
+                    <td>@Get.BankName</td>
+                    <td class="text-center"> <a href="javascript:(0)" class="viewDocument" style="font-size:1rem" data-id="@Get.Id"><i class="fal fa-file-excel"></i> </a></td>
+                    <td class="text-center">
+
+                        @{
+                            if (GetPermission.Update == true)
+                            {
+                                <a href="javascript:void(0);" data-val="@Get.Id" class="btn btn-xs btn-warning edit" title="Edit"><i class="fal fa-edit"></i> แก้ไข </a>
+                            }
+
+                            if (GetPermission.Delete == true)
+                            {
+                                <a href="javascript:void(0);" data-val="@Get.Id" class="btn btn-xs btn-danger  delete" title="Delete"><i class="fal fa-times"></i> ลบ </a>
+                            }
+                        }
+
+                    </td>
+                </tr>
+
+                Rows++;
+            }
+        }
+
+    </tbody>
+</table>

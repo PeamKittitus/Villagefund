@@ -1,0 +1,135 @@
+﻿@model IEnumerable<DZ_VILLAGEFUND_WEB.ViewModels.Villages.ReportViewModel>
+@{
+    ViewData["Title"] = "รายงานจำนวนข้อมูลสมาชิก แยกรายสาขาเขต";
+}
+
+<ol class="breadcrumb page-breadcrumb">
+    <li class="breadcrumb-item"><a href="/Home/Index">หน้าหลัก</a></li>
+    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+</ol>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel">
+            <div class="panel-hdr">
+                <h2><i class='subheader-icon fal fa-edit'></i>  @ViewData["Title"]</h2>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+
+                    <div id="JsonData">
+                        <table id="JsonTable" class="table table-bordered table-hover table-striped w-100">
+                            <thead class="bg-primary-600">
+                                <tr>
+                                    <th class="text-center" style="width:50px">ลำดับ</th>
+                                    <th class="text-center">สาขาเขต</th>
+                                    <th class="text-center">จำนวนข้อมูลสมาชิก</th>
+                                    <th class="text-center" style="width:50px">ร้อยละ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    int Rows = 1;
+                                    foreach (var Get in Model)
+                                    {
+                                        <tr>
+                                            <td class="text-center">@Rows.</td>
+                                            <td class="text-left">@Get.SubName</td>
+                                            <td class="text-center">@Get.Amount.ToString("N0")</td>
+                                            <td class="text-center">@((Get.Amount * 100 / (Get.AmountExp > 0 ? Get.AmountExp : 1)).ToString("N"))</td>
+                                        
+                                        </tr>
+
+                                        Rows++;
+                                    }
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <link rel="stylesheet" type="text/css" href="/css/notifications/toastr/toastr.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/datagrid/datatables/datatables.bundle.css">
+    <link rel="stylesheet" href="~/css/notifications/sweetalert2/sweetalert2.bundle.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/formplugins/select2/select2.bundle.css">
+    <script src="~/js/datagrid/datatables/datatables.bundle.js"></script>
+    <script src="~/js/datagrid/datatables/datatables.export.js"></script>
+    <script src="~/js/notifications/toastr/toastr.js"></script>
+    <script src="~/js/notifications/sweetalert2/sweetalert2.bundle.js"></script>
+    <script src="~/js/formplugins/select2/select2.bundle.js"></script>
+    <script src="~/js/NumberFormat.js"></script>
+    <script src="~/js/vfs_fonts.js"></script>
+    <script>
+        pdfMake.fonts = {
+            THSarabun: {
+                normal: 'THSarabun.ttf',
+                bold: 'THSarabun-Bold.ttf',
+                italics: 'THSarabun-Italic.ttf',
+                bolditalics: 'THSarabun-BoldItalic.ttf'
+            }
+        }
+
+        $(function () {
+            $('#JsonTable').DataTable({
+                pageLength: 50,
+                responsive: true,
+                dom:
+                    "<'row mb-3'<'col-sm-12 col-md-6 d-flex align-items-center justify-content-start'f><'col-sm-12 col-md-6 d-flex align-items-center justify-content-end'B>>" +
+                    "<'row'<'col-sm-12'tr>>" +
+                    "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+                lengthChange: false,
+                buttons: [
+                    {
+                        extend: 'excelHtml5',
+                        text: '<i class="fal fa-file-excel"></i>&nbsp;&nbsp;EXCEL',
+                        titleAttr: 'Excel',
+                        autoFilter: true,
+                        footer: false,
+                        className: 'btn-success btn-sm mr-1'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        text: '<i class="fal fa-file-pdf"></i>&nbsp;&nbsp;PDF',
+                        pageSize: 'A4',
+                        footer: true,
+                        className: 'btn-danger btn-sm mr-1',
+                        customize: function (doc) {
+                            doc.defaultStyle = {
+                                font: 'THSarabun',
+                                fontSize: 16
+                            };
+                            doc.content[1].table.widths = [50, '*', 100, 100];
+                            doc.content[1].layout = 'Borders';
+
+                            doc.styles.tableHeader.fontSize = 16;
+                            doc.styles.tableHeader.fillColor = '#049dab';
+                            doc.styles.tableFooter.fontSize = 16;
+                            doc.styles.tableFooter.fillColor = '#FFFFFF';
+                            doc.styles.tableFooter.color = '#000000';
+                            doc.styles.tableBodyOdd.fillColor = '#FFFFFF';
+                            doc.styles.tableBodyEven.fillColor = '#FFFFFF';
+
+                            doc.styles.title.fontSize = 20;
+                            doc.styles.title.bold = true;
+                            var rowCount = doc.content[1].table.body.length;
+                            for (i = 1; i < rowCount; i++) {
+                                doc.content[1].table.body[i][0].alignment = 'center';
+                                doc.content[1].table.body[i][0].fillColor = '#f3f3f3';
+                                doc.content[1].table.body[i][1].alignment = 'left';
+                                doc.content[1].table.body[i][2].alignment = 'center';
+                                doc.content[1].table.body[i][3].alignment = 'center';
+                            };
+                        }
+                    }
+                ]
+            });
+        });
+    </script>
+}

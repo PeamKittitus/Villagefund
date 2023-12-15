@@ -1,0 +1,519 @@
+﻿@model DZ_VILLAGEFUND_WEB.Models.EOfficeArchives
+@{
+    ViewData["Title"] = "ฟอร์มการแก้ไขหนังสือ";
+    var Helper = ViewBag.Helper as DZ_VILLAGEFUND_WEB.Helpers.Utility;
+}
+<ol class="breadcrumb page-breadcrumb">
+    <li class="breadcrumb-item"><a href="/Home/Index">หน้าหลัก</a></li>
+    <li class="breadcrumb-item"><a href="/EOffice/Archives">ทะเบียนหนังสือส่ง</a></li>
+    <li class="breadcrumb-item">@ViewData["Title"] </li>
+</ol>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel">
+            <div class="panel-hdr">
+                <h2><i class='subheader-icon fal fa-list-alt'></i>  @ViewData["Title"]</h2>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+                    <div class="row">
+                        <div class="col-lg-2"></div>
+                        <div class="col-lg-8">
+                            @* Form *@
+                            <form id="FormAddArchives" enctype="multipart/form-data" novalidate
+                                  asp-antiforgery="true"
+                                  data-bv-message="This value is not valid"
+                                  data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
+                                  data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
+                                  data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
+                                <input type="hidden" id="FirstOrg" value="@ViewBag.GetCurrentOrgId" />
+                                <fieldset>
+                                    <div class="form-group" style="font-size:15px">
+                                        <legend style="font-size:15px">
+                                            <strong>สร้างโดย :</strong> @ViewBag.FullName <br />
+                                            <strong>วันที่สร้าง : </strong>@ViewBag.Date
+                                        </legend>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-12 control-label">ประเภทหนังสือ : </label>
+                                        <div class="col-lg-12">
+                                            <select asp-for="TypeCode" asp-items="(IEnumerable<SelectListItem>)@ViewBag.TypeCode" id="TypeCode" style="width:100%;"></select>
+                                        </div>
+                                    </div>
+                                    <legend style="font-size:15px"><strong>ผู้รับ (ภายใน)</strong></legend>
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label"> ดำเนินการส่งทันที : </label>
+                                        <div class="col-lg-8 checkbox state-error text-align-left">
+                                            <label><input type="checkbox" name="IsSendNow" id="IsSendNow" value="true" checked></label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" id="IsCircu">
+                                        <label class="col-lg-3 control-label"> ต้องการแจ้งเวียน : </label>
+                                        <div class="col-lg-8 checkbox state-error">
+                                            <label>
+                                                <input type="checkbox" name="IsCirculation" id="IsCirculation">
+                                                <span style="color:red">คำชี้แจง : สำหรับหนังสือที่ต้องการแจ้งเวียน</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" id="DestOrg">
+                                        <label class="col-lg-12 control-label"> ส่งถึง : <span style="color:red;">*</span></label>
+                                        <div class="col-lg-12">
+                                            <select asp-for="DestinationOrgCode" asp-items="(IEnumerable<SelectListItem>)@ViewBag.Org" style="width:100%;"
+                                                    data-bv-notempty="true"
+                                                    data-bv-notempty-message="กรุณาเลือก"
+                                                    data-bv-stringlength="true">
+                                                <option value="">---กรุณาเลือก---</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" id="DestOrgCir" style="display:none">
+                                        <label class="col-lg-12 control-label"> ส่งถึง (หนังสือเวียน) : <span style="color:red;">*</span></label>
+                                        <div class="col-lg-12">
+                                            <select name="DestinationOrg[]" id="DestinationOrg" asp-items="(IEnumerable<SelectListItem>)@ViewBag.Org" style="width:100%;"
+                                                    data-bv-notempty="true"
+                                                    data-bv-notempty-message="กรุณาเลือก"
+                                                    data-bv-stringlength="true"
+                                                    multiple="multiple">
+                                                <optgroup label="ทั้งหมด"></optgroup>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" id="DestOrgCir" style="display:none">
+                                        <label class="col-lg-3 control-label"> ส่งถึง (หนังสือเวียน) : <span style="color:red;">*</span></label>
+                                        <div class="col-lg-12">
+                                            <select name="DestinationOrg[]" id="DestinationOrg" asp-items="(IEnumerable<SelectListItem>)@ViewBag.Org" style="width:100%;"
+                                                    data-bv-notempty="true"
+                                                    data-bv-notempty-message="กรุณาเลือก"
+                                                    data-bv-stringlength="true"
+                                                    multiple="multiple">
+                                                <optgroup label="ทั้งหมด"></optgroup>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label">เพื่อ :</label>
+                                        <div class="col-lg-12">
+                                            <select name="CmdCode" asp-items="(IEnumerable<SelectListItem>)@ViewBag.Command" id="CmdCode" style="width:100%;"></select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label"> หมายเหตุถึงผู้รับ : </label>
+                                        <div class="col-lg-12">
+                                            <label class="textarea">
+                                                <textarea rows="3" cols="120" name="Comment" id="Comment" class="form-control"></textarea>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <legend style="font-size:15px"><strong>ข้อมูลหนังสือ</strong></legend>
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label">ชั้นความลับ : </label>
+                                        <div class="col-lg-12">
+                                            <select asp-for="AccessLevel" asp-items="(IEnumerable<SelectListItem>)@ViewBag.AccessLevel" id="AccessLevel" style="width:100%;"></select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label">ความเร่งด่วน : </label>
+                                        <div class="col-lg-12">
+                                            <select asp-for="Expedition" asp-items="(IEnumerable<SelectListItem>)@ViewBag.Expendition" id="Expedition" style="width:100%;"></select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label">ปี พ.ศ. : </label>
+                                        <div class="col-lg-12">
+                                            @{
+                                                var YearThai = DateTime.Now.Year + 543;
+                                            }
+                                            <input type="text" asp-for="BudgetYear" value="@YearThai" class="form-control" readonly />
+                                        </div>
+                                    </div>
+                                    @*<div class="form-group">
+                                    <label class="col-lg-3 control-label">วันที่ลงหนังสือ : <span style="color:red;">*</span></label>
+                                    <div class="col-lg-3">
+                                    <label class="input-group" >
+                                    <input type="text" class="form-control" name="RegisterDateText" value="@Helper.getShortDate(DateTime.Now)" style="width:100%;">
+                                    </label>
+                                    <input type="hidden" asp-for="RegisterDate" value="@DateTime.Now" />
+                                    </div>
+                                    </div>*@
+
+
+                                    <div class="form-group">
+                                        <label class="col-lg-12 control-label">วันที่ลงหนังสือ</label>
+                                        <div class="col-lg-12">
+                                            <div class="row">
+                                                <div class="col-lg-2">
+                                                </div>
+                                                <div class="col-lg-2">
+                                                    <input type="hidden" id="_DayofDoc" value="@Model.RegisterDate.Day">
+                                                    <select id="DayofDoc" name="Day" style="width:100%"></select>
+                                                </div>
+                                                <div class="col-lg-3">
+                                                    <input type="hidden" id="_MonthofDoc" value="@Model.RegisterDate.Month">
+                                                    <select id="MonthofDoc" name="Month" style="width:100%">
+                                                        @{
+                                                            string[] MonthName = { "", "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม" };
+                                                            for (int m = 1; m < MonthName.Count();)
+                                                            {
+                                                                if (DateTime.Now.Month == m)
+                                                                {
+                                                                    <option value="@m" selected>@MonthName[m]</option>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <option value="@m">@MonthName[m]</option>
+                                                                }
+                                                                m++;
+                                                            }
+                                                        }
+                                                    </select>
+                                                </div>
+                                                <div class="col-lg-2">
+                                                    <input type="hidden" id="_YearofDoc" value="@Model.RegisterDate.Year">
+                                                    <select id="YearofDoc" name="Year" style="width:100%">
+                                                        @{
+                                                            int Year = DateTime.Now.Year;
+                                                            for (int y = Year; y >= Year - 7;)
+                                                            {
+                                                                if (y == DateTime.Now.Year)
+                                                                {
+                                                                    <option value="@y" selected>@(y + 543)</option>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <option value="@y">@(y + 543)</option>
+                                                                }
+                                                                y--;
+                                                            }
+                                                        }
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <input type="hidden" asp-for="OriginalOrgCode" value="@ViewBag.OriginalOrgCode">
+                                    <input type="hidden" asp-for="ArchiveOrgCode" value="@ViewBag.OriginalOrgCode">
+                                    @*เลขหนังสือของ สล*@
+                                    <div class="form-group" id="VNumberArchives" style="display:none">
+                                        <div class="col-lg-12">
+                                            <label class="col-lg-12 control-label">เลขที่หนังสือ : </label>
+                                            <div class="col-lg-1">
+                                                <input type="checkbox" id="IssueArchiveNumber" name="IssueArchiveNumber" value="">
+                                            </div>
+                                            <span style="color:red" id="txt">ต้องการออกเลขหนังสือ</span>
+                                            <span id="ShowArchive" style="display:none">
+                                                <span class="col-lg-10">
+                                                    <select asp-for="Prefix" asp-items="(IEnumerable<SelectListItem>)@ViewBag.Org" id="Prefix" style="width:100%;"></select>
+                                                </span>
+                                                <span class="col-lg-12"></span>
+                                                <span id="HideArchive">
+                                                    <span class="col-lg-3" style="padding-left: 63px">
+                                                        <input type="text" name="ArchiveOrg" id="ArchiveOrg" class="form-control" value="" readonly="readonly">
+                                                    </span>
+                                                    <span class="col-lg-1 IsCir" style="display:none">
+                                                        <label class="control-label"> / ว</label>
+                                                    </span>
+                                                    <span class="col-lg-1 IsNomal">
+                                                        <label class="control-label"> / </label>
+                                                    </span>
+                                                    <span class="col-lg-4">
+                                                        <input type="text" class="ArchiveNumber form-control" readonly="readonly">
+                                                    </span>
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    @*เลขหนังสือ*@
+                                    <div class="form-group" id="VshowArchivenum">
+                                        <label class="col-lg-3 control-label">เลขที่หนังสือ : </label>
+                                        <div class="col-lg-12">
+                                            <div>
+                                                <div class="col-lg-1">
+                                                    <input type="checkbox" id="IssueArchive" name="IssueArchive" value="" class="IssueArchive">
+                                                </div>
+                                                <span style="color:red" id="txt1">ต้องการออกเลขหนังสือ</span>
+                                                <div class="col-lg-12">
+                                                    <div class="row" id="ShowArchivenum" style="display:none">
+                                                        <label class="col-lg-1"> @ViewBag.CurrentNumber </label>
+                                                        <span class="col-lg-1 IsCir" style="display:none">
+                                                            <label class="control-label"> / ว @ViewBag.LastArchiveNumber</label>
+                                                        </span>
+                                                        <span class="col-lg-1 IsNomal">
+                                                            <label class="control-label"> / @ViewBag.LastArchiveNumber</label>
+                                                        </span>
+                                                        <span class="col-lg-1">
+                                                            <input type="number" name="ArchiveNumber" value="@ViewBag.LastArchiveNumber" hidden>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="Externalform" style="display:none;">
+                                        <div class="form-group">
+                                            <label class="col-lg-3 control-label">ชื่อหน่วยงานภายนอก : <span style="color:red;">*</span></label>
+                                            <div class="col-lg-8">
+                                                <input type="text" class="form-control" asp-for="ExternalOrgName"
+                                                       data-bv-notempty="true"
+                                                       data-bv-notempty-message="กรุณากรอกชื่อหน่วยงานภายนอก"
+                                                       data-bv-stringlength="true" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-lg-3 control-label">คำสั่งที่ไปยังหน่วยงานภายนอก : </label>
+                                            <div class="col-lg-8">
+                                                <select name="ExternalCmdCode" asp-items="(IEnumerable<SelectListItem>)@ViewBag.Command" id="ExternalCmdCode" style="width:100%;"></select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label">เรียน : <span style="color:red;">*</span></label>
+                                        <div class="col-lg-12">
+                                            <input type="text" class="form-control" asp-for="Dear"
+                                                   data-bv-notempty="true"
+                                                   data-bv-notempty-message="กรุณากรอกข้อมูล"
+                                                   data-bv-stringlength="true" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label">ชื่อหนังสือ : <span style="color:red;">*</span></label>
+                                        <div class="col-lg-12">
+                                            <input type="text" class="form-control" asp-for="Title"
+                                                   data-bv-notempty="true"
+                                                   data-bv-notempty-message="กรุณากรอกชื่อหนังสือ"
+                                                   data-bv-stringlength="true" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label">รายละเอียดหนังสือ : <span style="color:red;">*</span></label>
+                                        <div class="col-lg-12">
+                                            <input type="text" class="form-control" asp-for="Message"
+                                                   data-bv-notempty="true"
+                                                   data-bv-notempty-message="กรุณากรอกชื่อหนังสือ"
+                                                   data-bv-stringlength="true" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <label class="col-lg-12 control-label">ไฟล์เอกสาร <i class="fal fa-cloud"></i> : </label>
+                                                <div class="jarviswidget jarviswidget-color-blueLight" id="wid-id-0" data-widget-editbutton="false">
+                                                    <div class="fallback" style="padding: 10px 10px 10px 10px">
+                                                        <input type="file" name="AttachFiles" multiple id="AttachFiles"
+                                                               class="form-control"
+                                                               data-bv-notempty-message="กรุณาอัปโหลดข้อมูล"
+                                                               data-bv-notempty="true"
+                                                               accept=".pdf,.docx,.xlsx"
+                                                               pattern="^.*\.(docx|DOCX|pdf|PDF|xlsx|XLSX)$"
+                                                               data-bv-message="รองรับนามสกุลไฟล์ (xlsx,docx,pdf) เท่านั้น">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <input type="hidden" value="@DateTime.Now" asp-for="DateOfDoc">
+                                <hr />
+                                <div class="form-group text-right">
+                                    <button class="btn btn-success" id="submit" disabled>บันทึก</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-lg-2"></div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    @*Hide Not found Bootstrap Icon*@
+    <style>
+        .input-group-btn {
+            display: none;
+        }
+
+        .multiselect-container {
+            width: 100% !important;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" href="/css/notifications/toastr/toastr.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/formplugins/select2/select2.bundle.css">
+    <link rel="stylesheet" type="text/css" href="/lib/datepicker/datepicker.css">
+    <link rel="stylesheet" href="~/css/notifications/sweetalert2/sweetalert2.bundle.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/datagrid/datatables/datatables.bundle.css">
+    <link rel="stylesheet" href="~/css/bootstrap-multiselect.css" type="text/css" />
+    <script src="~/js/Validation/bootstrapValidator.min.js"></script>
+    <script src="~/js/notifications/toastr/toastr.js"></script>
+    <script src="~/js/notifications/sweetalert2/sweetalert2.bundle.js"></script>
+    <script src="~/js/formplugins/select2/select2.bundle.js"></script>
+    <script src="~/js/datagrid/datatables/datatables.bundle.js"></script>
+    <script src="~/js/datagrid/datatables/datatables.export.js"></script>
+    <script type="text/javascript" src="~/js/bootstrap-multiselect.js"></script>
+
+    <script>
+
+        $(function () {
+            //Beutiful DropDown
+            $("select").select2();
+            $('#FormAddArchives').bootstrapValidator();
+
+            //Circulation letter
+            $('#DestinationOrg').multiselect({
+                buttonWidth: '100%',
+                enableClickableOptGroups: true,
+                enableFiltering: true,
+                maxHeight: 200,
+                numberDisplayed: 1
+            });
+            $('#IsCirculation').click(function () {
+                if ($(this).is(':checked')) {
+                    this.value = true;
+                    $("#DestinationOrg").find('option:selected').removeAttr("selected");
+                    $("#DestOrg").hide();
+                    $("#DestOrgCir").show();
+                    $(".IsNomal").hide();
+                    $(".IsCir").show();
+                } else {
+                    this.value = false;
+                    $('#DestinationOrg option:selected').each(function () {
+                        $(this).prop('selected', false);
+                    })
+                    $('#DestinationOrg').multiselect('refresh');
+                    $("#DestinationOrgCode").select2("val", "");
+                    $("#DestOrg").show();
+                    $("#DestOrgCir").hide();
+                    $(".IsNomal").show();
+                    $(".IsCir").hide();
+                }
+            });
+
+            var $change = $("#MonthofDoc , #YearofDoc");
+            $change.change(function () {
+                // alert($("#MonthofDoc").val()+"/////"+$("#YearofDoc").val());
+                $.get("/TimeAttendance/GetDay", { "Day": $("#DayofDoc").val(), "Month": $("#MonthofDoc").val(), "Year": $("#YearofDoc").val() }, function (rs) {
+                    $("#DayofDoc").empty();
+                    $.each(rs, function (i, val) {
+                        $("#DayofDoc").append($("<option></option>").attr("value", val.value).attr("selected", val.selected).text(val.text));
+                    });
+                    $("#DayofDoc").select2();
+                    $("#DayofDoc").val($("#_DayofDoc").val()).change();
+                    $("#DayofDoc").change(function () {
+                        $("#_DayofDoc").val($("#DayofDoc").val())
+                    });
+
+                });
+                $("#DayofDoc").val($("#DayofDoc").val()).change();
+            });
+            $("#MonthofDoc").val($("#_MonthofDoc").val()).change();
+            $("#YearofDoc").val($("#_YearofDoc").val()).change();
+
+
+            //Hide Show การออกเลขหนังสือ
+            $('.IssueArchive').click(function () {
+                if ($(this).is(':checked')) {
+                    this.value = 1;
+                    $("#ShowArchivenum").show();
+                    $("#txt1").hide();
+                } else {
+                    this.value = 0;
+                    $("#ShowArchivenum").hide();
+                    $("#txt1").show();
+                }
+            });
+
+            //Archives Number
+            $("#ArchiveType").click(function () {
+                var TypeCode = $(this).val();
+                var FirstOrg = $("#FirstOrg").val();
+                $('#IssueArchive').prop('checked', false);
+                $('#IssueArchiveNumber').prop('checked', false);
+                $("#ShowArchivenum").hide();
+                $("#ShowArchive").hide();
+                $("#txt").show();
+                $("#txt1").show();
+                if (FirstOrg == 1 && TypeCode != "03") {
+                    $("#VshowArchivenum").show();
+                    $("#VNumberArchives").hide();
+                    $('#IssueArchive').click(function () {
+                        if ($(this).is(':checked')) {
+                            this.value = 1;
+                            $("#ShowArchivenum").show();
+                            $("#txt1").hide();
+                        } else {
+                            this.value = 0;
+                            $("#ShowArchivenum").hide();
+                            $("#txt1").show();
+                        }
+                    });
+                    // 6 คือ สลก OrgCode
+                } else if (TypeCode == "03" && FirstOrg == 1) {
+                    $("#VNumberArchives").show();
+                    $("#VshowArchivenum").hide();
+                    $('#IssueArchiveNumber').click(function () {
+                        if ($(this).is(':checked')) {
+                            this.value = 1;
+                            $("#ShowArchive").show();
+                            $("#txt").hide();
+                        } else {
+                            this.value = 0;
+                            $("#ShowArchive").hide();
+                            $("#txt").show();
+                        }
+                    });
+                } else if (TypeCode == "03" || TypeCode == "04" && FirstOrg != 1) {
+                    $("#VshowArchivenum").show();
+                    $("#VNumberArchives").hide();
+                    $('#IssueArchive').click(function () {
+                        if ($(this).is(':checked')) {
+                            this.value = 1;
+                            $("#ShowArchivenum").show();
+                            $("#txt").hide();
+                        } else {
+                            this.value = 0;
+                            $("#ShowArchivenum").hide();
+                            $("#txt").show();
+                        }
+                    });
+                }
+            });
+
+            // Add Archives
+            $("#submit").click(function () {
+                $('#FormAddArchives').data("bootstrapValidator").validate();
+                if ($('#FormAddArchives').data("bootstrapValidator").isValid() == true) {
+                    var Data = new FormData($("#FormAddArchives")[0]); FormAddArchives
+                    $.ajax(
+                        {
+                            type: "POST",
+                            url: "/EOffice/EditArchive",
+                            contentType: false,
+                            processData: false,
+                            data: Data,
+                            success: function (result) {
+                                if (result.valid == true) {
+                                    toastr.success(result.message);
+                                    setTimeout(function () {
+                                        window.location.href = "/EOffice/Archives";
+                                    }, 700);
+                                }
+                                else {
+                                    toastr.error('แจ้งเตือน! ' + result.message);
+                                }
+                            }
+                        })
+                }
+
+            });
+
+        })
+
+    </script>
+
+}

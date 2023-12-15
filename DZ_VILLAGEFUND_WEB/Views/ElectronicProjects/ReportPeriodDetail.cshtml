@@ -1,0 +1,240 @@
+﻿@model DZ_VILLAGEFUND_WEB.ViewModels.EProjects.PeriodViewModelDetail
+
+@{
+    ViewData["Title"] = "รายละเอียดกิจกรรม";
+    int Record = ViewBag.Record;
+    string Role = ViewBag.UserRole;
+}
+
+<ol class="breadcrumb page-breadcrumb">
+    <li class="breadcrumb-item"><a href="/Home/Index">หน้าหลัก</a></li>
+    @if (Role == "SuperUser")
+    {
+        <li class="breadcrumb-item"><a href="/ElectronicProjects/ViewDetails?ProjectId=@ViewBag.ProjectId">รายละเอียดโครงการ</a></li>
+    }
+    else
+    {
+        <li class="breadcrumb-item"><a href="/ElectronicProjects/Approve">รายการอนุมัติ</a></li>
+    }
+    <li class="breadcrumb-item">@ViewData["Title"] </li>
+</ol>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel">
+            <div class="panel-container show">
+                <div class="panel-content">
+                    <div class="row" id="js-contacts">
+
+                        <div class="col-lg-12">
+                            <div id="c_1" class="card border shadow-0 mb-g shadow-sm-hover" data-filter-tags="oliver kopyov">
+                                <div class="card-body border-faded border-top-0 border-left-0 border-right-0 rounded-top">
+                                    <div class="d-flex flex-row align-items-center">
+                                        <div class="info-card-text flex-1">
+                                            <a href="javascript:void(0);" class="fs-xl text-truncate text-truncate-lg text-info" data-toggle="dropdown" aria-expanded="false">
+                                                <strong class="font-weight-bold">กิจกรรม</strong>
+                                            </a>
+                                            <span class="text-truncate text-truncate-xl">  </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body p-0 collapse show">
+                                    <div class="p-3">
+                                        <a href="javascript:void(0)" class="mt-1 d-block fs-sm fw-400 text-dark">
+                                            <strong class="font-weight-bold">รายละเอียด</strong> : @Model.PeriodName
+                                        </a>
+
+                                        <a href="javascript:void(0)" class="mt-1 d-block fs-sm fw-400 text-dark">
+                                            <strong class="font-weight-bold">เริ่ม</strong> : @Model.StartDate
+                                        </a>
+
+                                        <a href="javascript:void(0)" class="mt-1 d-block fs-sm fw-400 text-dark">
+                                            <strong class="font-weight-bold"> สิ้นสุด</strong> : @Model.EndDate
+                                        </a>
+
+                                    </div>
+                                </div>
+                                @if (Role == "SuperUser")
+                                {
+                                    <div class="card-body border-faded border-top-0 border-left-0 border-right-0 rounded-top">
+                                        <div class="d-flex flex-row align-items-center">
+                                            <div class="info-card-text flex-1">
+                                                <a href="javascript:void(0);" class="fs-xl text-truncate text-truncate-lg text-info font-weight-bold" data-toggle="dropdown" aria-expanded="false">
+                                                    เอกสารแนบ
+                                                </a>
+                                                <label style="color:red">(ขนาดไฟล์ของเอกสารแนบรวมไม่เกิน 50MB/1ครั้ง )</label>
+                                                <span class="text-truncate text-truncate-xl"> </span>
+                                                <form id="JsonForm" enctype="multipart/form-data"
+                                                  asp-antiforgery="true"
+                                                  data-bv-message="This value is not valid"
+                                                  data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
+                                                  data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
+                                                  data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
+                                                    <div class="form-group">
+                                                        <input type="file" name="FileUpload" id="FileUpload" class="col-lg-12 col-md-12 col-sm-12 form-control" multiple
+                                                           data-bv-notempty="true"
+                                                           data-bv-notempty-message="กรุณาแนบไฟล์"
+                                                           accept="image/*, video/*, audio/*, .pdf, .docx, .xlsx, .zip, .rar, .ppt, .pptx" />
+                                                    </div>
+                                                    <input type="hidden" name="ProjectPeriodId" value="@ViewBag.ProjectPeriodId" />
+                                                    <div class="panel-content border-faded border-left-0 border-right-0 border-bottom-0 d-flex flex-row align-items-center m-3 pt-3">
+                                                        <button class="btn btn-primary ml-auto" type="button" id="Submit"> อัปโหลด</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                <div class="card-body p-0 collapse show">
+                                    <div class="p-3">
+
+                                        <table id="JsonTable" class="table table-bordered table-hover m-0">
+                                            <thead>
+                                                <tr class="font-weight-bold">
+                                                    <td class="text-center" style="width:50px;">ลำดับ</td>
+                                                    <td>ชื่อไฟล์</td>
+                                                    <td class="text-center" style="width:150px;">สถานะอนุมัติเอกสาร</td>
+                                                    <td class="text-center" style="width:150px;">วันที่อัปโหลด</td>
+                                                    @if (Role == "SuperUser")
+                                                    {
+                                                        <td class="text-center" style="width:100px;">  </td>
+                                                    }
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @{
+                                                    var FilePeriods = ViewBag.PeriodFile as IEnumerable<DZ_VILLAGEFUND_WEB.ViewModels.EProjects.PeriodFileList>;
+                                                    int Row = 1;
+                                                    if (FilePeriods.Count() > 0)
+                                                    {
+                                                        foreach (var FilePeriod in FilePeriods)
+                                                        {
+                                                            <tr>
+                                                                <td class="text-center">@Row .</td>
+                                                                <td><a href="/uploads/e-project/@FilePeriod.GencodeFileName" download="@FilePeriod.FileName">  @FilePeriod.FileName</a></td>
+                                                                @if (Role == "SuperUser")
+                                                                {
+                                                                    <td class="text-center">
+                                                                        @if (FilePeriod.ApproverMark)
+                                                                        {
+                                                                            <i class="fal fa-check-circle" style="color:green;font-size:1rem"></i>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <i class="fal fa-times-circle" style="color:red;font-size:1rem" title="คลิกเพื่่ออนุมัติเอกสาร"></i>
+                                                                        }
+                                                                    </td>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <td class="text-center">
+
+                                                                        @if (FilePeriod.ApproverMark == true)
+                                                                        {
+                                                                            <i class="fal fa-check-circle" style="color:green;font-size:1rem"></i>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <a href="javascript:void(0)" data-val="@FilePeriod.FilePeriodId" class="approvemark">
+                                                                                <i class="fal fa-times-circle" style="color:red;font-size:1rem" title="คลิกเพื่่ออนุมัติเอกสาร"></i>
+                                                                            </a>
+                                                                        }
+
+                                                                    </td>
+                                                                }
+                                                                <td class="text-center">@FilePeriod.UpdateDate</td>
+                                                                @if (Role == "SuperUser")
+                                                                {
+                                                                    <td class="text-center">
+                                                                        @if (!FilePeriod.ApproverMark)
+                                                                        {
+                                                                            <a href="javascript:void(0);" data-val="@FilePeriod.FilePeriodId" class="btn btn-xs btn-danger  delete" title="Delete"><i class="fal fa-times"></i> ลบ </a>
+                                                                        }
+                                                                    </td>
+                                                                }
+
+                                                            </tr>
+                                                            Row++;
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        @if (Role == "SuperUser")
+                                                        {
+                                                            <tr>
+                                                                <td colspan="5" class="text-center"> --- ไม่มีข้อมูล ---</td>
+                                                            </tr>
+                                                        }
+                                                        else
+                                                        {
+                                                            <tr>
+                                                                <td colspan="4" class="text-center"> --- ไม่มีข้อมูล ---</td>
+                                                            </tr>
+                                                        }
+                                                    }
+                                                }
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div id="c_1" class="card border shadow-0 mb-g shadow-sm-hover" data-filter-tags="oliver kopyov">
+                                        <div class="card-body border-faded border-top-0 border-left-0 border-right-0 rounded-top">
+                                            <div class="d-flex flex-row align-items-center">
+                                                <div class="info-card-text flex-1">
+                                                    <a href="javascript:void(0);" class="fs-xl text-truncate text-truncate-lg text-info font-weight-bold" data-toggle="dropdown" aria-expanded="false">
+                                                        สำหรับเจ้าหน้าที่
+                                                    </a>
+                                                    <span class="text-truncate text-truncate-xl"> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-body p-0 collapse show">
+                                            <div class="p-3">
+
+                                                <form id="JsonForm" enctype="multipart/form-data"
+                                                      asp-antiforgery="true"
+                                                      data-bv-message="This value is not valid"
+                                                      data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
+                                                      data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
+                                                      data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
+                                                    <div class="panel-content">
+                                                        <div class="col-lg-12 col-md-12 col-sm-12">
+                                                            <div class="form-group">
+                                                                <label class="form-label"><strong> หมายเหตุ</strong></label>
+                                                                <textarea name="Comment" id="Comment" class="form-control" rows="5"
+                                                                          data-bv-notempty-message="กรุณากรอกข้อมูล"> @Model.Comment </textarea>
+                                                            </div>
+                                                            <input type="hidden" name="ProjectPeriodId" value="@ViewBag.ProjectPeriodId" />
+                                                            <input type="hidden" id="ProjectId" value="@ViewBag.ProjectId" />
+
+                                                        </div>
+                                                    </div>
+                                                </form>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <link rel="stylesheet" type="text/css" href="/css/notifications/toastr/toastr.css">
+    <link rel="stylesheet" href="~/css/notifications/sweetalert2/sweetalert2.bundle.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/datagrid/datatables/datatables.bundle.css">
+    <script src="~/js/notifications/toastr/toastr.js"></script>
+    <script src="~/js/Validation/bootstrapValidator.min.js"></script>
+    <script src="~/js/datagrid/datatables/datatables.bundle.js"></script>
+    <script src="~/js/datagrid/datatables/datatables.export.js"></script>
+    <script src="~/js/notifications/sweetalert2/sweetalert2.bundle.js"></script>
+
+}
